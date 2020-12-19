@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  app:
+    container_name: app
+    build:
+      context: ./app
+      target: dev-stage
+    volumes:
+      - '.:/base/app'
+      - '/base/app/node_modules'
+    ports:
+      - '8080:8080'
+  api:
+    container_name: api
+    build:
+      context: ./api
+      target: dev-stage
+    volumes:
+      - '.:/base/api'
+      - '/base/api/node_modules'
+    ports:
+      - '3000:3000'

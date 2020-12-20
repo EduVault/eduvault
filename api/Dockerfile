@@ -1,12 +1,10 @@
 # dev-stage
 FROM node:13-alpine AS dev-stage
 
-RUN mkdir -p /home/node/api/node_modules && chown -R node:node /home/node/api
 WORKDIR /home/node/api
 COPY package*.json ./
-USER node
 RUN npm install --silent
-COPY --chown=node:node . .
+COPY . .
 
 EXPOSE 3000 
 CMD ["npm", "run", "serve"]

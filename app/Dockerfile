@@ -1,13 +1,11 @@
 # dev-stage
 FROM node:13-alpine AS dev-stage
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
 COPY package*.json ./
 RUN npm install @vue/cli -g 
-USER node
 RUN npm install  --silent
-COPY --chown=node:node . .
+COPY . .
 EXPOSE 8080
 
 CMD ["npm", "run", "serve"]

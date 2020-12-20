@@ -6,7 +6,7 @@ WORKDIR /home/node/app
 COPY package*.json ./
 USER node
 RUN npm install  --silent
-RUN npm install @vue/cli -g --silent
+RUN npm install @vue/cli -g 
 COPY --chown=node:node . .
 EXPOSE 8080
 
@@ -20,7 +20,7 @@ EXPOSE 8080
 WORKDIR /base/app
 COPY package*.json .
 RUN npm install  --silent
-RUN npm install @vue/cli -g --silent
+RUN npm install @vue/cli -g
 COPY . /base/app
 
 CMD ["npm", "run", "serve"]

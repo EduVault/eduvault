@@ -1,7 +1,7 @@
 FROM node:13-alpine
 
 WORKDIR /base/api
-COPY package*.json ./
+COPY package*.json /base/api/
 RUN npm install --silent
 COPY . .
 

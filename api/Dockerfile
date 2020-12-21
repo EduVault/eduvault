@@ -1,6 +1,6 @@
 FROM node:13-alpine
 
-WORKDIR /home/node/api
+WORKDIR /base/api
 COPY package*.json ./
 RUN npm install --silent
 COPY . .

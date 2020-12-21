@@ -5,7 +5,7 @@ services:
     build:
       context: ./app
     volumes:
-      - dist-share:/var/www/shared
+      - dist-share:/app/dist
 
   api:
     container_name: api

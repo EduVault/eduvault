@@ -1,24 +1,11 @@
-# dev-stage
-FROM node:13-alpine AS dev-stage
+FROM node:13-alpine
 
 WORKDIR /home/node/app
 COPY package*.json ./
-RUN npm install @vue/cli -g 
 RUN npm install  --silent
 COPY . .
-EXPOSE 8080
+RUN npm ci
+ENV NODE_ENV=production
+RUN npm run build
 
-CMD ["npm", "run", "serve"]
-
-
-# production-stage
-FROM node:13-alpine AS production-stage
-EXPOSE 8080
-
-WORKDIR /base/app
-COPY package*.json .
-RUN npm install  --silent
-RUN npm install @vue/cli -g
-COPY . /base/app
-
-CMD ["npm", "run", "serve"]
+COPY /home/node/app/dist /var/www/html

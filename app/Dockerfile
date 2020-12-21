@@ -7,5 +7,3 @@ COPY . .
 RUN npm ci
 ENV NODE_ENV=production
 RUN npm run build
-
-COPY /base/app/dist /var/www/html

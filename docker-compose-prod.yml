@@ -6,6 +6,7 @@ services:
       context: ./app
     volumes:
       - dist-share:/app/dist
+    stdin_open: true
 
   api:
     container_name: api

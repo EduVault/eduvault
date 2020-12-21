@@ -1,8 +1,8 @@
 FROM node:13-alpine
 
-WORKDIR /base/api
-COPY package*.json /base/api/
-RUN npm install --silent
+WORKDIR /api/
+COPY package*.json ./
+RUN npm install
 COPY . .
 
 EXPOSE 3000 

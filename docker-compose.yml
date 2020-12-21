@@ -5,16 +5,16 @@ services:
     build:
       context: ./app
     volumes:
-      - '.:/base/app'
-      - '/base/app/node_modules'
+      - '.:/app'
+      - '/app/node_modules'
 
   api:
     container_name: api
     build:
       context: ./api
     volumes:
-      - '.:/base/api'
-      - '/base/api/node_modules'
+      - '.:/api'
+      - '/api/node_modules'
     ports:
       - '3000:3000'
 

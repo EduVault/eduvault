@@ -4,6 +4,8 @@ services:
     container_name: app
     build:
       context: ./app
+    volumes:
+      - dist-share:/var/www/shared
 
   api:
     container_name: api
@@ -19,6 +21,7 @@ services:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
+      - dist-share:/var/www/shared
     ports:
       - '80:80'
       - '443:443'

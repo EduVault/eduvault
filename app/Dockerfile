@@ -6,4 +6,5 @@ RUN npm install  --silent
 COPY . .
 RUN npm ci
 ENV NODE_ENV=production
-CMD ["npm", "run", "build"]
+RUN npm run build
+COPY ./dist /var/www/shared/dist

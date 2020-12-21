@@ -6,4 +6,4 @@ RUN npm install  --silent
 COPY . .
 RUN npm ci
 ENV NODE_ENV=production
-RUN npm run build
+CMD ["npm", "run", "build"]

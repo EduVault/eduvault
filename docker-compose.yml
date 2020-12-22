@@ -4,16 +4,22 @@ services:
     container_name: app
     build:
       context: ./app
+      target: dev-stage
     volumes:
       - dist-share:/app/dist
-      - './api:/app'
+      - './app:/app'
       - '/app/node_modules'
     stdin_open: true
+    ports:
+      - '8080:8080'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
   api:
     container_name: api
     build:
       context: ./api
+      target: dev-stage
     ports:
       - '3000:3000'
     volumes:

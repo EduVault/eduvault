@@ -2,16 +2,31 @@
   "name": "api",
   "version": "1.0.0",
   "description": "eduvault auth server",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "serve": "node index.js"
+    "clean": "rimraf dist",
+    "dev": "run-p watch serve",
+    "serve": "node-dev --respawn dist/index.js",
+    "start": "node dist/",
+    "watch": "tsc -p src/ -w",
+    "build:server": "tsc -p src/",
+    "build": "run-s clean build:server"
   },
   "author": "Jacob Cohen-Rosenthal",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6"
+    "@types/express": "^4.17.9",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "eslint": "^7.1.0",
+    "rollup": "^2.12.1",
+    "ts-loader": "^7.0.5",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.9.3"
   }
 }

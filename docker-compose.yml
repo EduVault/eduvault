@@ -5,28 +5,33 @@ services:
     build:
       context: ./app
     volumes:
-      - '.app:/app'
+      - dist-share:/app/dist
+      - './api:/app'
       - '/app/node_modules'
+    stdin_open: true
 
   api:
     container_name: api
     build:
       context: ./api
+    ports:
+      - '3000:3000'
     volumes:
       - './api:/api'
       - '/api/node_modules'
-    ports:
-      - '3000:3000'
+
   nginx:
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./data/nginx/dev:/etc/nginx/conf.d
+      - dist-share:/var/www/shared
     ports:
       - '80:80'
       - '443:443'
     depends_on:
       - app
       - api
+volumes:
+  dist-share:
+    driver: local

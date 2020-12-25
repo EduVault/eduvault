@@ -5,11 +5,21 @@ services:
     build:
       context: ./app
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile.prod
     volumes:
       - dist-share:/app/dist
       - './app:/app'
       - '/app/node_modules'
+    stdin_open: true
+  example:
+    container_name: example
+    build:
+      context: ./example
+      target: prod-stage
+    volumes:
+      - example-dist-share:/app/dist
+      - './example:/example'
+      - '/example/node_modules'
     stdin_open: true
 
   api:
@@ -17,19 +27,31 @@ services:
     build:
       context: ./api
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile.prod
     ports:
       - '3000:3000'
     volumes:
       - './api:/api'
       - '/api/node_modules'
 
+  home-page:
+    container_name: home-page
+    build:
+      context: ./home-page
+      target: prod-stage
+      dockerfile: dockerfile.prod
+    volumes:
+      - './home-page:/home-page'
+      - '/home-page/node_modules'
+    ports:
+      - '8083:8083'
   nginx:
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
-      - ./data/nginx/dev-build:/etc/nginx/conf.d
-      - dist-share:/var/www/shared
+      - ./deploy/nginx/dev-build:/etc/nginx/conf.d
+      - dist-share:/var/www/app-dist
+      - example-dist-share:/var/www/example-dist
     ports:
       - '80:80'
       - '443:443'
@@ -38,4 +60,6 @@ services:
       - api
 volumes:
   dist-share:
+    driver: local
+  example-dist-share:
     driver: local

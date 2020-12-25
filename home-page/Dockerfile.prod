@@ -1,0 +1,12 @@
+FROM node:12-alpine AS build-stage
+
+WORKDIR /home-page
+ENV PATH /home-page/node_modules/.bin:$PATH
+COPY package*.json ./
+RUN yarn install
+COPY . .
+
+FROM build-stage AS prod-stage
+RUN yarn build
+EXPOSE 8083
+CMD [ "yarn", "start" ]

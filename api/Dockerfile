@@ -4,11 +4,13 @@ COPY package*.json ./
 
 ENV NODE_ENV=development
 
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
 COPY . .
-RUN npm run build
+RUN yarn build
 EXPOSE 3000 
 
 FROM build-stage AS dev-stage
-RUN npm i -g node-dev
-CMD ["npm", "run", "dev"]
+RUN yarn add global node-dev
+CMD ["yarn", "dev"]

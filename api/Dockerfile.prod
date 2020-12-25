@@ -1,0 +1,15 @@
+FROM node:12-alpine AS build-stage
+WORKDIR /api
+COPY package*.json ./
+
+ENV NODE_ENV=production
+
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+COPY . .
+RUN yarn build
+EXPOSE 3000 
+
+FROM build-stage AS prod-stage
+CMD ["yarn",  "start"]

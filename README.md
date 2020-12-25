@@ -4,18 +4,24 @@
 
 ## Problems
 
-Some of the ‘last legs’ ing for using [Textile](textile.io)/User-owned data in an interoperable app ecosystem.
+- Some of the ‘last legs’ are missing for using [Textile](textile.io)/User-owned data in complete, functional and practical interoperable app ecosystem.
+- EdTech apps lack interoperability
 
 ### Authentication
 
-- textile only has key pair
-- Need progressive auth choices for easy onboarding, oAuth2.0 -> password -> crypto wallets/PKI.
+- Because Textile ThreadDB only accepts key pair (PKI) challenges, we need progressive auth choices for easy onboarding:
+
+least control -> more control -> most control
+oAuth2.0 -> password -> crypto wallets/PKI.
 
 ### Discoverability, trust, and curation
 
-- How to find interoperable apps? — data manager lists them. Also have a registry on Textile homepage.
-- Apps have access to the data while in use . Data manager app can audit and only list trusted ones.
-- How can devs know beforehand what might be in the user-siloed DB? have a registry on Textile and data manager app dev homepage.
+- **How to find interoperable apps?**
+  - The Data Manager lists them.
+- **How can we deal with the fact that apps still must be trusted?**, as they will have access to the data while in use.
+  - The Data Manager app can audit them, and list only trusted ones.
+- **How can devs know beforehand what might be in the user-siloed DB?**
+  - have a schema registry on data manager app dev homepage and within the user-owned DB.
 
 ### Data management for users
 
@@ -27,7 +33,7 @@ Some of the ‘last legs’ ing for using [Textile](textile.io)/User-owned data 
 
 ### Paying for and backing up user-owned data
 
-- Each app shouldn’t have to worry about this. Data management app could handle this aspect.
+- Each app shouldn’t have to worry about this. The Data Management app could handle this aspect.
 
 ### Handling merge conflicts
 
@@ -35,20 +41,12 @@ Some of the ‘last legs’ ing for using [Textile](textile.io)/User-owned data 
 
 ## Solutions (EduVault)
 
-1. Auth server,
-2. Data management (could be called “my data home”) app, app store, my data, login page
+1. Auth server
+2. Data Manager app, (or “my data home”)
+   includes: app store, my data, login page
 3. SDKs/frontend libraries
 
-The auth server and data home app will be found in this repo and the SDKs will be seperate repos
-
-### TO DO
-
-- [ ] Basic project set up.
-  - [x] Hot reloading for dev, SSL for production. All dockerized
-  - [ ] Env variables in docker-compose and nginx
-- [ ] Migrate old MVPs
-  - [ ] Move login page to be served by backend (data home app) login should then be a redirect operation.
-  - [ ] MVP frontend move to 'examples' folder
+The auth server and data home app will be found in this repo and the SDKs will be separate repos
 
 ### To dev
 
@@ -67,16 +65,16 @@ docker-compose -f docker-compose-dev-build.yml up
 ### To deploy
 
 ```bash
-# change your path
-cd /Users/chenlu/Documents/IPFC/
-# change your server ssh
-ssh -i "eduvault-1.pem" ec2-user@ec2-52-15-112-97.us-east-2.compute.amazonaws.com
+# connect to your server
 sudo su
 service docker start
 # copy code into server with git
 rm -fr .git #reset old if need be
 git init
 git remote add origin https://github.com/EduVault/eduvault.git
+git reset --hard origin/main
+
+# script for SSL certificate: init-letsencrypt.sh
 chmod +x init-letsencrypt.sh
 ./init-letsencrypt.sh
 

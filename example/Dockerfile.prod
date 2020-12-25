@@ -1,0 +1,11 @@
+FROM node:12-alpine AS build-stage
+
+WORKDIR /example
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+
+FROM build-stage AS prod-stage
+ENV NODE_ENV=production
+RUN yarn build
+

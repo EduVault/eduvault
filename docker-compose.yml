@@ -6,14 +6,37 @@ services:
       context: ./app
       target: dev-stage
     volumes:
-      - dist-share:/app/dist
       - './app:/app'
       - '/app/node_modules'
     stdin_open: true
     ports:
-      - '8080:8080'
+      - '8081:8081'
     environment:
       - CHOKIDAR_USEPOLLING=true
+  example:
+    container_name: example
+    build:
+      context: ./example
+      target: dev-stage
+    volumes:
+      - './example:/example'
+      - '/example/node_modules'
+    stdin_open: true
+    ports:
+      - '8082:8082'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  home-page:
+    container_name: home-page
+    build:
+      context: ./home-page
+      target: dev-stage
+    volumes:
+      - './home-page:/home-page'
+      - '/home-page/node_modules'
+    ports:
+      - '8083:8083'
 
   api:
     container_name: api
@@ -30,14 +53,12 @@ services:
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
-      - ./data/nginx/dev:/etc/nginx/conf.d
-      - dist-share:/var/www/shared
+      - ./deploy/nginx/dev:/etc/nginx/conf.d
     ports:
       - '80:80'
       - '443:443'
     depends_on:
       - app
       - api
-volumes:
-  dist-share:
-    driver: local
+      - example
+      - home-page

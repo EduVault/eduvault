@@ -50,42 +50,42 @@ const userAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>
             if (!pubKey) {
               throw new Error('missing pubkey');
             }
-            const db = await newClientDB();
-            const token = await db.getTokenChallenge(pubKey, (challenge: Uint8Array) => {
-              return new Promise((resolve, reject) => {
-                let response = {} as any;
-                response.type = 'challenge-request';
-                response.value = Buffer.from(challenge).toJSON();
-                ctx.websocket.send(JSON.stringify(response));
-                let recieved = false;
-                /** Wait for the challenge event from our event emitter */
-                emitter.on('challenge-response', (signature: string) => {
-                  recieved = true;
-                  // console.log('challenge-response signature', signature);
-                  resolve(Buffer.from(signature));
-                });
-                setTimeout(() => {
-                  reject();
-                  if (!recieved) {
-                    console.log('client took too long to respond');
-                  }
-                }, 10000);
-              });
-            });
+            // const db = await newClientDB();
+            // const token = await db.getTokenChallenge(pubKey, (challenge: Uint8Array) => {
+            //   return new Promise((resolve, reject) => {
+            //     let response = {} as any;
+            //     response.type = 'challenge-request';
+            //     response.value = Buffer.from(challenge).toJSON();
+            //     ctx.websocket.send(JSON.stringify(response));
+            //     let recieved = false;
+            //     /** Wait for the challenge event from our event emitter */
+            //     emitter.on('challenge-response', (signature: string) => {
+            //       recieved = true;
+            //       // console.log('challenge-response signature', signature);
+            //       resolve(Buffer.from(signature));
+            //     });
+            //     setTimeout(() => {
+            //       reject();
+            //       if (!recieved) {
+            //         console.log('client took too long to respond');
+            //       }
+            //     }, 10000);
+            //   });
+            // });
             /**
              * The challenge was successfully completed by the client
              */
             console.log('challenge completed');
             const apiSig = await getAPISig(5000);
-            const userAuth: UserAuth = {
-              ...apiSig,
-              token: token,
-              key: TEXTILE_USER_API_KEY,
-            };
+            // const userAuth: UserAuth = {
+            //   ...apiSig,
+            //   token: token,
+            //   key: TEXTILE_USER_API_KEY,
+            // };
             ctx.websocket.send(
               JSON.stringify({
                 type: 'token-response',
-                value: userAuth,
+                // value: userAuth,
               }),
             );
             break;

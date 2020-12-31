@@ -1,13 +1,13 @@
-import { createAPISig, Client } from '@textile/hub';
+// import { createAPISig, Client } from '@textile/hub';
 import { TEXTILE_USER_API_KEY, TEXTILE_USER_API_SECRET } from '../utils/config';
 import { UserAuth } from '@textile/security';
 import { PrivateKey, Identity } from '@textile/crypto';
 const newClientDB = async () => {
-  const db = await Client.withKeyInfo({
-    key: TEXTILE_USER_API_KEY,
-    secret: TEXTILE_USER_API_SECRET,
-  });
-  return db;
+  // const db = await Client.withKeyInfo({
+  //   key: TEXTILE_USER_API_KEY,
+  //   secret: TEXTILE_USER_API_SECRET,
+  // });
+  // return db;
 };
 
 /** @param seconds (300) time until the sig expires */
@@ -16,8 +16,8 @@ const getAPISig = async (seconds: number = 300) => {
     await console.log('getting API sig');
     const expiration = await new Date(Date.now() + 1000 * seconds);
     console.log('expiration', expiration);
-    const signature = await createAPISig(TEXTILE_USER_API_KEY, expiration);
-    return signature;
+    // const signature = await createAPISig(TEXTILE_USER_API_KEY, expiration);
+    // return signature;
   } catch (err) {
     console.log(err.message);
     throw err;
@@ -38,15 +38,15 @@ const generateIdentity = async (): Promise<Identity> => {
 const generateUserAuth = async (
   pubkey: string,
   challengeHandler: (challenge: Uint8Array) => Uint8Array | Promise<Uint8Array>,
-): Promise<UserAuth> => {
+): Promise<any> => {
   const db = await newClientDB();
-  const token = await db.getTokenChallenge(pubkey, challengeHandler);
-  const signature = await getAPISig();
-  return {
-    ...signature,
-    token: token,
-    key: TEXTILE_USER_API_KEY,
-  } as UserAuth;
+  // const token = await db.getTokenChallenge(pubkey, challengeHandler);
+  // const signature = await getAPISig();
+  // return {
+  //   ...signature,
+  //   token: token,
+  //   key: TEXTILE_USER_API_KEY,
+  // } as UserAuth;
 };
 
 const localUserAuth = async (id: Identity) => {

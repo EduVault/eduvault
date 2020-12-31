@@ -30,6 +30,7 @@ const defaultState: AuthState = {
   pubKey: undefined,
   threadID: undefined,
   threadIDStr: undefined,
+  query: {},
   jwtEncryptedKeyPair: undefined,
 };
 const getDefaultState = () => {
@@ -37,7 +38,7 @@ const getDefaultState = () => {
 };
 
 export default {
-  namespaced: true as true,
+  namespaced: true as const,
   state: getDefaultState(),
   getters: {
     loggedIn: (state: AuthState) => state.loggedIn,
@@ -83,11 +84,14 @@ export default {
     JWT_ENCRYPTED_KEYPAIR(state: AuthState, jwtEncryptedKeyPair: string | undefined) {
       state.jwtEncryptedKeyPair = jwtEncryptedKeyPair;
     },
+    QUERY(state: AuthState, query: Record<string, unknown>) {
+      state.query = query;
+    },
   },
   actions: {
     async passwordAuth(
       { state }: ActionContext<AuthState, RootState>,
-      payload: { password: string; username: string; signup: boolean }
+      payload: { password: string; username: string; signup: boolean },
     ) {
       try {
         const options = {
@@ -109,7 +113,7 @@ export default {
           store.commit.authMod.PUBKEY(pubKey);
           const encryptedKeyPair = CryptoJS.AES.encrypt(
             keyPair.toString(),
-            payload.password
+            payload.password,
           ).toString();
           const newThreadID = ThreadID.fromRandom();
           options.data.threadIDStr = newThreadID.toString();
@@ -189,7 +193,7 @@ export default {
               state.jwtEncryptedKeyPair,
               state.pubKey,
               state.threadIDStr,
-              state.jwt
+              state.jwt,
             );
           } else if (
             state.authType === 'dotwallet' ||
@@ -201,7 +205,7 @@ export default {
               state.pubKey,
               state.threadIDStr,
               state.jwt,
-              state.authType
+              state.authType,
             );
           }
         }
@@ -265,7 +269,7 @@ export default {
         keyPair: Identity;
         threadID: ThreadID;
         retry: number;
-      }
+      },
     ) {
       console.log('payload.retry', payload.retry);
       if (payload.retry > 1) {
@@ -276,7 +280,7 @@ export default {
             state.API_WS_URL + '/ws/auth',
             payload.jwt,
             payload.keyPair,
-            payload.threadID
+            payload.threadID,
           );
           if (client) {
             // await store.commit.decksMod.CLIENT(client);

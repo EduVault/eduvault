@@ -13,6 +13,7 @@ services:
       - '8081:8081'
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
   example:
     container_name: example
     build:
@@ -25,6 +26,7 @@ services:
     ports:
       - '8082:8082'
     environment:
+      - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
 
   home-page:
@@ -37,6 +39,8 @@ services:
       - '/home-page/node_modules'
     ports:
       - '8083:8083'
+    environment:
+      - NODE_ENV=development
 
   api:
     container_name: api
@@ -48,6 +52,22 @@ services:
     volumes:
       - './api:/api'
       - '/api/node_modules'
+    depends_on:
+      - mongo
+    networks:
+      - mongo-network
+    environment:
+      - NODE_ENV=development
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+    networks:
+      - app-network
 
   nginx:
     image: nginx:1.15-alpine
@@ -62,3 +82,9 @@ services:
       - api
       - example
       - home-page
+volumes:
+  mongo:
+    name: mongo
+networks:
+  app-network:
+    name: app-network

@@ -102,6 +102,7 @@ export interface AuthState {
   bucketKey?: string;
   bucketUrl?: string;
   jwtEncryptedKeyPair?: string;
+  query?: Record<string, unknown>;
 }
 export interface DecksState {
   decks: Deck[];

@@ -4,8 +4,8 @@ import './registerServiceWorker';
 import router from './router';
 import store from './store';
 
-import './styles/main.scss';
 import { LayoutPlugin } from 'bootstrap-vue';
+import './styles/main.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -40,5 +40,5 @@ Vue.use(VueDOMPurifyHTML);
 new Vue({
   router,
   store: store.original,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app');

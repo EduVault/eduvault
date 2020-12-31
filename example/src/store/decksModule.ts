@@ -12,7 +12,7 @@ const getDefaultState = () => {
   return defaultState;
 };
 export default {
-  namespaced: true as true,
+  namespaced: true as const,
   state: getDefaultState(),
   getters: {
     decks: (state: DecksState) => {
@@ -27,11 +27,11 @@ export default {
 
     /** Add or update a list of decks */
     DECKS(state: DecksState, decks: Deck[]) {
-      decks.forEach(deck => {
-        const exists = state.decks.map(stateDeck => stateDeck._id).includes(deck._id);
+      decks.forEach((deck) => {
+        const exists = state.decks.map((stateDeck) => stateDeck._id).includes(deck._id);
         if (!exists) state.decks.push(deck);
         else
-          state.decks.forEach(stateDeck => {
+          state.decks.forEach((stateDeck) => {
             if (stateDeck._id === deck._id) {
               state.decks.splice(state.decks.indexOf(stateDeck), 1, deck);
             }
@@ -39,7 +39,7 @@ export default {
       });
     },
     deleteDeck(state: DecksState, deckId: string) {
-      state.decks.forEach(deck => {
+      state.decks.forEach((deck) => {
         if (deck._id == deckId) {
           const replaceDeck = { ...deck };
           replaceDeck.deleted = true;
@@ -61,9 +61,9 @@ export default {
     },
 
     editCard(state: DecksState, payload: EditCardPayload) {
-      state.decks.forEach(stateDeck => {
+      state.decks.forEach((stateDeck) => {
         if (stateDeck._id === payload.deckId) {
-          stateDeck.cards.forEach(stateCard => {
+          stateDeck.cards.forEach((stateCard) => {
             if (stateCard._id === payload.card._id) {
               const replaceCard = { ...payload.card };
               stateDeck.updatedAt = new Date().getTime();

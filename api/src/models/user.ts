@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { DotwalletProfile } from '../types';
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 /** @param username will be an email for local scheme, for google and facebook will be email if available or id if not */
 interface Dotwallet extends DotwalletProfile {

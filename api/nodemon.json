@@ -1,5 +1,0 @@
-{
-  "watch": ["src"],
-  "exec": "yarn serve",
-  "ext": ".ts,.js"
-}

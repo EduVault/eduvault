@@ -2,14 +2,9 @@
   <b-navbar class="navbar__navbar" ref="navbarMain" toggleable="xs" type="dark" variant="secondary">
     <b-navbar-toggle target="nav-collapse" />
 
-    <font-awesome-layers v-if="loggedIn" class="nav-icon__layers fa-lg ">
-      <font-awesome-icon class="nav-icon__cloud fa-lg primary " icon="cloud" />
-      <font-awesome-icon
-        id="nav-icon__sync"
-        class=" fa-xs secondary "
-        :spin="syncing"
-        icon="sync"
-      />
+    <font-awesome-layers v-if="loggedIn" class="nav-icon__layers fa-lg">
+      <font-awesome-icon class="nav-icon__cloud fa-lg primary" icon="cloud" />
+      <font-awesome-icon id="nav-icon__sync" class="fa-xs secondary" :spin="syncing" icon="sync" />
     </font-awesome-layers>
     <b-img height="20px" width="20px" src="/img/icons/flashy-cards-logo-white.svg"></b-img>
     <b-collapse class="pt-3" id="nav-collapse" is-nav>
@@ -24,17 +19,9 @@
         <b-link class="mt-3" @click="saveToChain()">Save my cards to the BitcoinSV chain</b-link>
         <b-link class="mt-3" to="/txlist">View my saved cards transactions</b-link>
         <b-nav-text class="mt-3">View my data on the IPFS</b-nav-text>
-        <b-link
-          v-for="(deck, index) in decks"
-          :key="index"
-          class="ml-2"
-          @click="viewDeck(deck._id)"
-          >{{ deck.title }}</b-link
-        >
-        <b-link class="mt-3" @click="openBucket()"
-          >View my uploaded photos on the IPFS</b-link
-        ></b-navbar-nav
-      >
+
+        <b-link class="mt-3" @click="openBucket()">View my uploaded photos on the IPFS</b-link>
+      </b-navbar-nav>
     </b-collapse>
   </b-navbar>
 </template>
@@ -43,7 +30,7 @@ import {
   BLink,
   BNavbar,
   BNavbarNav,
-  BNavbarBrand,
+  // BNavbarBrand,
   BImg,
   // BNavForm,
   // BFormInput,

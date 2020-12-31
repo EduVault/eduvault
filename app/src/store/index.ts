@@ -34,7 +34,7 @@ import authModule from './authModule';
 // });
 const vuexLocalStorage = new VuexPersistence<RootState>({
   storage: window.localStorage,
-  reducer: state => ({
+  reducer: (state) => ({
     // decksMod: {
     //   decks: state.decksMod.decks,
     //   backlog: state.decksMod.backlog,
@@ -89,6 +89,7 @@ export { rootActionContext, moduleActionContext, rootGetterContext, moduleGetter
 export type AppStore = typeof store;
 declare module 'vuex' {
   interface Store<S> {
+    // eslint-disable-next-line
     direct: AppStore;
   }
 }

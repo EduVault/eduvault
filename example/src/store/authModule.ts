@@ -4,8 +4,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import store from '../store';
 // import { ApiRes } from '../types';
 import router from '@/router';
-import { Libp2pCryptoIdentity } from '@textile/threads-core';
-import { ThreadID } from '@textile/hub';
+import { ThreadID, Identity, PrivateKey } from '@textile/hub';
 import CryptoJS from 'crypto-js';
 import { saveLoginData, passwordRehydrate, socialMediaRehydrate } from './utils';
 import { API_URL_ROOT, DEV_API_URL_ROOT, PASSWORD_LOGIN } from '../config';
@@ -31,6 +30,7 @@ const defaultState: AuthState = {
   pubKey: undefined,
   threadID: undefined,
   threadIDStr: undefined,
+  query: {},
   jwtEncryptedKeyPair: undefined,
 };
 const getDefaultState = () => {
@@ -38,7 +38,7 @@ const getDefaultState = () => {
 };
 
 export default {
-  namespaced: true as true,
+  namespaced: true as const,
   state: getDefaultState(),
   getters: {
     loggedIn: (state: AuthState) => state.loggedIn,
@@ -60,7 +60,7 @@ export default {
     SYNCING(state: AuthState, bool: boolean) {
       state.syncing = bool;
     },
-    KEYPAIR(state: AuthState, keyPair: Libp2pCryptoIdentity | undefined) {
+    KEYPAIR(state: AuthState, keyPair: Identity | undefined) {
       state.keyPair = keyPair;
     },
     JWT(state: AuthState, jwt: string | undefined) {
@@ -84,11 +84,14 @@ export default {
     JWT_ENCRYPTED_KEYPAIR(state: AuthState, jwtEncryptedKeyPair: string | undefined) {
       state.jwtEncryptedKeyPair = jwtEncryptedKeyPair;
     },
+    QUERY(state: AuthState, query: Record<string, unknown>) {
+      state.query = query;
+    },
   },
   actions: {
     async passwordAuth(
       { state }: ActionContext<AuthState, RootState>,
-      payload: { password: string; username: string; signup: boolean }
+      payload: { password: string; username: string; signup: boolean },
     ) {
       try {
         const options = {
@@ -105,12 +108,12 @@ export default {
           } as any,
         } as AxiosRequestConfig;
         if (payload.signup) {
-          const keyPair = await Libp2pCryptoIdentity.fromRandom();
+          const keyPair = await PrivateKey.fromRandom();
           const pubKey = keyPair.public.toString();
           store.commit.authMod.PUBKEY(pubKey);
           const encryptedKeyPair = CryptoJS.AES.encrypt(
             keyPair.toString(),
-            payload.password
+            payload.password,
           ).toString();
           const newThreadID = ThreadID.fromRandom();
           options.data.threadIDStr = newThreadID.toString();
@@ -152,8 +155,8 @@ export default {
       await axios(options);
       store.commit.authMod.CLEAR_STATE();
       store.commit.authMod.LOGGEDIN(false);
-      store.commit.decksMod.CLEAR_STATE();
-      console.log(store.state.decksMod);
+      // store.commit.decksMod.CLEAR_STATE();
+      // console.log(store.state.decksMod);
       // localStorage.setItem('vuex', '');
       router.push('/login/?checkauth=no');
     },
@@ -169,8 +172,8 @@ export default {
         // if we don't have an identity, check for jwt and localstorage,
         if (jwt && keyPair && threadID) {
           try {
-            if (!store.state.decksMod.client) throw 'not connected';
-            const threadsList = await store.state.decksMod.client.listThreads();
+            // if (!store.state.decksMod.client) throw 'not connected';
+            // const threadsList = await store.state.decksMod.client.listThreads();
             // console.log('authcheck threadsList', threadsList);
             store.commit.authMod.LOGGEDIN(true);
           } catch (error) {
@@ -190,7 +193,7 @@ export default {
               state.jwtEncryptedKeyPair,
               state.pubKey,
               state.threadIDStr,
-              state.jwt
+              state.jwt,
             );
           } else if (
             state.authType === 'dotwallet' ||
@@ -202,7 +205,7 @@ export default {
               state.pubKey,
               state.threadIDStr,
               state.jwt,
-              state.authType
+              state.authType,
             );
           }
         }
@@ -263,10 +266,10 @@ export default {
       { state }: ActionContext<AuthState, RootState>,
       payload: {
         jwt: string;
-        keyPair: Libp2pCryptoIdentity;
+        keyPair: Identity;
         threadID: ThreadID;
         retry: number;
-      }
+      },
     ) {
       console.log('payload.retry', payload.retry);
       if (payload.retry > 1) {
@@ -277,13 +280,13 @@ export default {
             state.API_WS_URL + '/ws/auth',
             payload.jwt,
             payload.keyPair,
-            payload.threadID
+            payload.threadID,
           );
           if (client) {
-            await store.commit.decksMod.CLIENT(client);
-            await store.dispatch.decksMod.setUpListening();
+            // await store.commit.decksMod.CLIENT(client);
+            // await store.dispatch.decksMod.setUpListening();
             // sync all remote instances with our local ones
-            await store.dispatch.decksMod.deckMergeToThread(store.state.decksMod.decks);
+            // await store.dispatch.decksMod.deckMergeToThread(store.state.decksMod.decks);
           } else throw 'unable to connect to Threads DB';
         } catch (err) {
           if (

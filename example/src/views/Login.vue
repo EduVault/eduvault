@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="state.landing" class="landing-page">
+    <div class="landing-page">
       <b-img class="landing-img" src="/img/icons/flashy-cards-cover-square.png" />
       <img
         src="@/assets/eduvault-button.png"
@@ -17,20 +17,27 @@ import { reactive, watch } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
 import router from '../router';
 import store from '../store';
+import axios from 'axios';
+import { v4 as uuid } from 'uuid';
 export default {
   name: 'Login',
   components: {},
   setup() {
-    const state = reactive({});
+    const state = reactive({
+      //
+    });
 
     async function login() {
-      // ....
-
-      router.push('/home');
+      const HOST = 'http://localhost:8081';
+      const code = uuid();
+      const redirectURL = `${HOST}/example/home`;
+      const loginURL = `${HOST}/app/login/?code=${code}&redirect_url=${redirectURL}&`;
+      window.location.href = loginURL;
     }
 
     return {
       state,
+      login,
     };
   },
 };

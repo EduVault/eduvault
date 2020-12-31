@@ -1,0 +1,44 @@
+{
+  "name": "eduvault",
+  "version": "1.0.0",
+  "description": "[Home page](eduvault.org)",
+  "main": ".prettierrc.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "app:clean": "cd ./app && rimraf yarn.lock && rimraf node_modules",
+    "app:dev": "cd ./app && yarn dev",
+    "app:build": "cd ./app && yarn install && yarn build",
+    "api:clean": "cd ./api && rimraf yarn.lock && rimraf node_modules",
+    "api:dev": "cd ./api && docker-compose up",
+    "api:build": "cd ./api && yarn install && yarn build",
+    "example:clean": "cd ./example && rimraf yarn.lock && rimraf node_modules",
+    "example:dev": "cd ./example && yarn dev",
+    "example:build": "cd ./example && yarn install && yarn build",
+
+    "dev-build": "docker-compose -f docker-compose-dev-build.yml up --build",
+    "dev-api": "docker-compose -f docker-compose-api.yml up",
+    "dev-api-build": "docker-compose -f docker-compose-api.yml up --build",
+    "clean": "run-s example:clean api:clean app:clean",
+    "build": "run-s example:build api:build app:build",
+    "clean-build": "run-s clean build",
+    "dev": "run-s app:dev api:dev example:dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduVault/eduvault.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduVault/eduvault/issues"
+  },
+  "homepage": "https://github.com/EduVault/eduvault#readme"
+}

@@ -4,6 +4,8 @@ WORKDIR /home-page
 ENV PATH /home-page/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
+RUN yarn config set registry 'https://registry.npm.taobao.org'
+
 RUN yarn install
 COPY . .
 

@@ -1,3 +1,7 @@
+import { Client } from '@textile/hub';
+import { Database, JSONSchema } from '@textile/threaddb';
+
+const testClient = new Client();
 export const cardSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   id: 'https://github.com/Jewcub/textile-flashcards',
@@ -10,7 +14,7 @@ export const cardSchema = {
   },
 };
 
-export const deckSchema = {
+export const deckSchema: JSONSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   id: 'https://github.com/Jewcub/textile-flashcards',
   title: 'Deck',
@@ -36,10 +40,12 @@ export const deckSchema = {
     },
   },
 };
+// testClient.newCollection('sdf', { name: 'sdf', schema: deckSchema });
+// const testDB = new Database('sdfs', { name: 'sdf', schema: deckSchema });
 
 // complex schema with refs
 // doesn't work yet
-export const fullSchema = {
+export const fullSchema: JSONSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   id: 'https://github.com/Jewcub/textile-flashcards',
   definitions: {

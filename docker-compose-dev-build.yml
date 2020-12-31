@@ -5,46 +5,67 @@ services:
     build:
       context: ./app
       target: prod-stage
-      dockerfile: dockerfile.prod
+      dockerfile: Dockerfile-prod
     volumes:
       - dist-share:/app/dist
       - './app:/app'
       - '/app/node_modules'
     stdin_open: true
+    environment:
+      - NODE_ENV=production
   example:
     container_name: example
     build:
       context: ./example
       target: prod-stage
+      dockerfile: Dockerfile-prod
     volumes:
       - example-dist-share:/app/dist
       - './example:/example'
       - '/example/node_modules'
     stdin_open: true
+    environment:
+      - NODE_ENV=production
 
   api:
     container_name: api
     build:
       context: ./api
       target: prod-stage
-      dockerfile: dockerfile.prod
+      dockerfile: Dockerfile-prod
     ports:
       - '3000:3000'
     volumes:
       - './api:/api'
       - '/api/node_modules'
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=production
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+    networks:
+      - app-network
 
   home-page:
     container_name: home-page
     build:
       context: ./home-page
       target: prod-stage
-      dockerfile: dockerfile.prod
+      dockerfile: Dockerfile-prod
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'
     ports:
       - '8083:8083'
+    environment:
+      - NODE_ENV=production
   nginx:
     image: nginx:1.15-alpine
     restart: unless-stopped
@@ -63,3 +84,8 @@ volumes:
     driver: local
   example-dist-share:
     driver: local
+  mongo:
+    name: mongo
+networks:
+  app-network:
+    name: app-network

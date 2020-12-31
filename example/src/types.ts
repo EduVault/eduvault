@@ -1,3 +1,6 @@
+import { Client, ThreadID, Buckets, Identity } from '@textile/hub';
+// import { DBInfo } from '@textile/threads';
+
 /** @param username will be an email for local scheme, for google and facebook will be email if available or id if not */
 export interface User {
   username: string;
@@ -90,7 +93,7 @@ export interface AuthState {
   PASSWORD_LOGIN: string;
   loggedIn: boolean;
   syncing: boolean;
-  keyPair?: Libp2pCryptoIdentity;
+  keyPair?: Identity;
   authType?: 'google' | 'facebook' | 'password' | 'metamask' | 'dotwallet';
   jwt?: string;
   pubKey?: string;
@@ -99,6 +102,7 @@ export interface AuthState {
   bucketKey?: string;
   bucketUrl?: string;
   jwtEncryptedKeyPair?: string;
+  query?: Record<string, unknown>;
 }
 export interface DecksState {
   decks: Deck[];

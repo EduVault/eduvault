@@ -1,5 +1,6 @@
 <template>
   <div class="app u-scroller">
+    <the-navbar></the-navbar>
     <AlertUpdatePWA></AlertUpdatePWA>
     <router-view class="app_router-view" />
   </div>

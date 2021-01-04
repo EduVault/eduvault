@@ -1406,35 +1406,35 @@
   resolved "https://registry.npm.taobao.org/@soda/get-current-script/download/@soda/get-current-script-1.0.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40soda%2Fget-current-script%2Fdownload%2F%40soda%2Fget-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha1-pTUV2yXYA4N0OBtzryC7Ty5QjYc=
 
-"@textile/buckets-grpc@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.npm.taobao.org/@textile/buckets-grpc/download/@textile/buckets-grpc-2.3.0.tgz#299cb831eb071cb0ff3d995b8976341a2d7878fa"
-  integrity sha1-KZy4MesHHLD/PZlbiXY0Gi14ePo=
+"@textile/buckets-grpc@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/@textile/buckets-grpc/-/buckets-grpc-2.2.2.tgz#c01ba950a5f148040c111e3124d6dcbfbaba5638"
+  integrity sha512-MTc6fFx9dsFD2+HkzxPsxxiYCw2FQ8Dm0QuCx445n1eFPcPMBTMbRoc+7imLieXQGEfnEDSp1wHt+RqDQ8y0rw==
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
     "@types/google-protobuf" "^3.7.4"
     google-protobuf "^3.13.0"
 
-"@textile/buckets@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.npm.taobao.org/@textile/buckets/download/@textile/buckets-5.0.1.tgz#05f2e8f21229a04f8d0b2b07bf4b3761746fdd46"
-  integrity sha1-BfLo8hIpoE+NCysHv0s3YXRv3UY=
+"@textile/buckets@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/@textile/buckets/-/buckets-4.1.0.tgz#90cde548dbe8f637b26acb49eaec7647508bceff"
+  integrity sha512-b7EJygIAXhbFGBzowJ9U1FDVc+l1u7YtfDpwv+66rW7diwI34GlvBZpWfDG0eBzHGj1q67K9F5S8AEY3By1Rgg==
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
-    "@textile/buckets-grpc" "2.3.0"
-    "@textile/context" "^0.10.0"
-    "@textile/crypto" "^2.1.1"
-    "@textile/grpc-authentication" "^3.0.1"
-    "@textile/grpc-connection" "^2.2.0"
-    "@textile/grpc-transport" "^0.3.0"
-    "@textile/hub-grpc" "2.3.0"
-    "@textile/hub-threads-client" "^5.0.1"
-    "@textile/security" "^0.7.0"
-    "@textile/threads-id" "^0.4.0"
+    "@textile/buckets-grpc" "2.2.2"
+    "@textile/context" "^0.9.2"
+    "@textile/crypto" "^2.0.0"
+    "@textile/grpc-authentication" "^2.1.0"
+    "@textile/grpc-connection" "^2.1.0"
+    "@textile/grpc-transport" "^0.2.1"
+    "@textile/hub-grpc" "2.2.2"
+    "@textile/hub-threads-client" "^4.0.0"
+    "@textile/security" "^0.6.2"
+    "@textile/threads-id" "^0.3.1"
     abort-controller "^3.0.0"
+    cids "^1.0.2"
     event-iterator "^2.0.0"
     loglevel "^1.6.8"
-    multiformats "^4.4.1"
 
 "@textile/context@^0.10.0":
   version "0.10.0"
@@ -1443,6 +1443,25 @@
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
     "@textile/security" "^0.7.0"
+
+"@textile/context@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.npmjs.org/@textile/context/-/context-0.9.2.tgz#3d6e3e92bca013b469a1da772839817afbe28f53"
+  integrity sha512-88rn/uBikldDq5eA33qnGT6oBnXKW/cxWVUfFxlzLDMj4NvcifpplAdac4/hcJhK+i9CubO/WHMGfI6/qQgW4A==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.13.0"
+    "@textile/security" "^0.6.2"
+
+"@textile/crypto@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/@textile/crypto/-/crypto-0.1.2.tgz#09637e8173daa8d62a78f570e170065ac631b089"
+  integrity sha512-vHmxLlTfPliq1LgaTwih5h9YPCJf5zotas2ld2TX8S6uOYY2jRoLTPR60ddAMfDxPmtuXvFaPz/aRJsHuqgwUA==
+  dependencies:
+    "@types/ed2curve" "^0.2.2"
+    "@types/multibase" "^0.6.0"
+    ed2curve "^0.3.0"
+    multibase "^3.0.0"
+    tweetnacl "^1.0.3"
 
 "@textile/crypto@^2.0.0", "@textile/crypto@^2.1.1":
   version "2.1.1"
@@ -1455,18 +1474,29 @@
     multibase "^3.1.0"
     tweetnacl "^1.0.3"
 
-"@textile/grpc-authentication@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.npm.taobao.org/@textile/grpc-authentication/download/@textile/grpc-authentication-3.0.1.tgz#2a433cc81a4c3417f41d6ac642961e02ce7f4fa8"
-  integrity sha1-KkM8yBpMNBf0HWrGQpYeAs5/T6g=
+"@textile/grpc-authentication@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/@textile/grpc-authentication/-/grpc-authentication-2.1.0.tgz#fa921df5e16f95154046d4735d5dd571f7c381f1"
+  integrity sha512-XzY882vqQdrD8eNn/iaaT72/2M+1ouZZG5IOANkvrzlL3VnY2Lk0E3NjbVpIAggjxYzppFY0POwIVxPwu2OuGg==
+  dependencies:
+    "@textile/context" "^0.9.2"
+    "@textile/crypto" "^2.0.0"
+    "@textile/grpc-connection" "^2.1.0"
+    "@textile/hub-threads-client" "^4.0.0"
+    "@textile/security" "^0.6.2"
+
+"@textile/grpc-authentication@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.npmjs.org/@textile/grpc-authentication/-/grpc-authentication-3.0.2.tgz#4ebd1e33c0f82a9f1dabd7f31b194d2e46b10156"
+  integrity sha512-SIi0VlwSpXseFscM8XrrTygPRehBZYn+NkcgSAYa33S7ZHwl3RBjOKvpNOVcI7NkHFXbk4HFSNCn9Z7fHRuKFw==
   dependencies:
     "@textile/context" "^0.10.0"
     "@textile/crypto" "^2.1.1"
     "@textile/grpc-connection" "^2.2.0"
-    "@textile/hub-threads-client" "^5.0.1"
+    "@textile/hub-threads-client" "^5.0.2"
     "@textile/security" "^0.7.0"
 
-"@textile/grpc-connection@^2.2.0":
+"@textile/grpc-connection@^2.1.0", "@textile/grpc-connection@^2.2.0":
   version "2.2.0"
   resolved "https://registry.npm.taobao.org/@textile/grpc-connection/download/@textile/grpc-connection-2.2.0.tgz#975faa0538120f175f77469726ec490ad1771e52"
   integrity sha1-l1+qBTgSDxdfd0aXJuxJCtF3HlI=
@@ -1484,6 +1514,17 @@
     "@types/google-protobuf" "^3.7.4"
     google-protobuf "^3.14.0"
 
+"@textile/grpc-transport@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/@textile/grpc-transport/-/grpc-transport-0.2.1.tgz#b5c79c48e3f6ac859736145f88e4ff6b5273353f"
+  integrity sha512-/2GhUiygoKmUNZC1x9Ev4wb4RbeEfPCLKqK1R2Vo2ATsf2ft6A4j7sURVk2JdoIQ9O6glKB/yDbUqrKHAhX2ig==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.13.0"
+    "@types/ws" "^7.2.6"
+    isomorphic-ws "^4.0.1"
+    loglevel "^1.6.6"
+    ws "^7.2.1"
+
 "@textile/grpc-transport@^0.3.0":
   version "0.3.0"
   resolved "https://registry.npm.taobao.org/@textile/grpc-transport/download/@textile/grpc-transport-0.3.0.tgz#106c278a5e10d12009033ff9d570bbcc3701c237"
@@ -1495,61 +1536,94 @@
     loglevel "^1.6.6"
     ws "^7.2.1"
 
-"@textile/hub-filecoin@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.npm.taobao.org/@textile/hub-filecoin/download/@textile/hub-filecoin-1.1.2.tgz#7dacb97fa0a753b74687880af5de00538ea3237f"
-  integrity sha1-fay5f6CnU7dGh4gK9d4AU46jI38=
+"@textile/hub-filecoin@^1.1.0":
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/@textile/hub-filecoin/-/hub-filecoin-1.1.3.tgz#0a8530f77f181ac761ff2d53419178ce8cc197e5"
+  integrity sha512-eO4GLo6Rsch03XVsZ3u0cTpyUKxcet7bHI6m5yM64nrZSwMT2mu1MeVZLPoDFlW/IujcybiAzrQfk4qaoYEd2w==
   dependencies:
     "@improbable-eng/grpc-web" "^0.12.0"
     "@textile/context" "^0.10.0"
     "@textile/crypto" "^2.1.1"
-    "@textile/grpc-authentication" "^3.0.1"
+    "@textile/grpc-authentication" "^3.0.2"
     "@textile/grpc-connection" "^2.2.0"
     "@textile/grpc-powergate-client" "^1.2.5"
-    "@textile/hub-grpc" "2.3.0"
+    "@textile/hub-grpc" "2.4.0"
     "@textile/security" "^0.7.0"
     event-iterator "^2.0.0"
     loglevel "^1.6.8"
 
-"@textile/hub-grpc@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.npm.taobao.org/@textile/hub-grpc/download/@textile/hub-grpc-2.3.0.tgz#5df9e1fd954eb477e915e223ee4fd59a97e2f391"
-  integrity sha1-Xfnh/ZVOtHfpFeIj7k/Vmpfi85E=
+"@textile/hub-grpc@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/@textile/hub-grpc/-/hub-grpc-2.2.2.tgz#ce10369fae9c9eb2c89e0b55033e2b58ca5f6187"
+  integrity sha512-N9U6ujMJLRgg/JNbRl7K072NuEWRQRiTnW2eGdz0K/rGLQhUYF4c2mi70DUVcT/SHND8KUl9lcdN9/yoiQubkw==
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
     "@types/google-protobuf" "^3.7.4"
     google-protobuf "^3.13.0"
 
-"@textile/hub-threads-client@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.npm.taobao.org/@textile/hub-threads-client/download/@textile/hub-threads-client-5.0.1.tgz#32bec151eb1ec39a968611c8438cc91253ac7c26"
-  integrity sha1-Mr7BUesew5qWhhHIQ4zJElOsfCY=
+"@textile/hub-grpc@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@textile/hub-grpc/-/hub-grpc-2.4.0.tgz#4f3d207958fd565b0c7e4b5d337f40160b1b600c"
+  integrity sha512-5TTDoIanKLoFRFALqayDyOjG3KEeYADYBvBVRTX/QC2gtMBx3Gb8aCxGuH3sw6idVdbScH3q8uAQvkEwFanNfQ==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.13.0"
+    "@types/google-protobuf" "^3.7.4"
+    google-protobuf "^3.13.0"
+
+"@textile/hub-threads-client@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/@textile/hub-threads-client/-/hub-threads-client-4.0.0.tgz#ec3387001b0c9fb239515fd3d31dc37205753136"
+  integrity sha512-YYE99H9JT36zUclQ3Pg9PZyYaz1QzMdy5dUJrdmYLoiqPqKmC/YGR+rPa6wVsMeGWN+vfrxCi8DT32VVl1U5lg==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.13.0"
+    "@textile/context" "^0.9.2"
+    "@textile/hub-grpc" "2.2.2"
+    "@textile/security" "^0.6.2"
+    "@textile/threads-client" "^1.3.2"
+    "@textile/threads-id" "^0.3.1"
+    "@textile/users-grpc" "2.2.2"
+    loglevel "^1.7.0"
+
+"@textile/hub-threads-client@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.npmjs.org/@textile/hub-threads-client/-/hub-threads-client-5.0.2.tgz#26cea610b65291f499ee9e003a19a0f57e8d6eb7"
+  integrity sha512-0U5RWAhDq8GgXuZK6IfRqPBwmW5dLGjbCpYquxbbXj9RxVQqA+xOBOFAXd0T3/kdMreeCQf5f9xTw4PXxEbNwA==
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
     "@textile/context" "^0.10.0"
-    "@textile/hub-grpc" "2.3.0"
+    "@textile/hub-grpc" "2.4.0"
     "@textile/security" "^0.7.0"
     "@textile/threads-client" "^2.1.0"
     "@textile/threads-id" "^0.4.0"
-    "@textile/users-grpc" "2.3.0"
+    "@textile/users-grpc" "2.4.0"
     loglevel "^1.7.0"
 
-"@textile/hub@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.npm.taobao.org/@textile/hub/download/@textile/hub-5.0.1.tgz#687ecec9d780b7575783d014d16019c32fb441f0"
-  integrity sha1-aH7OydeAt1dXg9AU0WAZwy+0QfA=
+"@textile/hub@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/@textile/hub/-/hub-4.1.0.tgz#69b0bf88182d8045ec58b8d1ef72d488388210a9"
+  integrity sha512-Tm65mq20kpbYYtET8CZJPrm5bZ4OMmW6YA2YH/6e/Ewnj2Pb3ADB1xwh47k1l5BAes/s7fvMrnubbFZ2bwWOhA==
   dependencies:
-    "@textile/buckets" "^5.0.1"
-    "@textile/crypto" "^2.1.1"
-    "@textile/grpc-authentication" "^3.0.1"
-    "@textile/hub-filecoin" "^1.1.2"
-    "@textile/hub-grpc" "2.3.0"
-    "@textile/hub-threads-client" "^5.0.1"
-    "@textile/security" "^0.7.0"
-    "@textile/threads-id" "^0.4.0"
-    "@textile/users" "^5.0.1"
+    "@textile/buckets" "^4.1.0"
+    "@textile/crypto" "^2.0.0"
+    "@textile/grpc-authentication" "^2.1.0"
+    "@textile/hub-filecoin" "^1.1.0"
+    "@textile/hub-grpc" "2.2.2"
+    "@textile/hub-threads-client" "^4.0.0"
+    "@textile/security" "^0.6.2"
+    "@textile/threads-id" "^0.3.1"
+    "@textile/users" "^4.0.0"
     loglevel "^1.6.8"
     multihashes "0.4.19"
+
+"@textile/multiaddr@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/@textile/multiaddr/-/multiaddr-0.3.1.tgz#0c34678b0afac58abfc5b9efab829aa66cde9af9"
+  integrity sha512-vCYLuBqxVo1ki0qNRV7ms1uux1ojjCJwCEb/jcVpFQH1zt7AO73/VIWTjtsLvZj4MuZ8ut2mIjNbJfP6Rl6Slg==
+  dependencies:
+    "@textile/threads-id" "^0.3.1"
+    multiaddr "^8.1.1"
+    uint8arrays "^1.1.0"
+    varint "^6.0.0"
 
 "@textile/multiaddr@^0.4.0":
   version "0.4.0"
@@ -1557,8 +1631,17 @@
   integrity sha1-T61zwIDpriSnXmXq7jEN1ytUYmQ=
   dependencies:
     "@textile/threads-id" "^0.4.0"
-    multiaddr "^8.1.1"
+    multiaddr "^8.1.2"
     varint "^6.0.0"
+
+"@textile/security@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.npmjs.org/@textile/security/-/security-0.6.2.tgz#a7ae385bac715dcbd68d66f352b847e6d335876e"
+  integrity sha512-RcDaR+S0kk6XepE0IF3JfdyRJ3fyEI1fxrWZxYTXmmfMihhhQWLeF1PhEvsUsiou32KBk6UjpxmhiNcqjIVwWg==
+  dependencies:
+    "@consento/sync-randombytes" "^1.0.5"
+    fast-sha256 "^1.3.0"
+    multibase "^3.1.0"
 
 "@textile/security@^0.7.0":
   version "0.7.0"
@@ -1570,7 +1653,7 @@
     fastestsmallesttextencoderdecoder "^1.0.22"
     multibase "^3.1.0"
 
-"@textile/threads-client-grpc@^1.0.2":
+"@textile/threads-client-grpc@^1.0.1", "@textile/threads-client-grpc@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/@textile/threads-client-grpc/download/@textile/threads-client-grpc-1.0.2.tgz#5d6ee09431eef2eb582f116bb3b48698e9fedc99"
   integrity sha1-XW7glDHu8utYLxFrs7SGmOn+3Jk=
@@ -1578,6 +1661,22 @@
     "@improbable-eng/grpc-web" "^0.13.0"
     "@types/google-protobuf" "^3.7.3"
     google-protobuf "^3.13.0"
+
+"@textile/threads-client@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.npmjs.org/@textile/threads-client/-/threads-client-1.3.2.tgz#3d89fa378c9029cc2bee40d01f40cebb726bfabc"
+  integrity sha512-4j8zcwzvv1TQX3DMvl7UNM0X+aJ3gPhXEcPTdhqv71/5bQ4PAancwkmAf3N7JN9eeG/u0U8miSUHLKTD2kpznw==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.13.0"
+    "@textile/context" "^0.9.2"
+    "@textile/crypto" "^0.1.2"
+    "@textile/grpc-transport" "^0.2.1"
+    "@textile/multiaddr" "^0.3.1"
+    "@textile/security" "^0.6.2"
+    "@textile/threads-client-grpc" "^1.0.1"
+    "@textile/threads-id" "^0.3.1"
+    "@types/to-json-schema" "^0.2.0"
+    to-json-schema "^0.2.5"
 
 "@textile/threads-client@^2.1.0":
   version "2.1.0"
@@ -1596,6 +1695,15 @@
     fastestsmallesttextencoderdecoder "^1.0.22"
     to-json-schema "^0.2.5"
 
+"@textile/threads-id@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/@textile/threads-id/-/threads-id-0.3.1.tgz#0149ae7a1c520a5d8f933772e2dc00913d84712a"
+  integrity sha512-Asxpu9g9EDbKoefP3E3bvzkPj/Uft7TwhiPispYeYdwktO82kCtCk85XUaW5Fyn4/z2h5tzC2XaTCYSFabv2pA==
+  dependencies:
+    "@consento/sync-randombytes" "^1.0.4"
+    multibase "^3.1.0"
+    varint "^6.0.0"
+
 "@textile/threads-id@^0.4.0":
   version "0.4.0"
   resolved "https://registry.npm.taobao.org/@textile/threads-id/download/@textile/threads-id-0.4.0.tgz#d0918477ab66da42e44356028ccb8a15e944fc64"
@@ -1605,32 +1713,41 @@
     multibase "^3.1.0"
     varint "^6.0.0"
 
-"@textile/users-grpc@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.npm.taobao.org/@textile/users-grpc/download/@textile/users-grpc-2.3.0.tgz#7b861a88cbce3b5490894e17322ceaa1ec14cf4d"
-  integrity sha1-e4YaiMvOO1SQiU4XMizqoewUz00=
+"@textile/users-grpc@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/@textile/users-grpc/-/users-grpc-2.2.2.tgz#e8b1146474b3dec965761ee81cfc98a1c14c16dd"
+  integrity sha512-NC7NAb2VE34HtVAUEnSzl2R/haWgKdc/JQ1RmzdhPLU+9XYrNiq8NljIn00YQaLixo5V0T3kC8iSxsbbUIK20Q==
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
     "@types/google-protobuf" "^3.7.4"
     google-protobuf "^3.13.0"
 
-"@textile/users@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.npm.taobao.org/@textile/users/download/@textile/users-5.0.1.tgz#220bc09ea42ef5015113cba9c31c43c33099103f"
-  integrity sha1-IgvAnqQu9QFRE8upwxxDwzCZED8=
+"@textile/users-grpc@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.npmjs.org/@textile/users-grpc/-/users-grpc-2.4.0.tgz#6936ac7dff9fe267f0575e1f9f8bf92de2ecfbf8"
+  integrity sha512-8xXiqgm7UGVHs6KpCgZiGKUZ3uGiff/JkWuTLCZPAU/blIHfSd3jN2M/j5NXMcayTeYu84WbTgt7fSTOd3VZ/A==
   dependencies:
     "@improbable-eng/grpc-web" "^0.13.0"
-    "@textile/buckets-grpc" "2.3.0"
-    "@textile/context" "^0.10.0"
-    "@textile/crypto" "^2.1.1"
-    "@textile/grpc-authentication" "^3.0.1"
-    "@textile/grpc-connection" "^2.2.0"
-    "@textile/grpc-transport" "^0.3.0"
-    "@textile/hub-grpc" "2.3.0"
-    "@textile/hub-threads-client" "^5.0.1"
-    "@textile/security" "^0.7.0"
-    "@textile/threads-id" "^0.4.0"
-    "@textile/users-grpc" "2.3.0"
+    "@types/google-protobuf" "^3.7.4"
+    google-protobuf "^3.13.0"
+
+"@textile/users@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/@textile/users/-/users-4.0.0.tgz#c428444511b3d67c9c0662826e1686842b443e8d"
+  integrity sha512-TIoK2qmVT5jbOlEKQERKy5EYDAvEnjVYXn2KlKdE0+QaHnwY+LCrXroVfFmJ/8GTZIXwJqRjWAqZ/HHKZ5hTrA==
+  dependencies:
+    "@improbable-eng/grpc-web" "^0.13.0"
+    "@textile/buckets-grpc" "2.2.2"
+    "@textile/context" "^0.9.2"
+    "@textile/crypto" "^2.0.0"
+    "@textile/grpc-authentication" "^2.1.0"
+    "@textile/grpc-connection" "^2.1.0"
+    "@textile/grpc-transport" "^0.2.1"
+    "@textile/hub-grpc" "2.2.2"
+    "@textile/hub-threads-client" "^4.0.0"
+    "@textile/security" "^0.6.2"
+    "@textile/threads-id" "^0.3.1"
+    "@textile/users-grpc" "2.2.2"
     event-iterator "^2.0.0"
     loglevel "^1.7.0"
 
@@ -1847,6 +1964,13 @@
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/@types/minimist/download/@types/minimist-1.2.1.tgz?cache=0&sync_timestamp=1604943434232&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fminimist%2Fdownload%2F%40types%2Fminimist-1.2.1.tgz#283f669ff76d7b8260df8ab7a4262cc83d988256"
   integrity sha1-KD9mn/dte4Jg34q3pCYsyD2YglY=
+
+"@types/multibase@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.npmjs.org/@types/multibase/-/multibase-0.6.0.tgz#a729395114a875918ac139ab3107866975a9329d"
+  integrity sha512-PhQiA4pCcIG5yibX/G7K7mk/CXw0HTY98R+efcbbfce9WOyAGbIVqY3zv5kMm+vMAunY29aeOtQ96ePjeX417w==
+  dependencies:
+    "@types/node" "*"
 
 "@types/node@*", "@types/node@^14.0.26":
   version "14.14.16"
@@ -3588,7 +3712,7 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.2.1, buffer@^5.4.3, buffer@^5.5.0, buffer@^5.6.1:
+buffer@^5.2.1, buffer@^5.4.3, buffer@^5.5.0:
   version "5.7.1"
   resolved "https://registry.npm.taobao.org/buffer/download/buffer-5.7.1.tgz?cache=0&sync_timestamp=1606098159535&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbuffer%2Fdownload%2Fbuffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha1-umLnwTEzBTWCGXFghRqPZI6Z7tA=
@@ -9543,15 +9667,6 @@ multicodec@^2.0.1:
   dependencies:
     uint8arrays "1.0.0"
     varint "^5.0.0"
-
-multiformats@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.npm.taobao.org/multiformats/download/multiformats-4.4.1.tgz#d1f2d1b1870f2ade4a3d1a3c4e3ed199ca6026e8"
-  integrity sha1-0fLRsYcPKt5KPRo8Tj7RmcpgJug=
-  dependencies:
-    buffer "^5.6.1"
-    cids "^1.0.2"
-    lodash.transform "^4.6.0"
 
 multihashes@0.4.19:
   version "0.4.19"

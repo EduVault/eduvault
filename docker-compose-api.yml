@@ -11,11 +11,9 @@ services:
     environment:
       - NODE_ENV=development
     ports:
-      - '3000:3000'
+      - '3003:3003'
     depends_on:
       - mongo
-    networks:
-      - app-network
 
   mongo:
     image: mongo
@@ -25,13 +23,7 @@ services:
       - '27017:27017'
     volumes:
       - mongo:/data/db
-    networks:
-      - app-network
 
 volumes:
   mongo:
     name: mongo
-
-networks:
-  app-network:
-    name: app-network

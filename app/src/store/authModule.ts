@@ -94,6 +94,7 @@ export default {
       payload: { password: string; username: string; signup: boolean },
     ) {
       try {
+        console.log('url ==========,', state.API_URL + state.PASSWORD_LOGIN);
         const options = {
           url: state.API_URL + state.PASSWORD_LOGIN,
           withCredentials: true,

@@ -9,7 +9,7 @@ COPY yarn.lock ./
 RUN yarn install
 COPY . .
 RUN yarn build
-EXPOSE 3000 
+EXPOSE 3003 
 
 FROM build-stage AS prod-stage
 CMD ["yarn",  "start"]

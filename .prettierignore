@@ -1,3 +1,8 @@
 node_modules
 coverage
 dist
+.eslintrc
+
+node_modules
+coverage
+dist

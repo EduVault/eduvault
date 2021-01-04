@@ -12,6 +12,7 @@ module.exports = {
     'plugin:nuxt/recommended',
   ],
   plugins: ['prettier'],
+  exclude: ['.eslintrc'],
   // add your custom rules here
   rules: { '@typescript-eslint/ban-ts-comment': 'off' },
 }

@@ -18,11 +18,9 @@ services:
       target: prod-stage
       dockerfile: Dockerfile-prod
     ports:
-      - '3000:3000'
+      - '3003:3003'
     depends_on:
       - mongo
-    networks:
-      - app-network
     environment:
       - NODE_ENV=production
   example:
@@ -47,8 +45,6 @@ services:
       - 27017:27017
     volumes:
       - mongo:/data/db
-    networks:
-      - app-network
 
   nginx:
     image: nginx:1.15-alpine
@@ -79,6 +75,3 @@ volumes:
     driver: local
   mongo:
     name: mongo
-networks:
-  app-network:
-    name: app-network

@@ -48,14 +48,12 @@ services:
       context: ./api
       target: dev-stage
     ports:
-      - '3000:3000'
+      - '3003:3003'
     volumes:
       - './api:/api'
       - '/api/node_modules'
     depends_on:
       - mongo
-    networks:
-      - mongo-network
     environment:
       - NODE_ENV=development
   mongo:
@@ -66,8 +64,6 @@ services:
       - 27017:27017
     volumes:
       - mongo:/data/db
-    networks:
-      - app-network
 
   nginx:
     image: nginx:1.15-alpine
@@ -85,6 +81,3 @@ services:
 volumes:
   mongo:
     name: mongo
-networks:
-  app-network:
-    name: app-network

@@ -100,8 +100,9 @@ depending on login method, ex. password. Sends login info and gets back encrypte
 
 --example
 first time using app must be online.
-redirects to eduvault/app/login/?code=aasdf1324?redirect_url=https://www.example.com?
---backend. must be registered host. set up database for that.
+redirects to eduvault/app/login/?code=aasdf1324?
+
+redirect_url=https://www.example.com? this must be registered host. set up database and dev signup page for that.
 --app
 goes through the original multi-path auth challenge stuff to receive UserAuth
 --example

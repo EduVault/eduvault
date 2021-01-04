@@ -30,12 +30,12 @@ const db = connectDb();
 
 /** Middlewares */
 app.use(async function handleGeneralError(ctx, next) {
-    try {
-        await next();
-    } catch (error) {
-        console.log(error, error.message);
-        ctx.internalServerError(error, error);
-    }
+  try {
+    await next();
+  } catch (error) {
+    console.log(error, error.message);
+    ctx.internalServerError(error, error);
+  }
 });
 app.use(cors(CORS_CONFIG));
 if (process.env.NODE_ENV === 'production') app.use(sslify({ resolver: xForwardedProtoResolver }));
@@ -44,15 +44,15 @@ app.use(logger());
 app.use(bodyParser());
 app.use(helmet());
 app.use(
-    koaResponse({
-        format(status, payload, message = '') {
-            return {
-                code: status,
-                data: payload,
-                message,
-            };
-        },
-    }),
+  koaResponse({
+    format(status, payload, message = '') {
+      return {
+        code: status,
+        data: payload,
+        message,
+      };
+    },
+  }),
 );
 
 /** Passport */
@@ -64,3 +64,5 @@ const router = startRouter(app, passport);
 userAuthRoute(app);
 /** Start the server! */
 app.listen(PORT, () => console.log(`Koa server listening at ${ip.address()}:${PORT}`));
+
+export default app;

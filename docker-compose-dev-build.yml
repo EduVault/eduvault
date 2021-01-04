@@ -34,7 +34,7 @@ services:
       target: prod-stage
       dockerfile: Dockerfile-prod
     ports:
-      - '3000:3000'
+      - '3003:3003'
     volumes:
       - './api:/api'
       - '/api/node_modules'
@@ -50,8 +50,6 @@ services:
       - 27017:27017
     volumes:
       - mongo:/data/db
-    networks:
-      - app-network
 
   home-page:
     container_name: home-page
@@ -86,6 +84,3 @@ volumes:
     driver: local
   mongo:
     name: mongo
-networks:
-  app-network:
-    name: app-network

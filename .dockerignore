@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/client-dist
+**/coverage
+**/tests
+**/test-output
+**/log
+.dockerignore
+Dockerfile*
+docker-*.yml
+.git
+.gitignore
+.eslintrc
+.editorconfig
+.vscode
+.md
+.DS_Store

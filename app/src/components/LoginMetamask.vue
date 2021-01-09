@@ -26,11 +26,13 @@ export default {
               return null;
             }
             console.log('signed', signed);
-            const pw = signed.slice(10, 30);
+            const password = signed.slice(10, 30);
             store.dispatch.authMod.passwordAuth({
               username: window.web3.eth.accounts[0],
-              password: pw,
+              password,
               signup: true,
+            redirectURI:  "http://localhost:8082",
+             code: "123"
             });
           } catch (err) {
             console.log('err.message ', err.message);

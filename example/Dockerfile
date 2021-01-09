@@ -16,5 +16,5 @@ COPY . .
 
 FROM build-stage AS dev-stage
 RUN yarn global add @vue/cli
-EXPOSE 8080
+EXPOSE 8082
 CMD [ "yarn", "dev" ]

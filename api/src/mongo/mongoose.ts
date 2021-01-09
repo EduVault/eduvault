@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { MONGO_URI } from '../utils/config';
+import { MONGO_URI } from '../config';
 
 const connectDb = () => {
   try {

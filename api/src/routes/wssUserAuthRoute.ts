@@ -7,7 +7,7 @@ import websockify from 'koa-websocket';
 import { newClientDB, getAPISig } from '../textile/helpers';
 import User, { IUser } from '../models/user';
 import { validateJwt } from '../utils/jwt';
-import { TEXTILE_USER_API_KEY } from '../utils/config';
+import { TEXTILE_USER_API_KEY } from '../config';
 import { DefaultState, Context, Middleware } from 'koa';
 
 interface wsMessageData {

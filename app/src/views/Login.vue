@@ -96,10 +96,14 @@ export default {
         const loginOrSignup = async function (signup: boolean) {
             state.makingRequest = true;
             state.failedLogin = false;
+            
             const response = await store.dispatch.authMod.passwordAuth({
                 password: state.password,
                 username: state.email,
                 signup,
+                code: '',
+                redirectURI: '', // store.state.authMod.query?.redirectURI,
+
             });
             if (response !== 'success') {
                 state.makingRequest = false;

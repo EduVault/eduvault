@@ -13,5 +13,5 @@ FROM build-stage AS dev-stage
 
 # npm kept failing here, so using yarn
 RUN yarn global add @vue/cli
-EXPOSE 8080
+EXPOSE 8081
 CMD [ "yarn", "dev" ]

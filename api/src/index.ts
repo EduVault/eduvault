@@ -16,7 +16,7 @@ import connectDb from './mongo/mongoose';
 import passportInit from './auth/passportInit';
 import startRouter from './routes';
 import userAuthRoute from './routes/wssUserAuthRoute';
-import { PORT, CORS_CONFIG } from './utils/config';
+import { PORT, CORS_CONFIG } from './config';
 
 const app = websockify(new Koa());
 

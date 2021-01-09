@@ -2,7 +2,7 @@ import passport from 'koa-passport';
 import Koa from 'koa';
 import session from 'koa-session';
 import User, { IUser } from '../models/user';
-import { APP_SECRET, SESSION_OPTIONS } from '../utils/config';
+import { APP_SECRET, SESSION_OPTIONS } from '../config';
 import localStrat from './strategies/local';
 import googleStrat from './strategies/google';
 import facebookStrat from './strategies/facebook';

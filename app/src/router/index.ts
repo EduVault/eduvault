@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig, Route, NavigationGuardNext } from 'vue-router';
 import store from '../store';
 import Login from '../views/Login.vue';
+import { ifObjectIsEmpty } from './utils';
 Vue.use(VueRouter);
 
 /**undocumented bug in vuex-persist with localforage. Hacky fix from issues forum */
@@ -18,8 +19,10 @@ async function reHydrateStorage(to: Route, from: Route, next: any) {
 /**More strict check */
 function checkAuthValid(to: Route, from: Route, next: any) {
   /** Saves the get request queries into vuex, and redirects without them */
-  const query = { ...to.query };
-  if (query !== {} && store.state.authMod.query != query && !query.checkauth) {
+  let query;
+  if (!ifObjectIsEmpty(to.query)) query = { ...to.query };
+  console.log('query', query);
+  if (query && store.state.authMod.query != query && !query.checkauth) {
     console.log('commiting query, ', query);
     store.commit.authMod.QUERY(query);
     next('/login/?checkauth=yes');

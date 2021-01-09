@@ -7,9 +7,9 @@
 // @ts-check
 
 const routeNames = ['VanillaCRUD', 'VuexPersisted', 'CompositionApiVanilla', 'ComposVuexPersist'];
-const baseUrl = 'localhost:8080/';
+const baseUrl = 'localhost:8081/';
 
-const testRoute = routeName => {
+const testRoute = (routeName) => {
   describe(routeName, () => {
     beforeEach(() => {
       cy.visit(baseUrl + routeName);
@@ -41,9 +41,7 @@ const testRoute = routeName => {
       cy.contains('.flashcard__back > .flashcard__content', 'Test card back');
     });
     it('can edit a card', () => {
-      cy.get('.deck-display__buttons-col > .buttons-col__button--edit')
-        .eq(0)
-        .click();
+      cy.get('.deck-display__buttons-col > .buttons-col__button--edit').eq(0).click();
       cy.get('.card-editor .form__text-input[name=card-front-input]').type('Test card edit front');
       cy.get('.card-editor .form__text-input[name=card-back-input]').type('Test card edit back');
       cy.get('.card-editor .form__button--confirm').click();
@@ -51,42 +49,32 @@ const testRoute = routeName => {
       cy.contains('.flashcard__back > .flashcard__content', 'Test card edit back');
     });
     it('cancels edit when cancel is clicked', () => {
-      cy.get('.deck-display__buttons-col > .buttons-col__button--edit')
-        .eq(0)
-        .click();
+      cy.get('.deck-display__buttons-col > .buttons-col__button--edit').eq(0).click();
       cy.get('.card-editor .form__text-input[name=card-front-input]').type('Test card edit front');
       cy.get('.card-editor .form__text-input[name=card-back-input]').type('Test card edit back');
       cy.get('.card-editor .form__button--cancel').click();
       cy.contains('.flashcard__front', 'What is a group of zebra').should(
         'not.contain.text',
-        'Test card edit front'
+        'Test card edit front',
       );
       cy.contains('.flashcard__back', 'A zeal').should('not.contain.text', 'Test card edit back');
     });
     it('can delete a card', () => {
-      cy.get('.deck-display__buttons-col > .buttons-col__button--delete')
-        .eq(0)
-        .click();
+      cy.get('.deck-display__buttons-col > .buttons-col__button--delete').eq(0).click();
       cy.contains('.flashcard__front', 'What is a group of zebra').should('not.exist');
     });
     it('can flip a card when clicked', () => {
       cy.contains('.flashcard__front', 'What is a group of zebra').should('be.visible');
-      cy.get('.flashcard__front')
-        .eq(0)
-        .click();
+      cy.get('.flashcard__front').eq(0).click();
       cy.contains('.flashcard__front', 'What is a group of zebra').should('not.be.visible');
       cy.contains('.flashcard__back', 'A zeal').should('be.visible');
-      cy.get('.flashcard__back')
-        .eq(0)
-        .click();
+      cy.get('.flashcard__back').eq(0).click();
       cy.contains('.flashcard__back', 'A zeal').should('not.be.visible');
     });
     if (routeName === 'VanillaCRUD') {
       it('does not save state on page reload', () => {
         cy.contains('.flashcard__front', 'What is a group of zebra').should('exist');
-        cy.get('.deck-display__buttons-col > .buttons-col__button--delete')
-          .eq(0)
-          .click();
+        cy.get('.deck-display__buttons-col > .buttons-col__button--delete').eq(0).click();
         cy.contains('.flashcard__front', 'What is a group of zebra').should('not.exist');
         cy.reload();
         cy.contains('.flashcard__front', 'What is a group of zebra').should('exist');
@@ -95,9 +83,7 @@ const testRoute = routeName => {
     if (routeName === 'VuexPersisted') {
       it('saves state on page reload', () => {
         cy.contains('.flashcard__front', 'What is a group of zebra').should('exist');
-        cy.get('.deck-display__buttons-col > .buttons-col__button--delete')
-          .eq(0)
-          .click();
+        cy.get('.deck-display__buttons-col > .buttons-col__button--delete').eq(0).click();
         cy.contains('.flashcard__front', 'What is a group of zebra').should('not.exist');
         cy.reload();
         cy.contains('.flashcard__front', 'What is a group of zebra').should('not.exist');

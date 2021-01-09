@@ -8,8 +8,9 @@ import Koa from 'koa';
 
 const ExtractJwt = passportJwt.ExtractJwt;
 
-dotenv.config({ path: './.env.local' }); // If the .env file is not just .env, you need this config
-
+dotenv.config({ path: './.env' }); // If the .env file is not just .env, you need this config
+// dotenv.config();
+// console.log('env', process.env);
 /** needs to match ports in docker-compose file */
 const PORT = parseInt(process.env.PORT, 10) || 3003;
 /** for dev, needs to match service name from docker-compose file. if hosting on heroku MONGO_URI will be an env, if not you need to manually create one*/
@@ -20,11 +21,11 @@ const ROOT_URL =
 const CORS_CONFIG: cors.Options = {
   credentials: true,
   origin: (ctx) => {
-    console.log(
-      '===================================ctx.request.header.origin===================================\n',
-      process.env.NODE_ENV,
-      ctx.request.header.origin,
-    );
+    // console.log(
+    //   '===================================ctx.request.header.origin===================================\n',
+    //   process.env.NODE_ENV,
+    //   ctx.request.header.origin,
+    // );
     const productionDomains = [
       'https://master--thirsty-ardinghelli-577c63.netlify.app',
       'https://thirsty-ardinghelli-577c63.netlify.app',
@@ -34,9 +35,9 @@ const CORS_CONFIG: cors.Options = {
       process.env.NODE_ENV === 'development'
         ? productionDomains.concat([...devDomains])
         : productionDomains;
-    console.log(validDomains);
+    // console.log(validDomains);
     if (validDomains.indexOf(ctx.request.header.origin) !== -1) {
-      console.log('\n is valid');
+      // console.log('\n is valid domain');
       return ctx.request.header.origin;
     }
     return validDomains[0]; // we can't return void, so let's return one of the valid domains
@@ -113,6 +114,7 @@ const DOTWALLET_APP_ID = process.env.DOTWALLET_APP_ID;
 const TEXTILE_USER_API_KEY = process.env.TEXTILE_USER_API_KEY;
 const TEXTILE_USER_API_SECRET = process.env.TEXTILE_USER_API_SECRET;
 
+console.log(GOOGLE_CONFIG);
 export {
   PORT,
   MONGO_URI,

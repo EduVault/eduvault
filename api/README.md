@@ -18,7 +18,6 @@ On login, they get sent the encrypted key pair. They can save that safely in per
 
 They can refresh the connection with the ThreadDB by calling our `/renew-textile` endpoint. They will be issued a challenge by our server, which they can sign with their key pair. They will recieve a `userAuth` object in return
 
-
 ## To run
 
 change the example.env.local to .env.local

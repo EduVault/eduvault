@@ -91,7 +91,13 @@ export default {
   actions: {
     async passwordAuth(
       { state }: ActionContext<AuthState, RootState>,
-      payload: { password: string; username: string; signup: boolean },
+      payload: {
+        password: string;
+        username: string;
+        signup: boolean;
+        redirectURI: string;
+        code: string;
+      },
     ) {
       try {
         console.log('url ==========,', state.API_URL + state.PASSWORD_LOGIN);
@@ -108,6 +114,8 @@ export default {
             password: CryptoJS.SHA256(payload.password).toString(),
           } as any,
         } as AxiosRequestConfig;
+
+        // new user info. generate each time, even if they are a returning user. if they are a returning user the server will just ignore this info. this lets us have a single endpoint for login/signup
         if (payload.signup) {
           const keyPair = await PrivateKey.fromRandom();
           const pubKey = keyPair.public.toString();
@@ -131,9 +139,16 @@ export default {
           else return 'Unable to connect to database';
         } else {
           const loginData = responseData.data;
-          // console.log('loginData', loginData);
+          console.log('login result Data', loginData);
           await saveLoginData(loginData, payload.password);
-          router.push('/home');
+          if (!store.state.authMod.keyPair) return 'no keypair found';
+          const codeEncryptedKey = CryptoJS.AES.encrypt(
+            store.state.authMod.keyPair?.toString(),
+            payload.code,
+          ).toString();
+          const outRedirectURI = payload.redirectURI + `?key=${codeEncryptedKey}`;
+          console.log(outRedirectURI);
+          router.push(outRedirectURI);
           return 'success';
         }
       } catch (err) {

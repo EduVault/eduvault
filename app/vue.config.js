@@ -1,3 +1,8 @@
 module.exports = {
-  devServer: { host: 'localhost', proxy: 'http://localhost:8081', port: 8081 },
+  devServer: {
+    public: 'localhost:8081',
+    disableHostCheck: true,
+    host: '0.0.0.0',
+    port: 8081,
+  },
 };

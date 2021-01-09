@@ -15,8 +15,8 @@ export function combineBacklog(decksRaw: Deck[], backlog: Deck[]) {
   const ordered = orderBy(combined, ['updatedAt', 'desc']);
   console.log(ordered);
   const pruned: Deck[] = [];
-  ordered.forEach(deck => {
-    const prunedIDs = pruned.map(deck => deck._id);
+  ordered.forEach((deck) => {
+    const prunedIDs = pruned.map((deck) => deck._id);
     if (!prunedIDs.includes(deck._id)) pruned.push(deck);
   });
   console.log('pruned', pruned);
@@ -26,7 +26,7 @@ export function combineBacklog(decksRaw: Deck[], backlog: Deck[]) {
 export async function rehydrateKeyPair(
   encryptedKeyPair: string,
   pubKey: string,
-  decrpyter: string
+  decrpyter: string,
 ) {
   const decryptedKeyPairBytes = CryptoJS.AES.decrypt(encryptedKeyPair, decrpyter);
   const decryptedKeyPairString = decryptedKeyPairBytes.toString(CryptoJS.enc.Utf8);
@@ -41,7 +41,7 @@ export async function saveLoginData(loginData: any, password: string) {
   const rehydratedKeyPair = await rehydrateKeyPair(
     loginData.encryptedKeyPair,
     loginData.pubKey,
-    password
+    password,
   );
   if (store.state.authMod.threadIDStr !== loginData.threadIDStr)
     store.commit.authMod.THREAD_ID_STR(loginData.threadIDStr);
@@ -53,7 +53,7 @@ export async function saveLoginData(loginData: any, password: string) {
   await store.commit.authMod.AUTHTYPE('password');
   const jwtEncryptedKeyPair = CryptoJS.AES.encrypt(
     rehydratedKeyPair.toString(),
-    loginData.jwt
+    loginData.jwt,
   ).toString();
   if (store.state.authMod.jwtEncryptedKeyPair !== jwtEncryptedKeyPair)
     await store.commit.authMod.JWT_ENCRYPTED_KEYPAIR(jwtEncryptedKeyPair);
@@ -64,7 +64,7 @@ export async function passwordRehydrate(
   jwtEncryptedKeyPair: string | undefined,
   pubKey: string | undefined,
   threadIDStr: string | undefined,
-  stateJwt: string | undefined
+  stateJwt: string | undefined,
 ): Promise<boolean> {
   if (!jwtEncryptedKeyPair || !pubKey || !threadIDStr) {
     store.commit.authMod.LOGGEDIN(false);
@@ -102,7 +102,7 @@ export async function socialMediaRehydrate(
   pubKey: string | undefined,
   threadIDStr: string | undefined,
   stateJwt: string | undefined,
-  authType: 'google' | 'facebook' | 'dotwallet'
+  authType: 'google' | 'facebook' | 'dotwallet',
 ): Promise<boolean> {
   let jwt = stateJwt;
   // console.log('stateJwt', stateJwt);
@@ -135,7 +135,7 @@ export async function socialMediaRehydrate(
       await store.commit.authMod.THREAD_ID_STR(threadIDStr);
       const jwtEncryptedKeyPair = CryptoJS.AES.encrypt(
         rehydratedKeyPair.toString(),
-        jwt
+        jwt,
       ).toString();
       await store.commit.authMod.JWT_ENCRYPTED_KEYPAIR(jwtEncryptedKeyPair);
       await store.commit.authMod.PUBKEY(pubKey);

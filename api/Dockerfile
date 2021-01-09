@@ -6,6 +6,8 @@ WORKDIR /api
 # RUN rm -rf node_modules
 COPY package.json ./
 COPY yarn.lock ./
+COPY .env ./
+RUN ls
 # RUN yarn config set registry 'https://registry.npmjs.org/'
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 

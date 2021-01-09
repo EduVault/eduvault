@@ -1,5 +1,5 @@
 import { createAPISig, Client } from '@textile/hub';
-import { TEXTILE_USER_API_KEY, TEXTILE_USER_API_SECRET } from '../utils/config';
+import { TEXTILE_USER_API_KEY, TEXTILE_USER_API_SECRET } from '../config';
 import { UserAuth } from '@textile/security';
 import { PrivateKey, Identity } from '@textile/crypto';
 const newClientDB = async () => {

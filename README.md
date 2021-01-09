@@ -48,18 +48,39 @@ oAuth2.0 -> password -> crypto wallets/PKI.
 
 The auth server and data home app will be found in this repo and the SDKs will be separate repos
 
-### To dev
+## Project structure
+
+```
+📦 eduvault
+ ┣ 📂 api         An auth server to store user credentials and app registration
+ ┣ 📂 app         'Data Home' app, app store, 3rd party login handler
+ ┣ 📂 example     An example 3rd party app that uses eduvault for login and DB
+ ┣ 📂 home-page   The EduVault home and info page
+ ┗ 📂 deploy      nginx and ssl config files
+```
+
+## To dev
+
+full docker dev setup with hot reloading.
 
 ```bash
-docker-compose up
+yarn dev:d
+```
+
+Note: Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
+
+alternatively, run just the api in docker and the rest locally
+
+```bash
+yarn dev:l
 ```
 
 #### Dev deploy
 
-Recreate the production deploy on your local machine (without SSL)with
+Recreate the production deploy on your local machine (without SSL) with:
 
 ```bash
-docker-compose -f docker-compose-dev-build.yml up
+yarn dev-build
 ```
 
 ### To deploy
@@ -72,10 +93,14 @@ service docker start
 rm -fr .git #reset old if need be
 git init
 git remote add origin https://github.com/EduVault/eduvault.git
+
+# to clear and start fresh. beware, this can erase configurations like the ssl certs.
 git reset --hard origin/main
+# otherwise just
+git pull
 
 # script for SSL certificate: init-letsencrypt.sh
 chmod +x init-letsencrypt.sh
 ./init-letsencrypt.sh
-
+yarn production
 ```

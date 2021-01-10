@@ -13,6 +13,8 @@
 </template>
 
 <script lang="ts">
+import EduVault from '../../../sdk/js/dist/lib';
+// import EduVault from 'eduvault-js';
 import { reactive, watch } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
 import router from '../router';
@@ -23,6 +25,9 @@ export default {
   name: 'Login',
   components: {},
   setup() {
+    const eduvault = new EduVault();
+    eduvault.getTest();
+
     const state = reactive({
       //
     });

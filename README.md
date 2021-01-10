@@ -99,6 +99,8 @@ git reset --hard origin/main
 # otherwise just
 git pull
 
+# ssh copy in .env file?
+
 # script for SSL certificate: init-letsencrypt.sh
 chmod +x init-letsencrypt.sh
 ./init-letsencrypt.sh

@@ -21,7 +21,7 @@ eduvault-js-sdk:
 ```js
 checkKeyStorage(){
 on page load
-if encrypted keys in localstorage:
+if pwEncryptedKeypair keys in localstorage:
   if internet connection:
     redirects to eduvault/app/login/?code=<xxx>&redirect_url=<https://www.example.com>
     use the cookie there to get jwt, decrypt keypair
@@ -97,7 +97,7 @@ eduvault-js-sdk:
 ```js
 storeCredentials(){
   receives codeEncrpytedKeypair, pwEncryptedKeypair, userAuth
-  stores
+  stores pwEncryptedKeypair
   decrypts keys with 'code'
 }
 createLocalDB(){

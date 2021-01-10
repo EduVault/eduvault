@@ -1,0 +1,42 @@
+{
+  "name": "eduvault-js",
+  "version": "0.0.24",
+  "description": "a library for connecting to an eduvault account and user owned database",
+  "main": "dist/lib/index.js",
+  "type": "module",
+  "module": "dist/lib/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "dev": "rollup -c rollup.config.ts -w",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "prebuild": "rimraf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/eduvault/eduvault"
+  },
+  "author": "Jacob Cohen-Rosenthal",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "@rollup/plugin-run": "^2.0.2",
+    "@rollup/plugin-typescript": "^8.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "eslint": "^7.17.0",
+    "lodash.camelcase": "^4.3.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.36.1",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3"
+  }
+}

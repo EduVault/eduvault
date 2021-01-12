@@ -20,7 +20,7 @@ eduvault-js-sdk:
 
 ```js
 checkKeyStorage(){
-on page load
+// on page load, throw in the <head>
 if pwEncryptedKeypair keys in localstorage:
   if internet connection:
     redirects to eduvault/app/login/?code=<xxx>&redirect_url=<https://www.example.com>

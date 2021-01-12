@@ -1,4 +1,4 @@
-import { AuthState, RootState, Deck } from '../types';
+import { AuthState, RootState } from '../types';
 import { ActionContext } from 'vuex';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import store from '../store';
@@ -30,7 +30,6 @@ const defaultState: AuthState = {
   pubKey: undefined,
   threadID: undefined,
   threadIDStr: undefined,
-  query: {},
   jwtEncryptedKeyPair: undefined,
 };
 const getDefaultState = () => {
@@ -41,51 +40,54 @@ export default {
   namespaced: true as const,
   state: getDefaultState(),
   getters: {
-    loggedIn: (state: AuthState) => state.loggedIn,
-    syncing: (state: AuthState) => state.syncing,
+    loggedIn: (state: AuthState): boolean => state.loggedIn,
+    syncing: (state: AuthState): boolean => state.syncing,
   },
   mutations: {
-    CLEAR_STATE(state: AuthState) {
+    CLEAR_STATE(state: AuthState): void {
       Object.assign(state, getDefaultState());
     },
-    RESET_STATE(state: AuthState, newstate: AuthState) {
+    RESET_STATE(state: AuthState, newstate: AuthState): void {
       Object.assign(state, newstate);
     },
-    AUTHTYPE(state: AuthState, type: 'google' | 'facebook' | 'dotwallet' | 'password') {
+    AUTHTYPE(state: AuthState, type: 'google' | 'facebook' | 'dotwallet' | 'password'): void {
       state.authType = type;
     },
-    LOGGEDIN(state: AuthState, bool: boolean) {
+    LOGGEDIN(state: AuthState, bool: boolean): void {
       state.loggedIn = bool;
     },
-    SYNCING(state: AuthState, bool: boolean) {
+    SYNCING(state: AuthState, bool: boolean): void {
       state.syncing = bool;
     },
-    KEYPAIR(state: AuthState, keyPair: Identity | undefined) {
+    KEYPAIR(state: AuthState, keyPair: Identity | undefined): void {
       state.keyPair = keyPair;
     },
-    JWT(state: AuthState, jwt: string | undefined) {
+    JWT(state: AuthState, jwt: string | undefined): void {
       state.jwt = jwt;
     },
-    PUBKEY(state: AuthState, key: string | undefined) {
+    PUBKEY(state: AuthState, key: string | undefined): void {
       state.pubKey = key;
     },
-    THREAD_ID(state: AuthState, ID: ThreadID | undefined) {
+    THREAD_ID(state: AuthState, ID: ThreadID | undefined): void {
       state.threadID = ID;
     },
-    THREAD_ID_STR(state: AuthState, ID: string | undefined) {
+    THREAD_ID_STR(state: AuthState, ID: string | undefined): void {
       state.threadIDStr = ID;
     },
-    BUCKET_KEY(state: AuthState, key: string | undefined) {
+    BUCKET_KEY(state: AuthState, key: string | undefined): void {
       state.bucketKey = key;
     },
-    BUCKET_URL(state: AuthState, url: string | undefined) {
+    BUCKET_URL(state: AuthState, url: string | undefined): void {
       state.bucketUrl = url;
     },
-    JWT_ENCRYPTED_KEYPAIR(state: AuthState, jwtEncryptedKeyPair: string | undefined) {
+    JWT_ENCRYPTED_KEYPAIR(state: AuthState, jwtEncryptedKeyPair: string | undefined): void {
       state.jwtEncryptedKeyPair = jwtEncryptedKeyPair;
     },
-    QUERY(state: AuthState, query: Record<string, unknown>) {
-      state.query = query;
+    CODE(state: AuthState, code: string | undefined): void {
+      state.code = code;
+    },
+    REDIRECT_URL(state: AuthState, url: string | undefined): void {
+      state.redirectURL = url;
     },
   },
   actions: {
@@ -98,7 +100,14 @@ export default {
         redirectURI: string;
         code: string;
       },
-    ) {
+    ): Promise<
+      | string
+      | 'Issue connecting to database'
+      | 'Unable to connect to database'
+      | 'Success'
+      | 'No keypair found'
+      | undefined
+    > {
       try {
         console.log('url ==========,', state.API_URL + state.PASSWORD_LOGIN);
         const options = {
@@ -112,7 +121,7 @@ export default {
           data: {
             username: payload.username,
             password: CryptoJS.SHA256(payload.password).toString(),
-          } as any,
+          },
         } as AxiosRequestConfig;
 
         // new user info. generate each time, even if they are a returning user. if they are a returning user the server will just ignore this info. this lets us have a single endpoint for login/signup
@@ -141,7 +150,7 @@ export default {
           const loginData = responseData.data;
           console.log('login result Data', loginData);
           await saveLoginData(loginData, payload.password);
-          if (!store.state.authMod.keyPair) return 'no keypair found';
+          if (!store.state.authMod.keyPair) return 'No keypair found';
           const codeEncryptedKey = CryptoJS.AES.encrypt(
             store.state.authMod.keyPair?.toString(),
             payload.code,
@@ -149,7 +158,7 @@ export default {
           const outRedirectURI = payload.redirectURI + `?key=${codeEncryptedKey}`;
           console.log(outRedirectURI);
           router.push(outRedirectURI);
-          return 'success';
+          return 'Success';
         }
       } catch (err) {
         console.log(err);

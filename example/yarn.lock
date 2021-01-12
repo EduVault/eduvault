@@ -5331,10 +5331,10 @@ editorconfig@^0.15.3:
     semver "^5.6.0"
     sigmund "^1.0.1"
 
-eduvault-js@^0.0.24:
-  version "0.0.24"
-  resolved "https://registry.npmjs.org/eduvault-js/-/eduvault-js-0.0.24.tgz#08ad7f2f74e9e7e7dc4f121988d3bc4d6def9fd6"
-  integrity sha512-bgjux1DlNp2bZRf8Hs/7S3fUKDQX8zDZFZhykrrWyPG0bMagkLDuBvesjgtArDnQm9hUlzdh71O4dYps6N8mjQ==
+eduvault-js@^0.0.25:
+  version "0.0.25"
+  resolved "https://registry.npmjs.org/eduvault-js/-/eduvault-js-0.0.25.tgz#ca62c093cbb2d135bc396a214dfd488ae1cfeac5"
+  integrity sha512-a2A4dBy+L/llUV/Fkxd+gq6uajoPJiZSCSTkCSTTnhr47U+6yQU3RhNbbs+u8e4IKsyuk5TdrPA0BnckR1j8Kg==
 
 ee-first@1.1.1:
   version "1.1.1"

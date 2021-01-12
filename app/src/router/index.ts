@@ -16,44 +16,35 @@ async function reHydrateStorage(to: Route, from: Route, next: any) {
   return null;
 }
 
-/**More strict check */
-function checkAuthValid(to: Route, from: Route, next: any) {
-  /** Saves the get request queries into vuex, and redirects without them */
-  let query;
-  if (!ifObjectIsEmpty(to.query)) query = { ...to.query };
-  console.log('query', query);
-  if (query && store.state.authMod.query != query && !query.checkauth) {
-    console.log('commiting query, ', query);
-    store.commit.authMod.QUERY(query);
-    next('/login/?checkauth=yes');
-  } else {
-    if (to.query.checkauth == 'no') {
-      next();
-      return null;
-    }
-    if (to.query.checkauth == 'yes') {
-      next();
-      return null;
-    }
+function collectQueries(to: Route, from: Route, next: any) {
+  const query = to.query;
+  if (query && !ifObjectIsEmpty(query)) {
+    console.log('query', query);
+    if (query.code) store.commit.authMod.CODE(query.code as string);
+    if (query.redirect_url) store.commit.authMod.REDIRECT_URL(query.redirect_url as string);
   }
-  // reHydrateStorage(to, from, next).then(() => {
-  //   store.dispatch.authMod.checkAuth().then((verified: boolean | undefined) => {
-  //     console.log('checking auth');
+}
 
-  //     console.log('verified', verified);
-  //     if (verified) {
-  //       if (to.path.includes('/login')) next('/home');
-  //       else next();
-  //       return null;
-  //     } else {
-  //       next('/login/?checkauth=no');
-  //       return null;
-  //     }
-  //   });
-  // });
+/**More strict check */
+async function routeGuard(to: Route, from: Route, next: any) {
+  // might want to do a more strict local check
+  if (store.state.authMod.keyPair) {
+    next();
+  } else {
+    // call the server
+    if (await store.dispatch.authMod.checkAuth()) {
+      next();
+    } else next('/login');
+  }
 }
 
 const routes: Array<RouteConfig> = [
+  {
+    path: '/home',
+    name: 'Home',
+    redirect: '/home',
+    beforeEnter: routeGuard,
+  },
   {
     path: '/',
     name: 'Root',
@@ -63,6 +54,9 @@ const routes: Array<RouteConfig> = [
     path: '/login',
     name: 'Login',
     component: Login,
+    beforeEnter: (to, from, next) => {
+      collectQueries(to, from, next);
+    },
   },
 ];
 
@@ -71,5 +65,4 @@ const router = new VueRouter({
   base: '/',
   routes,
 });
-router.beforeEach(checkAuthValid);
 export default router;

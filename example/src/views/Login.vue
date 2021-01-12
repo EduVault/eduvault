@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import Dummy, { number } from '../../../sdk/eduvault-js/build/module/';
+import Dummy, { number } from '../../../sdk/js/build/module';
 // import EduVault from 'eduvault-js';
 import { reactive, watch } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
@@ -25,8 +25,9 @@ export default {
   name: 'Login',
   components: {},
   setup() {
-    //
-    const eduvault = new Dummy();
+    number.double(12);
+
+    const eduvault = new Dummy.Dummy();
     eduvault.getTest();
 
     eduvault.getTest();

@@ -1,9 +1,4 @@
 export * as number from './lib/number';
-import * as number from './lib/number';
-class Dummy {
-  private testNumber = number.double(2);
-  getTest = () => this.testNumber;
-}
+import Dummy from './lib/classTest';
 
-const dum = new Dummy();
-console.log(dum.getTest());
+export default Dummy;

@@ -9,6 +9,7 @@
   - [x] Move login page to be served by backend (data home app) login should then be a redirect operation.
   - [x] MVP frontend move to 'examples' folder
 - [x] Migrate official site
+- [x] Set up js sdk, use in example app
 - [ ] Rework auth flow
 - [ ] set up dev signup page to register apps to add to cors whitelist, and schema registry
 

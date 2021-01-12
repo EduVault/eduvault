@@ -61,21 +61,21 @@ The auth server and data home app will be found in this repo and the SDKs will b
 
 ## To dev
 
-full docker dev setup with hot reloading.
+Run just the api in docker and the rest locally
 
 ```bash
-yarn dev:d
+yarn dev
 ```
 
-Note: Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
-
-alternatively, run just the api in docker and the rest locally
+optional: full docker dev setup with hot reloading.
 
 ```bash
-yarn dev:l
+yarn d-dev
 ```
 
-#### Dev deploy
+Note: Doesn't include sdk dev. Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
+
+### Dev deploy
 
 Recreate the production deploy on your local machine (without SSL) with:
 

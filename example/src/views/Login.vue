@@ -3,19 +3,19 @@
     <div class="landing-page">
       <b-img class="landing-img" src="/img/icons/flashy-cards-cover-square.png" />
       <img
+        id="eduvault-login-button"
         src="@/assets/eduvault-button.png"
         class="oauth-login-button eduvault-button"
         width="256px"
-        @click="login()"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Dummy, { number } from '../../../sdk/js/build/module';
+import { eduvault, EduVault } from '../../../sdk/js/build/module/index.js';
 // import EduVault from 'eduvault-js';
-import { reactive, watch } from '@vue/composition-api';
+import { reactive, watch, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
 import router from '../router';
 import store from '../store';
@@ -23,15 +23,13 @@ import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 export default {
   name: 'Login',
-  components: {},
+  components: { BImg },
+
   setup() {
-    number.double(12);
-
-    const eduvault = new Dummy.Dummy();
-    eduvault.getTest();
-
-    eduvault.getTest();
-
+    onMounted(() => {
+      eduvault.checkKeyStorage();
+    });
+    console.log(eduvault.thing);
     const state = reactive({
       //
     });
@@ -64,11 +62,9 @@ export default {
   margin-top: 1.5rem;
 }
 .landing-page {
-  background-color: #fdeddb;
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: calc(100vh - 37px);
 }
 .landing-img {
   width: 90%;

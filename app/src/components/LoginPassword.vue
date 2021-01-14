@@ -1,9 +1,13 @@
 <template>
-  <b-form class="login-component__body" @submit.stop.prevent>
-    <label for="feedback-email">Email</label>
+  <b-form inline class="login-component__body form" style="margin: 0" @submit.stop.prevent>
+    <label class="sr-only" for="feedback-email">Email</label>
     <b-form-input
+      class="form__input form__item"
       v-model="state.email"
       :state="emailValidation"
+      type="email"
+      autocomplete="username"
+      placeholder="Email"
       @formchange="
         $emit('updateEmail', state.email);
         $emit('emailValidation', emailValidation);
@@ -18,11 +22,14 @@
     }}</b-form-invalid-feedback>
     <!-- <b-form-valid-feedback :state="emailValidation">Looks Good.</b-form-valid-feedback> -->
 
-    <label class="mt-3" for="feedback-password">Password</label>
+    <label class="sr-only" for="feedback-password">Password</label>
     <b-form-input
+      class="form__input form__item"
       v-model="state.password"
       :state="passwordValidation"
+      placeholder="Password"
       type="password"
+      autocomplete="current-password"
       @keyup="
         $emit('updatePassword', state.password);
         $emit('passwordValidation', passwordValidation);
@@ -98,4 +105,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

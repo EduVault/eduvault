@@ -37,6 +37,14 @@ if pwEncryptedKeypair keys in localstorage:
 ### eduvault app
 
 ```js
+// The checking stuff might take some time, and we want something to display, but it needs to load super quick. display background splash screen, no navbar. that means we need to bring the navbar into the individual routes, the router-view
+// on any request that doesn't have 'checkauth=no', call the server to check auth credentials.
+// if there is a keypair in local, try to unlock with just a simple request for the jwt
+// use cookie to get jwt.
+// if there isnt, have the user log in, so redirect to login with checkauth=no
+
+// if checkauth=no, then display the login stuff
+
 // now pw and metamask login and signup are one endpoint, the server should detect whether its a returning user or not
 loginSignup(type){
 // type is pw, social media

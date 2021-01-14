@@ -1,12 +1,11 @@
 <template>
   <div>
     <div id="login-body">
-      <img class="m-2" src="@/assets/eduvault-logo-word-bw.png" alt="" width="100px" />
-      <h4>
-        With EduVault, have true ownership of your data, and carry it with you between learning
-        apps. apps.
-        <a class="secondary learn-more" href="">Learn more</a>
-      </h4>
+      <img class="mt-2" src="@/assets/eduvault-logo-word-bw.png" alt="" width="100px" />
+      <p class="mb-0 mx-2">
+        Own your data. Sync between learning apps.
+        <a class="secondary learn-more" href="https://eduvault.org">Learn more</a>
+      </p>
       <img class="security-option" src="@/assets/most-secure.png" width="150px" />
       <login-dotwallet></login-dotwallet>
       <login-metamask></login-metamask>
@@ -68,6 +67,7 @@ export default {
     LoginDotwallet,
   },
   setup() {
+    console.log('starting login');
     const state = reactive({
       email: '' as string,
       password: '' as string,
@@ -116,7 +116,6 @@ export default {
 
     return {
       state,
-      loginOrSignup,
       countDownChanged,
     };
   },
@@ -132,7 +131,7 @@ export default {
   text-decoration: underline;
 }
 .security-option {
-  margin-top: 1.5rem;
+  margin: 0.8rem 0 0.2rem;
 }
 .landing-page {
   background-color: #fdeddb;
@@ -152,7 +151,7 @@ export default {
   flex-direction: column;
   align-items: center;
   margin: auto;
-  max-width: 370px;
+  max-width: 4300px;
   overflow-y: auto;
 }
 </style>

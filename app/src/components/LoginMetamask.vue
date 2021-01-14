@@ -1,10 +1,10 @@
 <template>
-  <div class="login-component__body mb-1 ">
+  <div class="login-component__body mb-1">
     <img
       class="oauth-login-button"
       src="@/assets/metamask-button.png"
       alt="google login"
-      width="256px"
+      width="250px"
       @click.prevent="openLink"
     />
   </div>
@@ -31,8 +31,8 @@ export default {
               username: window.web3.eth.accounts[0],
               password,
               signup: true,
-            redirectURI:  "http://localhost:8082",
-             code: "123"
+              redirectURI: 'http://localhost:8082',
+              code: '123',
             });
           } catch (err) {
             console.log('err.message ', err.message);

@@ -1,10 +1,10 @@
 <template>
-  <div class="login-component__body mb-1 ">
+  <div class="login-component__body mb-1">
     <img
       class="oauth-login-button"
       src="@/assets/facebook-button.png"
       alt="google login"
-      width="256px"
+      width="250px"
       @click="openLink"
     />
   </div>

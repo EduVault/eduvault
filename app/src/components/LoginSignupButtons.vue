@@ -8,44 +8,15 @@
     </p> -->
     <span>
       <b-button
-        v-if="state.showSignup"
+        class="form__item"
         :disabled="loginButtonDisable"
         type="submit"
-        variant="primary"
-        @click.prevent="$emit('signup')"
-      >
-        <font-awesome-icon v-show="state.makingRequest" icon="spinner" spin />
-        Sign up</b-button
-      >
-      <b-button
-        v-else
-        :disabled="loginButtonDisable"
-        type="submit"
-        variant="primary"
+        variant="outline-primary"
         @click.prevent="$emit('login')"
       >
         <font-awesome-icon v-show="state.makingRequest" icon="spinner" spin />
-        Log in</b-button
+        Continue With Password</b-button
       >
-
-      <a
-        v-if="state.showSignup"
-        class="m-3"
-        type="submit"
-        variant="secondary"
-        @click="state.showSignup = !state.showSignup"
-      >
-        Log in
-      </a>
-      <a
-        v-else
-        class="m-3"
-        type="submit"
-        variant="secondary"
-        @click="state.showSignup = !state.showSignup"
-      >
-        Sign up
-      </a>
     </span>
   </b-form>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <b-alert style="z-index: 40000; width:" :show="showPrompt" dismissible fade variant="warning">
+  <b-alert style="z-index: 40000; width: " :show="showPrompt" dismissible fade variant="warning">
     {{ promptText }}
     <b-button @click="refreshApp()">
       {{ promptBtnText }}
@@ -23,7 +23,7 @@ export default {
       showPrompt: false,
     };
   },
-  created: function() {
+  created: function () {
     // PWA
     // Listen for swUpdated event and display refresh snackbar as required.
     document.addEventListener('swUpdated', this.showRefreshUI, { once: true });
@@ -45,7 +45,7 @@ export default {
     },
     showRefreshUI(e) {
       // console.log('---swUpdated');
-      // Display a snackbar inviting the user to refresh/reload the app due
+      // Display a snackbar inviting the person to refresh/reload the app due
       // to an app update being available.
       // The new service worker is installed, but not yet active.
       // Store the ServiceWorkerRegistration instance for later use.

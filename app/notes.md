@@ -1,7 +1,7 @@
 full flow of encrypting/decrypting ID key pairs
 
 ```js
-const keyPair = await Libp2pCryptoIdentity.fromRandom();
+const keyPair = await PrivateKey.fromRandom();
 const pubKey = keyPair.public.toString();
 const encrypedKeyPair = CryptoJS.AES.encrypt(keyPair.toString(), payload.password);
 const encrypedKeyPairString = CryptoJS.AES.encrypt(keyPair.toString(), payload.password).toString();
@@ -11,7 +11,7 @@ const decryptedKeyPairBytes = CryptoJS.AES.decrypt(
   payload.password
 );
 const decryptedKeyPairString = decryptedKeyPairBytes.toString(CryptoJS.enc.Utf8);
-const rehydratedKeyPair = await Libp2pCryptoIdentity.fromString(decryptedKeyPairString);
+const rehydratedKeyPair = await rehydratePrivateKey(decryptedKeyPairString)
 const testPubKey = rehydratedKeyPair.public.toString();
 console.log(testPubKey === pubKey);
 ```
@@ -22,7 +22,7 @@ console.log(testPubKey === pubKey);
 const connectDB = async (
   API_URL_ROOT: string,
   jwt: string,
-  keyPair: Libp2pCryptoIdentity,
+  keyPair: PrivateKey,
   DbInfo: DBInfo
 ): Promise<Database> => {
   // console.log(API_URL_ROOT, jwt, keyPair, threadID.toString());

@@ -2,19 +2,27 @@ import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
 import { DefaultState, Context } from 'koa';
 import { ROUTES, CLIENT_CALLBACK } from '../config';
-import { IUser } from '../models/user';
-import { createJwt } from '../utils/jwt';
+import { IPerson } from '../models/person';
+import { createJwt, getJwtExpiry } from '../utils/jwt';
 
 const dotwallet = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   router.get(ROUTES.DOTWALLET_AUTH, async (ctx, next) => {
-    return passport.authenticate('dotwallet', async (err: string, user: IUser) => {
+    return passport.authenticate('dotwallet', async (err: string, person: IPerson) => {
       if (err) {
         console.log(err);
         ctx.unauthorized(err, err);
       } else {
-        // console.log(user.facebook);
-        await ctx.login(user);
-        ctx.session.jwt = createJwt(user.username);
+        // console.log(person.facebook);
+        await ctx.login(person);
+        if (ctx.session.jwt) {
+          const now = new Date().getTime();
+          const expiry = await getJwtExpiry(ctx.session.jwt);
+          if (!expiry) ctx.session.jwt = createJwt(person.accountID);
+          else if (now - expiry.getTime() < 1000 * 60 * 60 * 24) {
+            ctx.session.oldJwt = JSON.parse(JSON.stringify(ctx.session.jwt));
+            ctx.session.jwt = createJwt(person.accountID);
+          }
+        } else ctx.session.jwt = createJwt(person.accountID);
         await ctx.session.save();
         ctx.redirect(CLIENT_CALLBACK);
       }

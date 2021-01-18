@@ -1,6 +1,6 @@
 const STORAGE_KEY = 'sourcelink';
 const DEV_API_URL_ROOT = 'localhost:3003';
-const API_URL_ROOT = 'eduvault.herokuapp.com';
+const API_URL_ROOT = 'eduvault.org';
 const PASSWORD_LOGIN = '/auth/local';
 const VERIFY_JWT = '/verify-jwt';
 const FACEBOOK_AUTH = '/auth/facebook';

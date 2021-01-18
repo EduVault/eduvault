@@ -30,8 +30,7 @@
         :email-validation="state.emailValidation"
         :password-validation="state.passwordValidation"
         :making-request="state.makingRequest"
-        @login="loginOrSignup(false)"
-        @signup="loginOrSignup(true)"
+        @login="login()"
       ></login-signup-buttons>
       <img class="security-option" src="@/assets/less-secure.png" width="150px" />
 
@@ -53,6 +52,7 @@ import LoginGoogle from '../components/LoginGoogle.vue';
 import LoginFacebook from '../components/LoginFacebook.vue';
 import LoginMetamask from '../components/LoginMetamask.vue';
 import LoginDotwallet from '../components/LoginDotwallet.vue';
+import router from '../router';
 import store from '../store';
 export default {
   name: 'Login',
@@ -87,22 +87,29 @@ export default {
     async function showAlert() {
       state.dismissCountDown = state.dismissSecs;
     }
+    async function countDownChanged(dismissCountDown: number) {
+      state.dismissCountDown = dismissCountDown;
+    }
     watch(
       () => state.failedLogin,
       (newValue) => {
         if (newValue) showAlert();
       },
     );
-    const loginOrSignup = async function (signup: boolean) {
+    const login = async function () {
       state.makingRequest = true;
       state.failedLogin = false;
+      const queries = router.currentRoute.query;
+      const [redirectURL, code] = [
+        typeof queries.redirect_url === 'string' ? queries.redirect_url : undefined,
+        typeof queries.code === 'string' ? queries.code : undefined,
+      ];
 
-      const response = await store.dispatch.authMod.passwordAuth({
+      const response = await store.dispatch.authMod.pwLogin({
         password: state.password,
-        username: state.email,
-        signup,
-        code: '',
-        redirectURI: '', // store.state.authMod.query?.redirectURI,
+        accountID: state.email,
+        code: code,
+        redirectURL: redirectURL,
       });
       if (!response || response !== 'success') {
         state.makingRequest = false;
@@ -110,13 +117,11 @@ export default {
         state.apiErrorMsg = response ? response : '';
       }
     };
-    async function countDownChanged(dismissCountDown: number) {
-      state.dismissCountDown = dismissCountDown;
-    }
 
     return {
       state,
       countDownChanged,
+      login
     };
   },
 };

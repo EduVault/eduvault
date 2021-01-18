@@ -4,7 +4,7 @@ This backend is a simple first version of what EduVault server will offer, which
 
 ## Auth strategy
 
-Currently the user can log in with a username or password or social media account with oAuth. They will recieve a cookie with a session
+Currently the person can log in with a accountID or password or social media account with oAuth. They will recieve a cookie with a session
 
 ### Issue that needs resolving
 
@@ -12,11 +12,11 @@ This would be fine for native mobile apps where they an store the JWT securely, 
 
 ### Textile ThreadDB access
 
-If the user signs up with social media we will store their private key/public key pair on the database, encrypted by a PIN number. If they used password, we will also add a layer of encryption using their password.
+If the person signs up with social media we will store their private key/public key pair on the database, encrypted by a PIN number. If they used password, we will also add a layer of encryption using their password.
 
 On login, they get sent the encrypted key pair. They can save that safely in persisted browser local storage, and store the decrypted keypair in more secure application storage. This means each time they reopen the app, they will need to tpye their pin again, but not their other login info.
 
-They can refresh the connection with the ThreadDB by calling our `/renew-textile` endpoint. They will be issued a challenge by our server, which they can sign with their key pair. They will recieve a `userAuth` object in return
+They can refresh the connection with the ThreadDB by calling our `/renew-textile` endpoint. They will be issued a challenge by our server, which they can sign with their key pair. They will recieve a `personAuth` object in return
 
 ## To run
 

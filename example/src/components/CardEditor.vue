@@ -17,7 +17,7 @@
         v-model="newBackText"
         :options="editorOptions"
       ></quill-editor>
-      <div class="form__button-row ">
+      <div class="form__button-row">
         <font-awesome-icon
           class="form__button button form__button--cancel"
           icon="times"
@@ -73,7 +73,7 @@ export default {
   props: {
     editPayload: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           deckId: {
             type: String,
@@ -125,7 +125,7 @@ export default {
         theme: 'snow',
         modules: {
           imageUpload: {
-            upload: async file => {
+            upload: async (file) => {
               return await uploadPictureToBucket(file);
             },
           },
@@ -133,7 +133,7 @@ export default {
           history: {
             delay: 2000,
             maxStack: 500,
-            userOnly: true,
+            personOnly: true,
           },
         },
       },
@@ -144,13 +144,13 @@ export default {
   },
 
   methods: {
-    setFields: function() {
+    setFields: function () {
       if (!this.newCard) {
         this.newFrontText = JSON.parse(JSON.stringify(this.editPayload.frontText));
         this.newBackText = JSON.parse(JSON.stringify(this.editPayload.backText));
       }
     },
-    addCard: function() {
+    addCard: function () {
       const payload = {
         card: {
           frontText: this.newFrontText,
@@ -162,7 +162,7 @@ export default {
       };
       this.$emit('addCard', payload);
     },
-    editCard: function() {
+    editCard: function () {
       const payload = {
         card: {
           frontText: this.newFrontText,

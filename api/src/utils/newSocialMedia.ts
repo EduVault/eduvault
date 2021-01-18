@@ -1,63 +1,63 @@
-import { IUser } from '../models/user';
-import CryptoJS from 'crypto-js';
+import { IPerson } from '../models/person';
 import { Profile as FBProfile } from 'passport-facebook';
 import { Profile as GProfile } from 'passport-google-oauth20';
-
-import { ThreadID, Identity } from '@textile/hub';
+import { encrypt, decrypt } from './encryption';
+import { ThreadID, PrivateKey } from '@textile/hub';
 import { DotwalletProfile } from '../types';
 
 export async function createSocialMediaAccount(
-  user: IUser,
+  person: IPerson,
   type: 'facebook' | 'google',
   profile: FBProfile | GProfile,
   token: string,
-  done: (error: any, user?: any, info?: any) => void,
+  done: (error: any, person?: any, info?: any) => void,
 ) {
-  // const email = profile.emails ? profile.emails[0].value.toLowerCase() || null : null;
-  // if (!user.username) user.username = email || profile.id;
-  // const keyPair: Identity = await PrivateKey.fromRandom();
-  // const encryptedKeyPair = CryptoJS.AES.encrypt(keyPair.toString(), profile.id).toString();
-  // user.socialMediaKeyPair = encryptedKeyPair;
-  // user.pubKey = keyPair.public.toString();
-  // const newThreadID = ThreadID.fromRandom();
-  // user.threadIDStr = newThreadID.toString();
+  console.log('profile', profile);
+  const email = profile.emails ? profile.emails[0].value.toLowerCase() || null : null;
+  if (!person.accountID) person.accountID = email || profile.id;
+  const keyPair = await PrivateKey.fromRandom();
+  person.socialMediaKeyPair = encrypt(keyPair.toString(), profile.id);
+  person.pubKey = keyPair.public.toString();
+  const newThreadID = ThreadID.fromRandom();
+  person.threadIDStr = newThreadID.toString();
 
-  // user[type].id = profile.id;
-  // user[type].givenName = profile.name.givenName;
-  // user[type].familyName = profile.name.familyName;
-  // user[type].picture = profile.photos[0].value || null;
-  // user[type].token = token;
-  // console.log('user', user);
-  user.save((err) => {
+  person[type].id = profile.id;
+  person[type].givenName = profile.name.givenName;
+  person[type].familyName = profile.name.familyName;
+  person[type].picture = profile.photos[0].value || null;
+  person[type].token = token;
+  console.log('person', person);
+  person.save((err) => {
     if (err) {
       console.log(err);
       return done(err);
     }
-    return done(null, user);
+    return done(null, person);
   });
 }
 
 export async function createDotwalletAccount(
-  user: IUser,
+  person: IPerson,
   profile: DotwalletProfile,
   token: string,
-  done: (error: any, user?: any, info?: any) => void,
+  done: (error: any, person?: any, info?: any) => void,
 ) {
-  // const id = profile.user_open_id;
-  // if (!user.username) user.username = id;
-  // const keyPair = await PrivateKey.fromRandom();
-  // const encryptedKeyPair = CryptoJS.AES.encrypt(keyPair.toString(), id).toString();
-  // user.socialMediaKeyPair = encryptedKeyPair;
-  // user.pubKey = keyPair.public.toString();
-  // const newThreadID = ThreadID.fromRandom();
-  // user.threadIDStr = newThreadID.toString();
-  // user.dotwallet = { ...profile, token: token };
-  // console.log('user', user);
-  user.save((err) => {
+  console.log('person', person);
+
+  const id = profile.person_open_id;
+  if (!person.accountID) person.accountID = id;
+  const keyPair = await PrivateKey.fromRandom();
+  person.socialMediaKeyPair = encrypt(keyPair.toString(), id);
+  person.pubKey = keyPair.public.toString();
+  const newThreadID = ThreadID.fromRandom();
+  person.threadIDStr = newThreadID.toString();
+  person.dotwallet = { ...profile, token: token };
+  console.log('person', person);
+  person.save((err) => {
     if (err) {
       console.log(err);
       return done(err);
     }
-    return done(null, user);
+    return done(null, person);
   });
 }

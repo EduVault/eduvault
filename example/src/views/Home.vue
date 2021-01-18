@@ -45,7 +45,13 @@
 </template>
 
 <script lang="ts">
-import { reactive, computed, onBeforeMount, onMounted } from '@vue/composition-api';
+import {
+  reactive,
+  computed,
+  onBeforeMount,
+  onMounted,
+  onBeforeUnmount,
+} from '@vue/composition-api';
 
 import { Deck, EditCardPayload } from '../types';
 import store from '../store';
@@ -60,8 +66,10 @@ import NewDeckButton from '../components/NewDeckButton.vue';
 export default {
   name: 'ComposVuexPersist',
   components: { DeckDisplay, DeckEditor, CardEditor, NewCardButton, NewDeckButton },
-
   setup() {
+    onBeforeUnmount(() => {
+      //
+    });
     onMounted(() => {
       function startup(retry: number) {
         store.dispatch.decksMod.init();
@@ -71,7 +79,7 @@ export default {
 
     const decks = computed(() => {
       // console.log('decks changed');
-      return store.getters.decksMod.decks.filter(deck => !deck.deleted);
+      return store.getters.decksMod.decks.filter((deck) => !deck.deleted);
     });
 
     const emptyPayload = {
@@ -86,7 +94,7 @@ export default {
       newCard: false as boolean,
     });
 
-    const createDeck = async function(deck: Deck) {
+    const createDeck = async function (deck: Deck) {
       // await store.dispatch.decksMod.deckMergeToState({ decks: [deck], skipThreadMerge: false });
       state.selectedDeck = deck;
       state.showDeckEditor = false;
@@ -109,7 +117,7 @@ export default {
     };
     const changeSelectedDeck = (deckId: string) => {
       console.log('changeSelectedDeck', deckId);
-      decks.value.forEach(deck => {
+      decks.value.forEach((deck) => {
         if (deck._id === deckId) state.selectedDeck = deck;
       });
     };

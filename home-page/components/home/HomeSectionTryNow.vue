@@ -2,7 +2,25 @@
   <div id="try-now" class="section">
     <div class="section-wrap">
       <h3 class="mb-5 text-center">TRY NOW</h3>
-      <p class="text-center">EduVault is still in development.</p>
+      <p class="text-center">
+        EduVault is still in development. The alpha app is located here:
+      </p>
+      <a
+        class="text-center block border-orange border text-orange py-1 px-2 my-2 w-32 rounded mx-auto cursor-pointer"
+        :href="appLink"
+      >
+        TRY ALPHA
+      </a>
+      <p class="text-center">
+        FlashyCards is a mini app built to showcase syncing app data with
+        EduVault
+      </p>
+      <a
+        :href="exampleLink"
+        class="text-center block bg-orange text-white py-1 px-2 my-2 w-48 rounded mx-auto cursor-pointer"
+      >
+        TRY EXAMPLE APP
+      </a>
       <p class="mb-3 text-center">
         Send us an <a href="info@eduvault.org" class="link">email</a> to be
         alerted of future releases.
@@ -65,5 +83,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
-export default Vue.extend({})
+import { EDUVAULT_APP_URL, EXAMPLE_APP_URL } from '../../config'
+export default Vue.extend({
+  data() {
+    return {
+      appLink: EDUVAULT_APP_URL,
+      exampleLink: EXAMPLE_APP_URL,
+    }
+  },
+})
 </script>

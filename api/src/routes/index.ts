@@ -11,7 +11,7 @@ import saveOnChain from './saveOnChain';
 import checkAuth from './checkAuth';
 import { DefaultState, Context, Middleware } from 'koa';
 import { CLIENT_CALLBACK } from '../config';
-import getUser from '../utils/getUserFromSession';
+import getPerson from '../utils/getPersonFromSession';
 
 const startRouter = (
   app: websockify.App<Koa.DefaultState, Koa.DefaultContext>,
@@ -21,13 +21,23 @@ const startRouter = (
   router.get('/ping', async (ctx) => {
     ctx.oK(null, 'pong!');
   });
-
-  router.get('/get-user', checkAuth, async (ctx) => {
-    // console.log('++++++++++++++++++get user+++++++++++++++++++');
-    const user = await (await getUser(ctx.session.toJSON())).toObject();
-    if (!user) ctx.internalServerError('user not found');
-    // console.log(user);
-    ctx.oK({ ...user, jwt: ctx.session.jwt });
+  /** Get Person and JWT */
+  router.get('/get-person', checkAuth, async (ctx) => {
+    // console.log('++++++++++++++++++get person+++++++++++++++++++');
+    try {
+      const person = await (await getPerson(ctx.session.toJSON())).toObject();
+      if (!person) ctx.internalServerError('person not found');
+      console.log(person);
+      ctx.oK(person);
+    } catch (error) {
+      ctx.internalServerError('person not found');
+    }
+  });
+  router.get('/get-jwt', checkAuth, async (ctx) => {
+    ctx.oK({
+      jwt: ctx.session.jwt,
+      oldJwt: ctx.session.oldJwt ? ctx.session.oldJwt : null,
+    });
   });
   router.get('/logout', async (ctx) => {
     ctx.session = null;
@@ -38,22 +48,22 @@ const startRouter = (
     ctx.oK(null, 'ok');
   });
   router.post('/save-thread-id', checkAuth, async (ctx) => {
-    const user = await getUser(ctx.session.toJSON());
-    if (!user) ctx.internalServerError('user not found');
-    // console.log(user);
-    if (user.threadIDStr) ctx.oK({ threadIDStr: user.toObject().threadIDStr, exists: true });
-    user.threadIDStr = ctx.request.body.threadIDStr;
-    await user.save();
-    ctx.oK({ threadIDStr: user.threadIDStr });
+    const person = await getPerson(ctx.session.toJSON());
+    if (!person) ctx.internalServerError('person not found');
+    // console.log(person);
+    if (person.threadIDStr) ctx.oK({ threadIDStr: person.toObject().threadIDStr, exists: true });
+    person.threadIDStr = ctx.request.body.threadIDStr;
+    await person.save();
+    ctx.oK({ threadIDStr: person.threadIDStr });
   });
   router.post('/upload-db-info', checkAuth, async (ctx) => {
-    const user = await getUser(ctx.session.toJSON());
-    if (!user) ctx.internalServerError('user not found');
-    // console.log(user);
-    if (user.DbInfo) ctx.oK({ DbInfo: user.toObject().DbInfo, exists: true });
-    user.DbInfo = ctx.request.body.DbInfo;
-    await user.save();
-    ctx.oK({ DbInfo: user.DbInfo });
+    const person = await getPerson(ctx.session.toJSON());
+    if (!person) ctx.internalServerError('person not found');
+    // console.log(person);
+    if (person.DbInfo) ctx.oK({ DbInfo: person.toObject().DbInfo, exists: true });
+    person.DbInfo = ctx.request.body.DbInfo;
+    await person.save();
+    ctx.oK({ DbInfo: person.DbInfo });
   });
   local(router, passport);
   facebook(router, passport);

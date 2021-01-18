@@ -2,24 +2,25 @@
   <div>
     <div class="landing-page">
       <b-img class="landing-img" src="/img/icons/flashy-cards-cover-square.png" />
-      <img
-        id="eduvault-login-button"
-        src="@/assets/eduvault-button.png"
-        class="oauth-login-button eduvault-button"
-        width="256px"
-      />
+      <a :href="loginLink">
+        <img
+          id="eduvault-login-button"
+          src="@/assets/eduvault-button.png"
+          class="oauth-login-button eduvault-button"
+          width="256px"
+      /></a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { eduvault, EduVault } from '../../../sdk/js/build/module/index.js';
+import { eduvault } from '../../../sdk/js/build/module/index.js';
 // import EduVault from 'eduvault-js';
-import { reactive, watch, onMounted } from '@vue/composition-api';
+import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
-import router from '../router';
-import store from '../store';
-import axios from 'axios';
+// import router from '../router';
+// import store from '../store';
+// import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 export default {
   name: 'Login',
@@ -34,17 +35,15 @@ export default {
       //
     });
 
-    async function login() {
-      const HOST = 'http://localhost:8081';
-      const code = uuid();
-      const redirectURL = `${HOST}/example/home`;
-      const loginURL = `${HOST}/app/login/?code=${code}&redirect_url=${redirectURL}&`;
-      window.location.href = loginURL;
-    }
+    const EDUVAULT_LOGIN = 'http://localhost:8081';
+    const THIS_SITE_URL = 'http://localhost:8082';
+    const code = uuid();
+    const redirectURL = `${THIS_SITE_URL}/home`;
+    const loginLink = `${EDUVAULT_LOGIN}/?code=${code}&redirect_url=${redirectURL}&`;
 
     return {
       state,
-      login,
+      loginLink,
     };
   },
 };

@@ -2,7 +2,9 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig, Route, NavigationGuardNext } from 'vue-router';
 import store from '../store';
 import Login from '../views/Login.vue';
-import Splash from '../views/Splash.vue';
+import Loading from '../views/Loading.vue';
+import Home from '../views/Home.vue';
+
 import { ifObjectIsEmpty } from './utils';
 Vue.use(VueRouter);
 
@@ -14,17 +16,6 @@ async function reHydrateStorage(to: Route, from: Route, next: any) {
   // await console.log('rehydrating storage');
   // await console.log(store.state.authMod);
   await (store as any).original.restored;
-  return null;
-}
-
-function collectQueries(to: Route, from: Route, next: any) {
-  console.log('collecting queries', to.query);
-  const query = to.query;
-  if (query && !ifObjectIsEmpty(query)) {
-    console.log('query', query);
-    if (query.code) store.commit.authMod.CODE(query.code as string);
-    if (query.redirect_url) store.commit.authMod.REDIRECT_URL(query.redirect_url as string);
-  }
   next();
 }
 
@@ -35,7 +26,7 @@ async function routeGuard(to: Route, from: Route, next: any) {
     next();
   } else {
     // call the server
-    if (await store.dispatch.authMod.checkAuth()) {
+    if (await store.dispatch.authMod.serverCheckAuth()) {
       next();
     } else next('/login');
   }
@@ -43,26 +34,29 @@ async function routeGuard(to: Route, from: Route, next: any) {
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/loading',
-    name: 'Loading',
-    component: Splash,
-  },
-  {
     path: '/home',
     name: 'Home',
-    redirect: '/home',
-    beforeEnter: routeGuard,
+    component: Home,
+    beforeEnter: async (to: Route, from: Route, next: any) => {
+      await reHydrateStorage(to, from, next);
+      routeGuard(to, from, next);
+    },
   },
   {
     path: '/',
-    name: 'Root',
-    redirect: '/login',
+    name: 'Loading',
+    component: Loading,
+    beforeEnter: async (to: Route, from: Route, next: any) => {
+      await reHydrateStorage(to, from, next);
+    },
   },
   {
     path: '/login',
     name: 'Login',
     component: Login,
-    beforeEnter: collectQueries,
+    beforeEnter: async (to: Route, from: Route, next: any) => {
+      await reHydrateStorage(to, from, next);
+    },
   },
 ];
 

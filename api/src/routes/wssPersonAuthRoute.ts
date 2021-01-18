@@ -1,11 +1,11 @@
 import Router from 'koa-router';
 import Emittery from 'emittery'; // use the emitter to send events to ourself (the challenge)
-import { UserAuth } from '@textile/security';
+import { UserAuth as PersonAuth } from '@textile/security';
 import Koa from 'koa';
 import websockify from 'koa-websocket';
 
 import { newClientDB, getAPISig } from '../textile/helpers';
-import User, { IUser } from '../models/user';
+import Person, { IPerson } from '../models/person';
 import { validateJwt } from '../utils/jwt';
 import { TEXTILE_USER_API_KEY } from '../config';
 import { DefaultState, Context, Middleware } from 'koa';
@@ -20,12 +20,12 @@ interface wsMessageData {
     | 'challenge-request'
     | 'challenge-response'
     | 'error';
-  username: IUser['username'];
+  accountID: IPerson['accountID'];
   signature: string;
   error: string;
 }
 const router = new Router<DefaultState, Context>();
-const userAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>) => {
+const personAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>) => {
   router.get('/ws/auth', (ctx) => {
     const emitter = new Emittery();
     ctx.websocket.on('message', async (msg) => {
@@ -38,15 +38,15 @@ const userAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>
         }
         const jwtCheck = await validateJwt(data.jwt);
         console.log('jwtCheck', !!jwtCheck);
-        if (!jwtCheck || !jwtCheck.pubKey || !jwtCheck.username) {
+        if (!jwtCheck || !jwtCheck.pubKey || !jwtCheck.accountID) {
           throw new Error('invalid jwt');
         }
-        const user = jwtCheck;
+        const person = jwtCheck;
         switch (data.type) {
           case 'keys-request': {
           }
           case 'token-request': {
-            const pubKey = user.pubKey;
+            const pubKey = person.pubKey;
             if (!pubKey) {
               throw new Error('missing pubkey');
             }
@@ -77,7 +77,7 @@ const userAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>
              */
             console.log('challenge completed');
             const apiSig = await getAPISig(5000);
-            const userAuth: UserAuth = {
+            const personAuth: PersonAuth = {
               ...apiSig,
               token: token,
               key: TEXTILE_USER_API_KEY,
@@ -85,7 +85,7 @@ const userAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>
             ctx.websocket.send(
               JSON.stringify({
                 type: 'token-response',
-                value: userAuth,
+                value: personAuth,
               }),
             );
             break;
@@ -117,4 +117,4 @@ const userAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>
   //@ts-ignore
   app.ws.use(router.routes()).use(router.allowedMethods());
 };
-export default userAuthRoute;
+export default personAuthRoute;

@@ -1,11 +1,11 @@
-import { Client, ThreadID, Buckets, Identity } from '@textile/hub';
+import { Client, ThreadID, Buckets, PrivateKey } from '@textile/hub';
 // import { DBInfo } from '@textile/threads';
 
-/** @param username will be an email for local scheme, for google and facebook will be email if available or id if not */
-export interface User {
-  username: string;
+/** @param accountID will be an email for local scheme, for google and facebook will be email if available or id if not */
+export interface Person {
+  accountID: string;
   password?: string;
-  encryptedKeyPair?: string;
+  pwEncryptedKeyPair?: string;
   socialMediaKeyPair?: string;
   pubKey?: string;
   threadIDStr?: string;
@@ -19,10 +19,10 @@ interface DotwalletProfile {
   pay_status: number;
   pre_amount: number;
   total_amount: number;
-  user_address: string;
-  user_avatar: string;
-  user_name: string;
-  user_open_id: string;
+  person_address: string;
+  person_avatar: string;
+  person_name: string;
+  person_open_id: string;
 }
 interface SocialMediaAccount {
   id?: string;
@@ -93,7 +93,7 @@ export interface AuthState {
   PASSWORD_LOGIN: string;
   loggedIn: boolean;
   syncing: boolean;
-  keyPair?: Identity;
+  keyPair?: PrivateKey;
   authType?: 'google' | 'facebook' | 'password' | 'metamask' | 'dotwallet';
   jwt?: string;
   pubKey?: string;
@@ -121,7 +121,7 @@ export interface RootState {
 //   message: string;
 // }
 // export interface PasswordRes {
-//   username: string;
+//   accountID: string;
 //   _id: string;
 //   token: string;
 // }

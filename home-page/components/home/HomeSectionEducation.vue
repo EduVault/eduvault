@@ -17,8 +17,8 @@
       </p>
       <p class="mb-3 max-w-sm md:max-w-xl ml-auto">
         EduVault paves the way for human-centric AI-guided education, letting
-        users accumulate their own
-        <strong>personalized learning</strong> history. With EduVault, users
+        persons accumulate their own
+        <strong>personalized learning</strong> history. With EduVault, persons
         permission which apps can read or write their data, eventually allowing
         them to opt in to AI services while anonymizing their data.
       </p>

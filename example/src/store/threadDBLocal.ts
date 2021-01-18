@@ -1,7 +1,6 @@
 import { Database, JSONSchema } from '@textile/threaddb';
-import { PrivateKey } from '@textile/crypto';
-import { Identity, UserAuth } from '@textile/hub';
-import { userAuthChallenge } from './textileHelpers';
+import { PrivateKey, UserAuth as PersonAuth } from '@textile/hub';
+import { personAuthChallenge } from './textileHelpers';
 const DBName = 'eduvault';
 import { deckSchema } from '../types';
 const schema = deckSchema as JSONSchema;
@@ -18,9 +17,9 @@ const identity = PrivateKey.fromRandom();
 
 //
 
-const startDB = async (userID: string) => {
+const startDB = async (personID: string) => {
   try {
-    const db = new Database(`${DBName}-${userID.slice(-8)}`, {
+    const db = new Database(`${DBName}-${personID.slice(-8)}`, {
       name: DBName,
       schema,
     });
@@ -28,8 +27,8 @@ const startDB = async (userID: string) => {
     await db.open(1);
     // Initialize the remote db...
     // this is where we need the server to do this
-    // const userAuth = userAuthChallenge('/api/login', jwt);
-    // db.remote.setUserAuth();
+    // const personAuth = personAuthChallenge('/api/login', jwt);
+    // db.remote.setPersonAuth();
     // const remote = await db.remote.setKeyInfo({ key: process.env.REACT_APP_HUB_KEY });
     // // If we throw here, our error catcher will grab it later on down the line
     // await remote.authorize(identity, callback);

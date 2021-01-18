@@ -1,6 +1,6 @@
 import { Strategy as CustomStrategy } from 'passport-custom';
 import axios from 'axios';
-import User from '../../models/user';
+import Person from '../../models/person';
 import { DOTWALLET_APP_ID, DOTWALLET_SECRET } from '../../config';
 import { createDotwalletAccount } from '../../utils/newSocialMedia';
 import url from 'url';
@@ -24,15 +24,16 @@ const dotwalletStrat = new CustomStrategy(async (ctx, done) => {
     const accessData: DotwalletAccessData = accessTokenRequest.data.data;
     const accessToken = accessData.access_token;
     if (accessToken) {
-      const userInfoRequest = await axios.get(
-        'https://www.ddpurse.com/platform/openapi/get_user_info?access_token=' + accessToken,
+      const personInfoRequest = await axios.get(
+        'https://www.ddpurse.com/platform/openapi/get_person_info?access_token=' + accessToken,
       );
-      console.log('==============user info result==============\n', userInfoRequest.data);
-      const profile: DotwalletProfile = userInfoRequest.data.data;
-      const id = profile.user_open_id;
-      const user = await User.findOne({ username: id });
-      if (user && user.dotwallet) return done(null, user);
-      else return createDotwalletAccount(user ? user : new User(), profile, accessToken, done);
+      console.log('==============person info result==============\n', personInfoRequest.data);
+      const profile: DotwalletProfile = personInfoRequest.data.data;
+      const id = profile.person_open_id;
+      const person = await Person.findOne({ accountID: id });
+      if (person && person.dotwallet) return done(null, person);
+      else
+        return createDotwalletAccount(person ? person : new Person(), profile, accessToken, done);
     }
   } catch (err) {
     console.log('==============ERROR==============\n', err);

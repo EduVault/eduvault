@@ -1,4 +1,4 @@
-import { Deck, User } from '../types';
+import { Deck, Person } from '../types';
 import { orderBy } from 'lodash';
 import CryptoJS from 'crypto-js';
 import store from './index';
@@ -15,8 +15,8 @@ export function combineBacklog(decksRaw: Deck[], backlog: Deck[]) {
   const ordered = orderBy(combined, ['updatedAt', 'desc']);
   console.log(ordered);
   const pruned: Deck[] = [];
-  ordered.forEach(deck => {
-    const prunedIDs = pruned.map(deck => deck._id);
+  ordered.forEach((deck) => {
+    const prunedIDs = pruned.map((deck) => deck._id);
     if (!prunedIDs.includes(deck._id)) pruned.push(deck);
   });
   console.log('pruned', pruned);
@@ -24,11 +24,11 @@ export function combineBacklog(decksRaw: Deck[], backlog: Deck[]) {
 }
 
 export async function rehydrateKeyPair(
-  encryptedKeyPair: string,
+  pwEncryptedKeyPair: string,
   pubKey: string,
-  decrpyter: string
+  decrpyter: string,
 ) {
-  const decryptedKeyPairBytes = CryptoJS.AES.decrypt(encryptedKeyPair, decrpyter);
+  const decryptedKeyPairBytes = CryptoJS.AES.decrypt(pwEncryptedKeyPair, decrpyter);
   const decryptedKeyPairString = decryptedKeyPairBytes.toString(CryptoJS.enc.Utf8);
   const rehydratedKeyPair = await PrivateKey.fromString(decryptedKeyPairString);
   const testMatching = rehydratedKeyPair.public.toString() === pubKey;
@@ -39,9 +39,9 @@ export async function rehydrateKeyPair(
 
 export async function saveLoginData(loginData: any, password: string) {
   const rehydratedKeyPair = await rehydrateKeyPair(
-    loginData.encryptedKeyPair,
+    loginData.pwEncryptedKeyPair,
     loginData.pubKey,
-    password
+    password,
   );
   if (store.state.authMod.threadIDStr !== loginData.threadIDStr)
     store.commit.authMod.THREAD_ID_STR(loginData.threadIDStr);
@@ -53,7 +53,7 @@ export async function saveLoginData(loginData: any, password: string) {
   await store.commit.authMod.AUTHTYPE('password');
   const jwtEncryptedKeyPair = CryptoJS.AES.encrypt(
     rehydratedKeyPair.toString(),
-    loginData.jwt
+    loginData.jwt,
   ).toString();
   if (store.state.authMod.jwtEncryptedKeyPair !== jwtEncryptedKeyPair)
     await store.commit.authMod.JWT_ENCRYPTED_KEYPAIR(jwtEncryptedKeyPair);
@@ -64,7 +64,7 @@ export async function passwordRehydrate(
   jwtEncryptedKeyPair: string | undefined,
   pubKey: string | undefined,
   threadIDStr: string | undefined,
-  stateJwt: string | undefined
+  stateJwt: string | undefined,
 ): Promise<boolean> {
   if (!jwtEncryptedKeyPair || !pubKey || !threadIDStr) {
     store.commit.authMod.LOGGEDIN(false);
@@ -74,8 +74,8 @@ export async function passwordRehydrate(
     // If we refreshed the page and don't have a jwt, we'll need to request a new one
     let jwt;
     if (!stateJwt) {
-      const user = await store.dispatch.authMod.getUser();
-      jwt = user.jwt;
+      const person = await store.dispatch.authMod.getPerson();
+      jwt = person.jwt;
     } else {
       jwt = stateJwt;
     }
@@ -102,7 +102,7 @@ export async function socialMediaRehydrate(
   pubKey: string | undefined,
   threadIDStr: string | undefined,
   stateJwt: string | undefined,
-  authType: 'google' | 'facebook' | 'dotwallet'
+  authType: 'google' | 'facebook' | 'dotwallet',
 ): Promise<boolean> {
   let jwt = stateJwt;
   // console.log('stateJwt', stateJwt);
@@ -115,16 +115,16 @@ export async function socialMediaRehydrate(
     await store.commit.authMod.LOGGEDIN(true);
     return true;
   } else {
-    const user: User = await store.dispatch.authMod.getUser();
-    // console.log('user', user);
-    const socialMediaKeyPair = user.socialMediaKeyPair;
+    const person: Person = await store.dispatch.authMod.getPerson();
+    // console.log('person', person);
+    const socialMediaKeyPair = person.socialMediaKeyPair;
     const socialMediaID =
       authType === 'google' || authType === 'facebook'
-        ? user[authType]?.id
-        : user.dotwallet?.user_open_id;
-    const threadIDStr = user.threadIDStr;
-    const pubKey = user.pubKey;
-    jwt = user.jwt;
+        ? person[authType]?.id
+        : person.dotwallet?.person_open_id;
+    const threadIDStr = person.threadIDStr;
+    const pubKey = person.pubKey;
+    jwt = person.jwt;
     if (jwt && threadIDStr && socialMediaKeyPair && socialMediaID && pubKey) {
       const threadID = ThreadID.fromString(threadIDStr);
       const rehydratedKeyPair = await rehydrateKeyPair(socialMediaKeyPair, pubKey, socialMediaID);
@@ -135,7 +135,7 @@ export async function socialMediaRehydrate(
       await store.commit.authMod.THREAD_ID_STR(threadIDStr);
       const jwtEncryptedKeyPair = CryptoJS.AES.encrypt(
         rehydratedKeyPair.toString(),
-        jwt
+        jwt,
       ).toString();
       await store.commit.authMod.JWT_ENCRYPTED_KEYPAIR(jwtEncryptedKeyPair);
       await store.commit.authMod.PUBKEY(pubKey);
@@ -149,5 +149,5 @@ export async function socialMediaRehydrate(
     }
   }
 
-  // if we don't, get the user, then use their socialMediaID, and socialMediaKeyPair to decrypt. set threadIDStr and threadID
+  // if we don't, get the person, then use their socialMediaID, and socialMediaKeyPair to decrypt. set threadIDStr and threadID
 }

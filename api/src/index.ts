@@ -15,7 +15,7 @@ import ip from 'ip';
 import connectDb from './mongo/mongoose';
 import passportInit from './auth/passportInit';
 import startRouter from './routes';
-import userAuthRoute from './routes/wssUserAuthRoute';
+import personAuthRoute from './routes/wssPersonAuthRoute';
 import { PORT, CORS_CONFIG } from './config';
 
 const app = websockify(new Koa());
@@ -24,8 +24,10 @@ if (process.env.NODE_ENV === 'production') app.proxy = true;
 
 /** Database */
 const db = connectDb();
-// mongoose.connection.collections['user'].drop(function (err) {
-//     console.log('collection dropped');
+
+// delete person collection
+// mongoose.connection.collections['person'].drop(function (err: any) {
+//   console.log('+++++collection dropped++++');
 // });
 
 /** Middlewares */
@@ -61,7 +63,7 @@ const passport = passportInit(app);
 /** Routes */
 const router = startRouter(app, passport);
 /** Websockets */
-userAuthRoute(app);
+personAuthRoute(app);
 /** Start the server! */
 app.listen(PORT, () => console.log(`Koa server listening at ${ip.address()}:${PORT}`));
 

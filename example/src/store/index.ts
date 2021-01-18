@@ -54,7 +54,7 @@ const vuexLocalStorage = new VuexPersistence<RootState>({
 //     Cookies.set(key, state, {
 //       expires: 3,
 //     }) as void,
-//   modules: ['authMod'], //only save user module
+//   modules: ['authMod'], //only save person module
 //   // filter: mutation => mutation.type == 'logIn' || mutation.type == 'logOut',
 // });
 

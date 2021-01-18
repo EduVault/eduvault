@@ -15,7 +15,7 @@
       <h2 class="text-center">ANYWHERE</h2>
       <p
         class="bg-orange text-center text-white py-1 px-2 mt-2 w-32 rounded mx-auto cursor-pointer"
-        @click="scrolltoEl('try-now')"
+        @click="scrollToElement('try-now')"
       >
         TRY NOW
       </p>
@@ -60,7 +60,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    scrollToEl: (anchor: string) => {
+    scrollToElement: (anchor: string) => {
       const element = document.querySelector('#' + anchor)
       const topPos = element!.getBoundingClientRect().top + window.pageYOffset
       window.scrollTo({

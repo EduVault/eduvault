@@ -20,24 +20,24 @@ oAuth2.0 -> password -> crypto wallets/PKI.
   - The Data Manager lists them.
 - **How can we deal with the fact that apps still must be trusted?**, as they will have access to the data while in use.
   - The Data Manager app can audit them, and list only trusted ones.
-- **How can devs know beforehand what might be in the user-siloed DB?**
-  - have a schema registry on data manager app dev homepage and within the user-owned DB.
+- **How can devs know beforehand what might be in the person-siloed DB?**
+  - have a schema registry on data manager app dev homepage and within the person-owned DB.
 
-### Data management for users
+### Data management for Persons (persons)
 
-- Need an app where users can browse, edit and mange permissions to all of their data in a friendly GUI.
+- Need an app where persons can browse, edit and mange permissions to all of their data in a friendly GUI.
 
 ### Steep learning curve for devs
 
 - SDKs. Abstract away auth and sync
 
-### Paying for and backing up user-owned data
+### Paying for and backing up person-owned data
 
 - Each app shouldn’t have to worry about this. The Data Management app could handle this aspect.
 
 ### Handling merge conflicts
 
-- GUI for the user to handle conflicts. —part of SDKs
+- GUI for the person to handle conflicts. —part of SDKs
 
 ## Solutions (EduVault)
 
@@ -52,7 +52,7 @@ The auth server and data home app will be found in this repo and the SDKs will b
 
 ```
 📦 eduvault
- ┣ 📂 api         An auth server to store user credentials and app registration
+ ┣ 📂 api         An auth server to store person credentials and app registration
  ┣ 📂 app         'Data Home' app, app store, 3rd party login handler
  ┣ 📂 example     An example 3rd party app that uses eduvault for login and DB
  ┣ 📂 home-page   The EduVault home and info page

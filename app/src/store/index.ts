@@ -8,7 +8,7 @@ import { STORAGE_KEY } from '../config';
 
 import { RootState } from '../types';
 import authModule from './authModule';
-
+import personModule from './personModule';
 // import defaultDeck from '@/assets/defaultDeck.json';
 
 // Hacky fix. For some reason when vuex-persist is combined with direct-vuex,
@@ -53,7 +53,7 @@ const vuexLocalStorage = new VuexPersistence<RootState>({
 //     Cookies.set(key, state, {
 //       expires: 3,
 //     }) as void,
-//   modules: ['authMod'], //only save user module
+//   modules: ['authMod'], //only save person module
 //   // filter: mutation => mutation.type == 'logIn' || mutation.type == 'logOut',
 // });
 
@@ -68,7 +68,7 @@ const {
 } = createDirectStore({
   modules: {
     authMod: authModule,
-    // decksMod: decksModule,
+    personMod: personModule,
   },
   plugins: [
     // vuexLocalForage.plugin,

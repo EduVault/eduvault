@@ -12,6 +12,7 @@
 - [x] Set up js sdk, use in example app
 - [ ] Rework auth flow
 - [ ] set up dev signup page to register apps to add to cors whitelist, and schema registry
+- [ ] move User Model to a shared folder between app and api
 
 ## auth flow pseudocode
 
@@ -28,7 +29,7 @@ if pwEncryptedKeypair keys in localstorage:
     use the cookie there to get jwt, decrypt keypair
     send it back encrypted by code
   if no internet:
-    asks user for password, decrypts localstorage saved pwEncryptedKeys
+    asks person for password, decrypts localstorage saved pwEncryptedKeys
   if no keys in storage:
     display <a> link redirects to eduvault/app/login/?code=<xxx>&redirect_url=<https://www.example.com>
 }
@@ -37,18 +38,37 @@ if pwEncryptedKeypair keys in localstorage:
 ### eduvault app
 
 ```js
-// The checking stuff might take some time, and we want something to display, but it needs to load super quick. display background splash screen, no navbar. that means we need to bring the navbar into the individual routes, the router-view
-// on any request that doesn't have 'checkauth=no', call the server to check auth credentials.
-// if there is a keypair in local, try to unlock with just a simple request for the jwt
-// use cookie to get jwt.
-// if there isnt, have the user log in, so redirect to login with checkauth=no
+//  inside home route eduvault.org/ to  /loading:
+//  coming to the app from another app --- will have queries: code and redirect
+//  fromExternal = has code and redirect
+//  fromExternal ? redirect to external app : redirect to app home
+//  encryptedKeys = store.state.keys...
+//  redirect = fromExternal ? /redirect_url : /home
 
-// if checkauth=no, then display the login stuff
+//  if cookie or (encryptedKeys and cookie):
+//    call checkAuth(redirect)
 
-// now pw and metamask login and signup are one endpoint, the server should detect whether its a returning user or not
+//  else if !encryptedKeys exist:
+//    redirect to login/?redirect_url=xxx  // login needs redirect variable in query
+
+// Login route: no check /login
+//  inside login():
+//       fromExternal ? redirect to external app : redirect to app home
+
+
+// in router
+//  for protected routes --- check for unencrypted keys /home /my-data
+//  keysExist = app state has unencrypted keys
+//    redirect to desired location /home
+//  cookie and encryptedKeys exist and cookie
+//    redirect to loading page;
+//    call checkAuth
+//       redirect to originally desired location   **how does checkAuth know? it must take a redirect param
+
+// *** now pw and metamask login and signup are one endpoint, the server should detect whether its a returning person or not
 loginSignup(type){
 // type is pw, social media
-user inputs email(username) and password
+person inputs email(accountID) and password
 password is hashed
 an identity(keypair) is created
 the keypair is hashed with the plaintext password pwEncryptedKeypair
@@ -85,8 +105,8 @@ getUserAuth(){
 ### server
 
 ```js
-userAuthChallenge(){
-  signs the challenge and returns a userAuth object.
+personAuthChallenge(){
+  signs the challenge and returns a personAuth object.
 }
 ```
 
@@ -95,7 +115,7 @@ userAuthChallenge(){
 ```js
 returnCredentials(){
   redirects to the apps provided redirect URL
-  `www.example.com?code_encrypted_id=<code_encrypted_id>&pw_encrypted_id=<pw_encrypted_id>&user_auth=<UserAuth>`
+  `www.example.com?code_encrypted_id=<code_encrypted_id>&pw_encrypted_id=<pw_encrypted_id>&person_auth=<UserAuth>`
 }
 ```
 
@@ -105,7 +125,7 @@ eduvault-js-sdk:
 
 ```js
 storeCredentials(){
-  receives codeEncrpytedKeypair, pwEncryptedKeypair, userAuth
+  receives codeEncrpytedKeypair, pwEncryptedKeypair, personAuth
   stores pwEncryptedKeypair
   decrypts keys with 'code'
 }
@@ -123,14 +143,14 @@ creates eduvault DB object, can make calls to it based on textile documentated m
 ```
 
 - problem: for local-first, the credentials must be continually available locally(client side). How can you keep them available without letting other apps see it?
-  only answer I can think of now is using a PIN or the user's password.
+  only answer I can think of now is using a PIN or the person's password.
   look into the comment someone said about using PINs. obvs just 6 numbers isn't great security.
 - make each step succinct (put notes in footnotes)
 - make each step a function, so people can follow flow easily
 - look into ways of forwarding the cookie, to save a trip to the login page
 - apps are registered just with url. login page checks if url is registered or not
 - Can UserAuth and id be stringified properly?
-- How sensitive is textile userAuth? Can it be saved locally?
+- How sensitive is textile personAuth? Can it be saved locally?
 
 ## musings
 
@@ -139,8 +159,8 @@ make example old app without login page, make the login actions into an sdk, sdk
 migrate to vue 3
 get rid of boostrap-vue in favor of tailwind
 
-If private key is stored client-side (local-first, user-owned) then it will be accessible from any browser app/script and that's a huge security concern. To solve this (at the expense of some UX) we can offer two ways to unlock DB, either with EduVault login (pw, wallet, oAuth) which requires online connection, or offline unlock with a PIN.
-Private key (Identity) will be stored client-side encrypted in these two ways. Eduvualt login page will have http only cookie that decrypts and sends that back to the app.
+If private key is stored client-side (local-first, person-owned) then it will be accessible from any browser app/script and that's a huge security concern. To solve this (at the expense of some UX) we can offer two ways to unlock DB, either with EduVault login (pw, wallet, oAuth) which requires online connection, or offline unlock with a PIN.
+Private key (PrivateKey) will be stored client-side encrypted in these two ways. Eduvualt login page will have http only cookie that decrypts and sends that back to the app.
 Another way to solve this, is simply not use ThreadDB client-side, or that the client-side ThreadDB is a separate DB, but that can sync to the remote one. Of course, this still requires those credentials be stored locally, but the damage possible is much smaller. could do a back-up of the cloud server every time before it syncs with local.
 question? Can the local-first ThreadDB have a different private key? MAybe yes, but you still need the private key of the cloud DB
 
@@ -159,16 +179,16 @@ string constructed as
 ```javascript
 // the keys should match the local store
 'store':{
-  userInfo: {
-    userName: '',
-    userAge: '',
+  personInfo: {
+    accountID: '',
+    personAge: '',
   }
 }
 'registry': {
-  userInfo:
+  personInfo:
   {
-    userName: 'User:<instance-ID>:userName',
-    userAge: 'User:<instance-ID>:userAge',
+    accountID: 'User:<instance-ID>:accountID',
+    personAge: 'User:<instance-ID>:personAge',
   }
 }
 ```
@@ -180,8 +200,8 @@ Or 'matching' method:
   User:[
     {
       ID: '<instance-ID>'
-      userName: '',
-      userAge: '',
+      accountID: '',
+      personAge: '',
     }
   ]
 }
@@ -192,16 +212,16 @@ also need a reducer:
 ```js
 'reducer':[
   // include:
-  'User', // or in the first case 'userInfo'
-  'User.userName' // to be more specific
+  'User', // or in the first case 'personInfo'
+  'User.accountID' // to be more specific
 ]
 ```
 
 need to create an app registry, and give out developer keys.... wait a minute these can't live in the client-side either or ill get spammed... we can just do app_id, not app_secret, then block that app_id if it's spamming. but wait, any use that uses the app can see that app_id... hmmm.
-in this case, it just has to be that it's a verified user, don't worry about apps at all? Maybe have a registry just to keep track of use, and to post schemas of course.
+in this case, it just has to be that it's a verified person, don't worry about apps at all? Maybe have a registry just to keep track of use, and to post schemas of course.
 y
 
-originally using textile client, auth flow also required user keys on the frontend, but because using the hub required the dev keys, it had to do the funky signing thing. now the local first just needs a dev to get a token first server side, then send to client and can use that to 'set' the server. then the client needs the user keys to initialize the DB.
+originally using textile client, auth flow also required person keys on the frontend, but because using the hub required the dev keys, it had to do the funky signing thing. now the local first just needs a dev to get a token first server side, then send to client and can use that to 'set' the server. then the client needs the person keys to initialize the DB.
 
 Can you have multiple threadDB local-first DBs running at the same time?
 How can you do sharing? without ACL, all you can do is create a new ThreadDB and send them the keys.

@@ -1,7 +1,7 @@
-import { UserAuth } from '@textile/hub';
+import { UserAuth as PersonAuth } from '@textile/hub';
 import { AuthState, Deck, deckSchema } from '../types';
 import { Buffer } from 'buffer';
-import { Client, ThreadID, Buckets, Root, Identity } from '@textile/hub';
+import { Client, ThreadID, Buckets, Root, PrivateKey } from '@textile/hub';
 import store from './index';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { fromEvent, Observable } from 'rxjs';
@@ -9,16 +9,16 @@ import defaultDeck from '@/assets/defaultDeck.json';
 import { v4 as uuid } from 'uuid';
 // import { DBInfo } from '@textile/threads';
 
-/** we should have different forms of getting the Textile userAuth,
+/** we should have different forms of getting the Textile personAuth,
  * 1. crypto wallet: ask crypto wallet to sign
- * 2. oauth: on log in, get the keypair encrypted by PIN and store in localStorage, challeng user with PIN, and keep the unencrypted keypair in app storage to keep signing
+ * 2. oauth: on log in, get the keypair encrypted by PIN and store in localStorage, challeng person with PIN, and keep the unencrypted keypair in app storage to keep signing
  * 3. password account: same as 2, but the server is storing only encrypted keypair, encryped by password. both 2 and 3 need to keep the plaintext public key for recovery
  */
-export function userAuthChallenge(
+export function personAuthChallenge(
   API_URL_ROOT: string,
   jwt: string,
-  keyPair: Identity,
-): () => Promise<UserAuth> {
+  keyPair: PrivateKey,
+): () => Promise<PersonAuth> {
   // we pass identity into the function returning function to make it
   // available later in the callback
   return () => {
@@ -51,7 +51,7 @@ export function userAuthChallenge(
             case 'challenge-request': {
               /** Convert the challenge json to a Buffer */
               const buf = Buffer.from(data.value);
-              /** User our identity to sign the challenge */
+              /** Person our identity to sign the challenge */
               const signed = await keyPair.sign(buf);
               /** Send the signed challenge back to the server */
               socket.send(
@@ -78,23 +78,23 @@ export function userAuthChallenge(
 export async function connectClient(
   API_URL_ROOT: string,
   jwt: string,
-  keyPair: Identity,
+  keyPair: PrivateKey,
   threadID: ThreadID,
 ) {
   async function createClients(
     API_URL_ROOT: string,
     jwt: string,
-    keyPair: Identity,
+    keyPair: PrivateKey,
     threadID: ThreadID,
   ) {
     try {
       let start = new Date().getTime();
-      const loginCallback = userAuthChallenge(API_URL_ROOT, jwt, keyPair);
+      const loginCallback = personAuthChallenge(API_URL_ROOT, jwt, keyPair);
       const threadClient = Client.withUserAuth(await loginCallback());
-      console.log('Client.withUserAuth(await loginCallback())\n', new Date().getTime() - start);
+      console.log('Client.withPersonAuth(await loginCallback())\n', new Date().getTime() - start);
       start = new Date().getTime();
       const bucketClient = Buckets.withUserAuth(await loginCallback());
-      console.log('Buckets.withUserAuth(await loginCallback())\n', new Date().getTime() - start);
+      console.log('Buckets.withPersonAuth(await loginCallback())\n', new Date().getTime() - start);
 
       return { threadClient, bucketClient };
     } catch (error) {

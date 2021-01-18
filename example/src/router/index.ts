@@ -12,7 +12,7 @@ async function reHydrateStorage(to: Route, from: Route, next: any) {
   // await console.log('rehydrating storage');
   // await console.log(store.state.authMod);
   await (store as any).original.restored;
-  return null;
+  next();
 }
 
 /**More strict check */
@@ -69,5 +69,5 @@ const router = new VueRouter({
   base: '/',
   routes,
 });
-router.beforeEach(checkAuthValid);
+router.beforeEach(reHydrateStorage);
 export default router;

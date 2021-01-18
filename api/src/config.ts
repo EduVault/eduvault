@@ -16,7 +16,7 @@ const PORT = parseInt(process.env.PORT, 10) || 3003;
 /** for dev, needs to match service name from docker-compose file. if hosting on heroku MONGO_URI will be an env, if not you need to manually create one*/
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://mongo:27017';
 const ROOT_URL =
-  process.env.NODE_ENV === 'production' ? 'https://eduvault.herokuapp.com' : 'localhost:' + PORT;
+  process.env.NODE_ENV === 'production' ? 'https://eduvault.org' : 'localhost:' + PORT;
 
 const CORS_CONFIG: cors.Options = {
   credentials: true,
@@ -53,7 +53,7 @@ const SESSION_OPTIONS = {
   /** (number || 'session') maxAge in ms (default is 1 days) */
   /** 'session' will result in a cookie that expires when session/browser is closed */
   /** Warning: If a session cookie is stolen, this cookie will never expire */
-  maxAge: 1000 * 60 * 60 * 48 /** 48 hours*/,
+  maxAge: 1000 * 60 * 60 * 24 * 2 /** two days */,
   autoCommit: true /** (boolean) automatically commit headers (default true) */,
   overwrite: true /** (boolean) can overwrite or not (default true) */,
   httpOnly:
@@ -62,7 +62,7 @@ const SESSION_OPTIONS = {
       : false /** (boolean) httpOnly or not (default true) */,
   signed: true /** (boolean) signed or not (default true) */,
   rolling: true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
-  renew: false /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/,
+  renew: false /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
   secure: process.env.NODE_ENV === 'production' ? true : false /** (boolean) secure cookie*/,
   sameSite:
     process.env.NODE_ENV === 'production'
@@ -74,7 +74,7 @@ const SESSION_OPTIONS = {
 const CLIENT_CALLBACK =
   process.env.NODE_ENV === 'production'
     ? 'https://thirsty-ardinghelli-577c63.netlify.app/'
-    : 'http://localhost:8080/home/';
+    : 'http://localhost:8081/';
 
 const ROUTES = {
   FACEBOOK_AUTH: '/auth/facebook',
@@ -114,7 +114,7 @@ const DOTWALLET_APP_ID = process.env.DOTWALLET_APP_ID;
 const TEXTILE_USER_API_KEY = process.env.TEXTILE_USER_API_KEY;
 const TEXTILE_USER_API_SECRET = process.env.TEXTILE_USER_API_SECRET;
 
-console.log(GOOGLE_CONFIG);
+// console.log(GOOGLE_CONFIG);
 export {
   PORT,
   MONGO_URI,

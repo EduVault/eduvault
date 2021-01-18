@@ -18,13 +18,13 @@
         One login across apps
       </figcaption>
       <p class="mb-3 max-w-sm md:max-w-xl mr-auto">
-        Holding data hostage and trying to provide every service users might
-        need leads to <strong class="font-black">monopoly</strong>, stagnation,
-        and bloat.
+        Walled gardens Hold your data hostage. They try to provide every service
+        persons might need in a closed system. The leads to
+        <strong class="font-black">monopoly</strong>, stagnation, and bloat.
       </p>
       <p class="mb-3 max-w-sm md:max-w-xl mr-auto">
-        Letting users leave at any time with their data leads to a healthier,
-        more
+        Letting persons migrate at any time with their data leads to a
+        healthier, more
         <strong class="font-black">diverse</strong>, and more specialized app
         ecosystem.
       </p>

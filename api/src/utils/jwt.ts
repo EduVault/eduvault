@@ -1,9 +1,24 @@
 import { APP_SECRET, JWT_EXPIRY } from '../config';
-import User, { IUser } from '../models/user';
+import Person, { IPerson } from '../models/person';
 import jwt from 'jsonwebtoken';
 
-export const createJwt = (username: IUser['username']) =>
-  jwt.sign({ data: { username: username } }, APP_SECRET, { expiresIn: JWT_EXPIRY });
+export const createJwt = (accountID: IPerson['accountID']) => {
+  const newJwt = jwt.sign({ data: { accountID: accountID } }, APP_SECRET, {
+    expiresIn: JWT_EXPIRY,
+  });
+  console.log({ newJwt });
+  return newJwt;
+};
+export const getJwtExpiry = async (token: string) => {
+  try {
+    const decoded: any = jwt.verify(token, APP_SECRET);
+    console.log({ decoded });
+    return new Date(decoded.exp * 1000);
+  } catch (err) {
+    console.log('err', err);
+    return false;
+  }
+};
 
 export const validateJwt = async (token: string) => {
   try {
@@ -11,9 +26,9 @@ export const validateJwt = async (token: string) => {
     const exp = new Date(decoded.exp * 1000);
     const now = new Date();
     const valid = now < exp;
-    const user = await User.findOne({ username: decoded.data.username });
-    if (user && valid) {
-      return user;
+    const person = await Person.findOne({ accountID: decoded.data.accountID });
+    if (person && valid) {
+      return person;
     } else {
       return false;
     }

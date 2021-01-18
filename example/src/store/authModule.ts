@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import store from '../store';
 // import { ApiRes } from '../types';
 import router from '@/router';
-import { ThreadID, Identity, PrivateKey } from '@textile/hub';
+import { ThreadID, PrivateKey } from '@textile/hub';
 import CryptoJS from 'crypto-js';
 import { saveLoginData, passwordRehydrate, socialMediaRehydrate } from './utils';
 import { API_URL_ROOT, DEV_API_URL_ROOT, PASSWORD_LOGIN } from '../config';
@@ -60,7 +60,7 @@ export default {
     SYNCING(state: AuthState, bool: boolean) {
       state.syncing = bool;
     },
-    KEYPAIR(state: AuthState, keyPair: Identity | undefined) {
+    KEYPAIR(state: AuthState, keyPair: PrivateKey | undefined) {
       state.keyPair = keyPair;
     },
     JWT(state: AuthState, jwt: string | undefined) {
@@ -91,7 +91,7 @@ export default {
   actions: {
     async passwordAuth(
       { state }: ActionContext<AuthState, RootState>,
-      payload: { password: string; username: string; signup: boolean },
+      payload: { password: string; accountID: string; signup: boolean },
     ) {
       try {
         const options = {
@@ -103,7 +103,7 @@ export default {
           },
           method: 'POST',
           data: {
-            username: payload.username,
+            accountID: payload.accountID,
             password: CryptoJS.SHA256(payload.password).toString(),
           } as any,
         } as AxiosRequestConfig;
@@ -111,13 +111,13 @@ export default {
           const keyPair = await PrivateKey.fromRandom();
           const pubKey = keyPair.public.toString();
           store.commit.authMod.PUBKEY(pubKey);
-          const encryptedKeyPair = CryptoJS.AES.encrypt(
+          const pwEncryptedKeyPair = CryptoJS.AES.encrypt(
             keyPair.toString(),
             payload.password,
           ).toString();
           const newThreadID = ThreadID.fromRandom();
           options.data.threadIDStr = newThreadID.toString();
-          options.data.encryptedKeyPair = encryptedKeyPair;
+          options.data.pwEncryptedKeyPair = pwEncryptedKeyPair;
           options.data.pubKey = pubKey;
         }
 
@@ -160,7 +160,7 @@ export default {
       // localStorage.setItem('vuex', '');
       router.push('/login/?checkauth=no');
     },
-    async rehydrateUser({ state }: ActionContext<AuthState, RootState>) {
+    async rehydratePerson({ state }: ActionContext<AuthState, RootState>) {
       try {
         // const restoredStore = JSON.parse(localStorage.getItem('sourcelink')!);
         // await console.log('store', store);
@@ -243,10 +243,10 @@ export default {
       }
     },
 
-    async getUser({ state }: ActionContext<AuthState, RootState>) {
+    async getPerson({ state }: ActionContext<AuthState, RootState>) {
       try {
         const options: AxiosRequestConfig = {
-          url: state.API_URL + '/get-user',
+          url: state.API_URL + '/get-person',
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -254,7 +254,7 @@ export default {
           withCredentials: true,
         };
         const response = await axios(options);
-        console.log('get-user', response.data);
+        console.log('get-person', response.data);
         if (!response.data || !response.data.data || !response.data.data.jwt) return null;
         else return response.data.data;
       } catch (err) {
@@ -266,7 +266,7 @@ export default {
       { state }: ActionContext<AuthState, RootState>,
       payload: {
         jwt: string;
-        keyPair: Identity;
+        keyPair: PrivateKey;
         threadID: ThreadID;
         retry: number;
       },

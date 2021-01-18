@@ -21,13 +21,14 @@
     "dev:api": "docker-compose -f docker-compose-api.yml up",
     "dev:example": "cd ./example && yarn dev",
     "dev:sdk-js": "cd ./sdk/js && yarn dev",
+    "dev:home-page": "cd ./home-page && yarn dev",
     "dev": "run-p dev:*",
 
     "build:app": "cd ./app && yarn install && yarn build",
     "build:api": "cd ./api && yarn install && yarn build",
     "build:example": "cd ./example && yarn install && yarn build",
     "build:sdk-js": "cd ./sdk/js && yarn build",
-    "build": "run-s example:build api:build app:build",
+    "build": "run-s build:*",
 
     "dev-build:api": "docker-compose -f docker-compose-api.yml up --build --remove-orphans",
     "dev-build": "docker-compose -f docker-compose-dev-build.yml up --build",

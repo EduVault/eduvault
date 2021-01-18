@@ -1,7 +1,7 @@
 import passport from 'koa-passport';
 import Koa from 'koa';
 import session from 'koa-session';
-import User, { IUser } from '../models/user';
+import Person, { IPerson } from '../models/person';
 import { APP_SECRET, SESSION_OPTIONS } from '../config';
 import localStrat from './strategies/local';
 import googleStrat from './strategies/google';
@@ -14,13 +14,13 @@ export default (app: Koa) => {
    */
   app.keys = [APP_SECRET];
   app.use(session(SESSION_OPTIONS, app));
-  passport.serializeUser(function (user: IUser, done) {
-    done(null, user._id);
+  passport.serializeUser(function (person: IPerson, done) {
+    done(null, person._id);
   });
 
   passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err: any, user: IUser) {
-      done(err, user);
+    Person.findById(id, function (err: any, person: IPerson) {
+      done(err, person);
     });
   });
 

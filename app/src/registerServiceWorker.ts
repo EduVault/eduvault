@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
     ready() {
       console.log(
         'App is being served from cache by a service worker.\n' +
-          'For more details, visit https://goo.gl/AFskqB'
+          'For more details, visit https://goo.gl/AFskqB',
       );
     },
     registered(registration) {
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log('Content has been cached for offline use. ');
     },
     updatefound() {
-      console.log('New content is downloading.');
+      console.log('New content is downcookies.');
     },
     updated(registration) {
       console.log('New content is available; please refresh.');

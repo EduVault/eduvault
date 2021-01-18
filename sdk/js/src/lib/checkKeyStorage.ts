@@ -62,7 +62,7 @@ export async function checkKeyStorage() {
   //     use the cookie there to get jwt, decrypt keypair
   //     send it back encrypted by code
   //    if no internet:
-  //      asks user for password, decrypts localstorage saved pwEncryptedKeys
+  //      asks person for password, decrypts localstorage saved pwEncryptedKeys
   //  else if no keys in storage:
   //     display <a> link redirects to eduvault/app/login/?code=<xxx>&redirect_url=<https://www.example.com>
 }

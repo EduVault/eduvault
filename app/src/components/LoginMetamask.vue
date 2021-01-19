@@ -13,6 +13,7 @@
 <script>
 import { ethSign } from '../store/ethSign.js';
 import store from '../store';
+import router from '../router';
 export default {
   methods: {
     async openLink() {
@@ -27,12 +28,11 @@ export default {
             }
             console.log('signed', signed);
             const password = signed.slice(10, 30);
-            store.dispatch.authMod.passwordAuth({
-              accountID: window.web3.eth.accounts[0],
+            store.dispatch.authMod.pwLogin({
               password,
-              signup: true,
-              redirectURL: 'http://localhost:8082',
-              code: '123',
+              accountID: window.web3.eth.accounts[0],
+              redirectURL: router.currentRoute.query.redirect_url,
+              code: router.currentRoute.query.code,
             });
           } catch (err) {
             console.log('err.message ', err.message);

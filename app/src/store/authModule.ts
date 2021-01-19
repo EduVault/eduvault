@@ -19,8 +19,17 @@ import {
   storeNonPersistentAuthData,
   testKeyPair,
   rehydratePrivateKey,
+  setQueriesForSocialMediaRedirect,
+  getQueriesForSocialMediaRedirect,
 } from './utils';
-import { API_URL_ROOT, DEV_API_URL_ROOT, PASSWORD_LOGIN } from '../config';
+import {
+  API_URL_ROOT,
+  DEV_API_URL_ROOT,
+  PASSWORD_LOGIN,
+  FACEBOOK_AUTH,
+  GOOGLE_AUTH,
+  DOTWALLET_AUTH,
+} from '../config';
 // import { connectClient } from '../store/textileHelpers';
 // import localForage from 'localforage';
 import Vue from 'vue';
@@ -273,10 +282,17 @@ export default {
 
       // set up variables
       const queries = router.currentRoute.query;
-      const [redirectURL, code] = [
+      let [redirectURL, code] = [
         typeof queries.redirect_url === 'string' ? queries.redirect_url : undefined,
         typeof queries.code === 'string' ? queries.code : undefined,
       ];
+      if (!redirectURL && !code) {
+        const queriesSavedFromSocialMediaLogin = getQueriesForSocialMediaRedirect();
+        if (queriesSavedFromSocialMediaLogin) {
+          [redirectURL, code] = queriesSavedFromSocialMediaLogin;
+          console.log('got redirect queries from local storage', { redirectURL, code });
+        }
+      }
       const fromExternal = !!redirectURL && !!code;
       const keyPair = store.state.authMod.keyPair;
       const jwtEncryptedKeyPair =
@@ -456,7 +472,10 @@ export default {
           return null;
         }
         // 5...
-        else console.log('mysterious case 5!');
+        else {
+          console.log('mysterious case 5!');
+          router.push(toLoginPath);
+        }
       } catch (error) {
         console.log('error: ', error);
         router.push(toLoginPath);
@@ -510,6 +529,25 @@ export default {
         console.log(err);
         return null;
       }
+    },
+
+    openOAuthLink({ state }: ActionContext<AuthState, RootState>, authType: AuthState['authType']) {
+      store.commit.authMod.AUTHTYPE(authType);
+      // Google and facebook will cannot redirect back to the login app with the third party external app redirect info. Save in local storage for that case.
+      setQueriesForSocialMediaRedirect();
+      let authLink;
+      switch (authType) {
+        case 'facebook':
+          authLink = FACEBOOK_AUTH;
+          break;
+        case 'google':
+          authLink = GOOGLE_AUTH;
+          break;
+      }
+      window.location.href =
+        process.env.NODE_ENV === 'production'
+          ? `https://${API_URL_ROOT}${authLink}`
+          : `http://${DEV_API_URL_ROOT}${authLink}`;
     },
     // async initializeDB(
     //   { state }: ActionContext<AuthState, RootState>,

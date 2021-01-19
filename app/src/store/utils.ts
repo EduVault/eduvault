@@ -2,6 +2,7 @@ import { IPerson, AuthState } from '../types';
 // import { orderBy } from 'lodash';
 import CryptoJS from 'crypto-js';
 import store from './index';
+import router from '../router';
 import { ThreadID, PrivateKey } from '@textile/hub';
 
 export function encrypt(content: string, encryptKey: string) {
@@ -78,3 +79,30 @@ export const storePersistentAuthData = (
   if (pubKey) store.commit.authMod.PUBKEY(pubKey);
   if (authType) store.commit.authMod.AUTHTYPE(authType);
 };
+
+export function setQueriesForSocialMediaRedirect() {
+  localStorage.setItem(
+    'queriesForSocialMediaRedirect',
+    JSON.stringify({
+      redirectURL: router.currentRoute.query.redirect_url,
+      code: router.currentRoute.query.code,
+      time: new Date().getTime(),
+    }),
+  );
+}
+export function getQueriesForSocialMediaRedirect() {
+  const raw = localStorage.getItem('queriesForSocialMediaRedirect');
+  if (!raw) return false;
+  const queries: {
+    redirectURL: string;
+    code: string;
+    time: number;
+  } | null = JSON.parse(raw);
+  if (!queries) return false;
+  else {
+    if (!queries.time) return false;
+    const now = new Date().getTime();
+    if (now - queries.time >= 1000 * 60 * 3) return false;
+    else return [queries.redirectURL, queries.code];
+  }
+}

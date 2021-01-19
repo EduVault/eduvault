@@ -7,7 +7,7 @@
         <a class="secondary learn-more" href="https://eduvault.org">Learn more</a>
       </p>
       <img class="security-option" src="@/assets/most-secure.png" width="150px" />
-      <login-dotwallet></login-dotwallet>
+      <!-- <login-dotwallet></login-dotwallet> -->
       <login-metamask></login-metamask>
       <img class="security-option" src="@/assets/secure.png" width="150px" />
 
@@ -51,7 +51,7 @@ import LoginSignupButtons from '../components/LoginSignupButtons.vue';
 import LoginGoogle from '../components/LoginGoogle.vue';
 import LoginFacebook from '../components/LoginFacebook.vue';
 import LoginMetamask from '../components/LoginMetamask.vue';
-import LoginDotwallet from '../components/LoginDotwallet.vue';
+// import LoginDotwallet from '../components/LoginDotwallet.vue';
 import router from '../router';
 import store from '../store';
 export default {
@@ -64,7 +64,7 @@ export default {
     LoginGoogle,
     LoginFacebook,
     LoginMetamask,
-    LoginDotwallet,
+    // LoginDotwallet,
   },
   setup() {
     console.log('starting login');
@@ -121,7 +121,7 @@ export default {
     return {
       state,
       countDownChanged,
-      login
+      login,
     };
   },
 };

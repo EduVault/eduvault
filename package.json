@@ -12,6 +12,13 @@
     "rimraf": "^3.0.2"
   },
   "scripts": {
+    "setup:app":"cd ./app && yarn install",
+    "setup:example":"cd ./example && yarn install",
+    "setup:api":"cd ./api && yarn install",
+    "setup:home-page":"cd ./home-page && yarn install",
+    "setup:jsdk-js":"cd ./sdk/js && yarn install",
+    "setup":"run-p setup:*",
+
     "clean:app": "cd ./app && rimraf yarn.lock && rimraf node_modules",
     "clean:example": "cd ./example && rimraf yarn.lock && rimraf node_modules",
     "clean:api": "cd ./api && rimraf yarn.lock && rimraf node_modules",

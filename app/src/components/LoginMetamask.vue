@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { ethSign } from '../store/ethSign.js';
+import { sign } from '../store/ethSign';
 import store from '../store';
 import router from '../router';
 export default {
@@ -21,7 +21,7 @@ export default {
         if (typeof window.ethereum.isMetaMask !== 'undefined') {
           console.log('MetaMask is installed!');
           try {
-            const signed = await ethSign();
+            const { signed, account } = await sign();
             if (!signed) {
               alert('unable to connect');
               return null;
@@ -30,7 +30,7 @@ export default {
             const password = signed.slice(10, 30);
             store.dispatch.authMod.pwLogin({
               password,
-              accountID: window.web3.eth.accounts[0],
+              accountID: account,
               redirectURL: router.currentRoute.query.redirect_url,
               code: router.currentRoute.query.code,
             });

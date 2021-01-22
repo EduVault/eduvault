@@ -29,6 +29,7 @@ export default {
   setup() {
     onMounted(() => {
       eduvault.checkKeyStorage();
+      // const db = eduvault.connectDB()
     });
     console.log(eduvault.thing);
     const state = reactive({
@@ -49,8 +50,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-@import '../styles/_variables.scss';
+<style scoped>
 .eduvault-button {
   margin-bottom: auto;
 }

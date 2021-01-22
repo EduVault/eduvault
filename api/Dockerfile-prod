@@ -2,6 +2,7 @@ FROM node:12-alpine AS build-stage
 ENV PATH /api/node_modules/.bin:$PATH
 RUN apk update
 RUN apk add git
+RUN apk add python
 WORKDIR /api
 COPY package.json ./
 COPY yarn.lock ./

@@ -1,13 +1,16 @@
 {
   "name": "@eduvault/shared",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",
-    "prepublish": "run-s clean build",
+    "prepublishOnly": "run-s clean build",
     "watch": "tsc -w"
   },
   "keywords": [],

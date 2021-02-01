@@ -1,6 +1,6 @@
 {
   "name": "@eduvault/shared",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc",
     "prepub": "run-s clean build",
     "prepublishOnly": "yarn prepub",

@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div class="landing-page">
+    <div class="login-page">
       <b-img class="landing-img" src="/img/icons/flashy-cards-cover-square.png" />
-      <a :href="loginLink">
+      <a id="eduvault-login-button">
         <img
-          id="eduvault-login-button"
           src="@/assets/eduvault-button.png"
           class="oauth-login-button eduvault-button"
           width="256px"
@@ -14,37 +13,63 @@
 </template>
 
 <script lang="ts">
-import { eduvault } from '../../../sdk/js/build/module/index.js';
+import EduVault, { appRegister, devVerify, Database } from '@eduvault/eduvault-js';
 // import EduVault from 'eduvault-js';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
+import { APP_SECRET } from '../config';
+// import { log } from 'util';
 // import router from '../router';
 // import store from '../store';
-// import axios from 'axios';
-import { v4 as uuid } from 'uuid';
+// import axios from 'axios'
+
+// import { v4 as uuid } from 'uuid';
+let db: Database;
+
 export default {
   name: 'Login',
   components: { BImg },
 
   setup() {
-    onMounted(() => {
-      eduvault.checkKeyStorage();
-      // const db = eduvault.connectDB()
-    });
-    console.log(eduvault.thing);
-    const state = reactive({
-      //
-    });
-
-    const EDUVAULT_LOGIN = 'http://localhost:8081';
     const THIS_SITE_URL = 'http://localhost:8082';
-    const code = uuid();
-    const redirectURL = `${THIS_SITE_URL}/home`;
-    const loginLink = `${EDUVAULT_LOGIN}/?code=${code}&redirect_url=${redirectURL}&`;
+    const redirectURL = `${THIS_SITE_URL}/login`;
+
+    onMounted(async () => {
+      // if initiated with options, will a
+      const reset = true;
+
+      let appID = '50eb35c1-4cb0-4f6c-b406-404eb2468915';
+      if (reset) {
+        console.log({ APP_SECRET });
+
+        if (!APP_SECRET) return;
+        devVerify(APP_SECRET, 'jacobcoro@qq.com');
+        const appInfo = await appRegister(
+          'jacobcoro@qq.com',
+          'Password123',
+          'test app',
+          'a testing app',
+        );
+        console.log({ appInfo });
+        if (appInfo) appID = appInfo.appID;
+      }
+      const eduvault = new EduVault({
+        appID,
+        redirectURL,
+        buttonID: 'eduvault-login-button',
+        log: true,
+        onReady: (db) => {
+          alert('database ready!');
+          state.db = db;
+        },
+      });
+    });
+    const state = reactive({
+      db,
+    });
 
     return {
       state,
-      loginLink,
     };
   },
 };
@@ -54,13 +79,8 @@ export default {
 .eduvault-button {
   margin-bottom: auto;
 }
-.learn-more {
-  text-decoration: underline;
-}
-.security-option {
-  margin-top: 1.5rem;
-}
-.landing-page {
+
+.login-page {
   display: flex;
   align-items: center;
   flex-direction: column;

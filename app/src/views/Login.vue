@@ -32,10 +32,19 @@
         :making-request="state.makingRequest"
         @login="login()"
       ></login-signup-buttons>
+
       <img class="security-option" src="@/assets/less-secure.png" width="150px" />
 
       <login-google></login-google>
       <login-facebook></login-facebook>
+
+      <div v-if="state.redirectURL" class="mt-3 text-center">
+        <h1>
+          <strong>{{ state.redirectURL }}</strong>
+        </h1>
+        <p>is requesting access to your personal cloud database</p>
+        <p>Make sure you trust this site</p>
+      </div>
     </div>
   </div>
 </template>
@@ -54,6 +63,23 @@ import LoginMetamask from '../components/LoginMetamask.vue';
 // import LoginDotwallet from '../components/LoginDotwallet.vue';
 import router from '../router';
 import store from '../store';
+interface State {
+  redirectURL?: string;
+  appID?: string;
+  email: string;
+  password: string;
+  emailValidation: boolean;
+  passwordValidation: boolean;
+
+  apiErrorMsg: string;
+  failedLogin: boolean;
+  dismissSecs: number;
+  dismissCountDown: number;
+
+  makingRequest: boolean;
+
+  showSignup: boolean;
+}
 export default {
   name: 'Login',
   components: {
@@ -67,21 +93,20 @@ export default {
     // LoginDotwallet,
   },
   setup() {
-    console.log('starting login');
-    const state = reactive({
-      email: '' as string,
-      password: '' as string,
-      emailValidation: false as boolean,
-      passwordValidation: false as boolean,
+    const state: State = reactive({
+      email: '',
+      password: '',
+      emailValidation: false,
+      passwordValidation: false,
 
-      apiErrorMsg: '' as string,
-      failedLogin: false as boolean,
-      dismissSecs: 5 as number,
-      dismissCountDown: 0 as number,
+      apiErrorMsg: '',
+      failedLogin: false,
+      dismissSecs: 5,
+      dismissCountDown: 0,
 
-      makingRequest: false as boolean,
+      makingRequest: false,
 
-      showSignup: false as boolean,
+      showSignup: false,
     });
 
     async function showAlert() {
@@ -99,17 +124,9 @@ export default {
     const login = async function () {
       state.makingRequest = true;
       state.failedLogin = false;
-      const queries = router.currentRoute.query;
-      const [redirectURL, code] = [
-        typeof queries.redirect_url === 'string' ? queries.redirect_url : undefined,
-        typeof queries.code === 'string' ? queries.code : undefined,
-      ];
-
       const response = await store.dispatch.authMod.pwLogin({
         password: state.password,
         accountID: state.email,
-        code: code,
-        redirectURL: redirectURL,
       });
       if (!response || response !== 'success') {
         state.makingRequest = false;

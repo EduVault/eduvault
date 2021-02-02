@@ -1,9 +1,8 @@
-import { IPerson } from '../models/person';
+import { IPerson, DotwalletProfile } from '../models/person';
 import { Profile as FBProfile } from 'passport-facebook';
 import { Profile as GProfile } from 'passport-google-oauth20';
 import { encrypt, decrypt } from './encryption';
 import { ThreadID, PrivateKey } from '@textile/hub';
-import { DotwalletProfile } from '../types';
 
 export async function createSocialMediaAccount(
   person: IPerson,
@@ -15,11 +14,12 @@ export async function createSocialMediaAccount(
   console.log('profile', profile);
   const email = profile.emails ? profile.emails[0].value.toLowerCase() || null : null;
   if (!person.accountID) person.accountID = email || profile.id;
-  const keyPair = await PrivateKey.fromRandom();
-  person.socialMediaKeyPair = encrypt(keyPair.toString(), profile.id);
-  person.pubKey = keyPair.public.toString();
+  const privateKey = await PrivateKey.fromRandom();
+  person.socialMediaPrivateKey = encrypt(privateKey.toString(), profile.id);
+  person.pubKey = privateKey.public.toString();
   const newThreadID = ThreadID.fromRandom();
   person.threadIDStr = newThreadID.toString();
+  person.dev = { isVerified: false, apps: [] };
 
   person[type].id = profile.id;
   person[type].givenName = profile.name.givenName;
@@ -46,11 +46,12 @@ export async function createDotwalletAccount(
 
   const id = profile.person_open_id;
   if (!person.accountID) person.accountID = id;
-  const keyPair = await PrivateKey.fromRandom();
-  person.socialMediaKeyPair = encrypt(keyPair.toString(), id);
-  person.pubKey = keyPair.public.toString();
+  const privateKey = await PrivateKey.fromRandom();
+  person.socialMediaPrivateKey = encrypt(privateKey.toString(), id);
+  person.pubKey = privateKey.public.toString();
   const newThreadID = ThreadID.fromRandom();
   person.threadIDStr = newThreadID.toString();
+  person.dev = { isVerified: false, apps: [] };
   person.dotwallet = { ...profile, token: token };
   console.log('person', person);
   person.save((err) => {

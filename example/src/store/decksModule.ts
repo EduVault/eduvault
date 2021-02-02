@@ -6,7 +6,7 @@ import defaultDeck from '../assets/defaultDeck.json';
 const defaultState: DecksState = {
   decks: [defaultDeck],
   backlog: [] as Deck[],
-  client: undefined,
+  // client: undefined,
 };
 const getDefaultState = () => {
   return defaultState;

@@ -1,7 +1,5 @@
-import { Client } from '@textile/hub';
-import { Database, JSONSchema } from '@textile/threaddb';
+import { Database, JSONSchema } from '@eduvault/eduvault-js';
 
-const testClient = new Client();
 export const cardSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   id: 'https://github.com/Jewcub/textile-flashcards',

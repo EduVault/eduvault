@@ -1,59 +1,76 @@
 import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
-import Person, { IPerson, hashPassword } from '../models/person';
+import Person, { IPerson } from '../models/person';
+import App, { IApp } from '../models/app';
 import { DefaultState, Context } from 'koa';
-import { PasswordLoginRes } from '../types';
-import { ROUTES, CLIENT_CALLBACK, APP_SECRET, JWT_EXPIRY } from '../config';
-import { createJwt, validateJwt, getJwtExpiry } from '../utils/jwt';
+import { types } from '../types';
+import { ROUTES } from '../config';
+import { createJwt, getJwtExpiry, createAppLoginToken } from '../utils/jwt';
+import { hashPassword, validPassword } from '../utils/encryption';
+import { v4 as uuid } from 'uuid';
 const local = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
-  async function signup(ctx: Context) {
-    const data = ctx.request.body;
-    // const previousPerson = await Person.findOne({
-    //   accountID: data.accountID,
-    // });
-    // if (previousPerson) {
-    //   ctx.unauthorized({ error: 'person already exists' }, 'person already exists');
-    //   return;
-    // }
-    if (
-      !data.password ||
-      !data.accountID ||
-      !data.pwEncryptedKeyPair ||
-      !data.pubKey ||
-      !data.threadIDStr
-    ) {
+  async function signup(ctx: Context, appLoginToken?: string, decryptToken?: string) {
+    const data: types.PasswordLoginReq = ctx.request.body;
+    if (!data.pwEncryptedPrivateKey || !data.pubKey || !data.threadIDStr) {
       ctx.unauthorized({ error: 'invalid signup' }, 'invalid signup');
       return;
     }
     const newPerson = new Person();
     newPerson.accountID = data.accountID;
     newPerson.password = hashPassword(data.password);
-    newPerson.pwEncryptedKeyPair = data.pwEncryptedKeyPair;
+    newPerson.pwEncryptedPrivateKey = data.pwEncryptedPrivateKey;
     newPerson.pubKey = data.pubKey;
     newPerson.threadIDStr = data.threadIDStr;
+    newPerson.dev = { isVerified: false, apps: [] };
     // console.log('data', data);
-    console.log('new person', newPerson.toJSON());
+    // console.log('new person', newPerson.toJSON());
     newPerson.save();
     await ctx.login(newPerson);
     ctx.session.jwt = createJwt(newPerson.accountID);
     await ctx.session.save();
-    const returnData: PasswordLoginRes = {
-      pwEncryptedKeyPair: newPerson.pwEncryptedKeyPair,
+
+    const returnData: types.PasswordLoginRes = {
+      pwEncryptedPrivateKey: newPerson.pwEncryptedPrivateKey,
       jwt: ctx.session.jwt,
       pubKey: newPerson.pubKey,
       threadIDStr: newPerson.threadIDStr,
     };
+    if (appLoginToken && decryptToken) {
+      returnData.appLoginToken = appLoginToken;
+      returnData.decryptToken = decryptToken;
+    }
+    // console.log({ returnData });
     ctx.oK(returnData);
   }
 
   router.post(ROUTES.LOCAL, async (ctx, next) => {
-    const person = await Person.findOne({ accountID: ctx.request.body.accountID });
-    if (!person) return signup(ctx);
-    // sign in
-    else
-      return passport.authenticate('local', async (err: string, person: IPerson) => {
-        if (err) {
-          ctx.unauthorized(err, err);
+    const data: types.PasswordLoginReq = ctx.request.body;
+    // console.log({ data });
+    if (!data.password || !data.accountID) {
+      ctx.unauthorized({ error: 'invalid signup' }, 'invalid signup');
+      return;
+    }
+    const appLoginTokens = async () => {
+      if (data.redirectURL && data.appID) {
+        const decryptToken = uuid();
+        return { decryptToken, appLoginToken: await createAppLoginToken(data.appID, decryptToken) };
+      } else return { decryptToken: null, appLoginToken: null };
+    };
+    const { appLoginToken, decryptToken } = await appLoginTokens();
+    // console.log({ appLoginToken, decryptToken });
+    const person = await Person.findOne({ accountID: data.accountID });
+    // console.log({ person });
+
+    if (!person) return signup(ctx, appLoginToken, decryptToken);
+    else {
+      return passport.authenticate('password', async (error: string, foundPerson: IPerson) => {
+        // strange bug where passport is returning false for the user, but accepting authentication. console logs aren't working within the strategy either
+        console.log({ error, foundPerson });
+        // so do another check here:
+        const valid = validPassword(data.password, person.password);
+        // console.log('password check: ', { valid });
+        if (error || !valid) {
+          ctx.unauthorized(error, error);
         } else {
           await ctx.login(person);
           if (ctx.session.jwt) {
@@ -66,16 +83,21 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
             }
           } else ctx.session.jwt = createJwt(person.accountID);
           await ctx.session.save();
-          const returnData: PasswordLoginRes = {
-            pwEncryptedKeyPair: person.pwEncryptedKeyPair,
+          const returnData: types.PasswordLoginRes = {
+            pwEncryptedPrivateKey: person.pwEncryptedPrivateKey,
             jwt: ctx.session.jwt,
             pubKey: person.pubKey,
             threadIDStr: person.threadIDStr,
           };
-          console.log('login authorized. returnData', returnData);
+          if (appLoginToken) {
+            returnData.appLoginToken = appLoginToken;
+            returnData.decryptToken = decryptToken;
+          }
+          // console.log({ returnData });
           ctx.oK(returnData);
         }
       })(ctx, next);
+    }
   });
   return router;
 };

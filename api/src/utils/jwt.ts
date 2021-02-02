@@ -1,18 +1,29 @@
 import { APP_SECRET, JWT_EXPIRY } from '../config';
 import Person, { IPerson } from '../models/person';
 import jwt from 'jsonwebtoken';
+import App, { IApp } from '../models/app';
+import { types } from 'types';
 
-export const createJwt = (accountID: IPerson['accountID']) => {
-  const newJwt = jwt.sign({ data: { accountID: accountID } }, APP_SECRET, {
+export const createJwt = (id: string) => {
+  const newJwt = jwt.sign({ data: { id } }, APP_SECRET, {
     expiresIn: JWT_EXPIRY,
   });
-  console.log({ newJwt });
+  // console.log({ newJwt });
   return newJwt;
 };
+
+export const createCustomJwt = (data: any) => {
+  const newJwt = jwt.sign({ data }, APP_SECRET, {
+    expiresIn: JWT_EXPIRY,
+  });
+  // console.log({ newJwt });
+  return newJwt;
+};
+
 export const getJwtExpiry = async (token: string) => {
   try {
     const decoded: any = jwt.verify(token, APP_SECRET);
-    console.log({ decoded });
+    // console.log({ decoded });
     return new Date(decoded.exp * 1000);
   } catch (err) {
     console.log('err', err);
@@ -20,15 +31,14 @@ export const getJwtExpiry = async (token: string) => {
   }
 };
 
-export const validateJwt = async (token: string) => {
+export const validateAndDecodeJwt = async (token: string) => {
   try {
     const decoded: any = jwt.verify(token, APP_SECRET);
     const exp = new Date(decoded.exp * 1000);
     const now = new Date();
     const valid = now < exp;
-    const person = await Person.findOne({ accountID: decoded.data.accountID });
-    if (person && valid) {
-      return person;
+    if (valid) {
+      return decoded;
     } else {
       return false;
     }
@@ -37,3 +47,30 @@ export const validateJwt = async (token: string) => {
     return false;
   }
 };
+export async function createAppLoginToken(appID: string, decryptToken: string) {
+  const createdAt = new Date().getTime();
+  return createCustomJwt({ id: appID, decryptToken });
+}
+
+export async function compareAppLoginToken(
+  token: string,
+  appID: string,
+): Promise<string | types.AppTokenData> {
+  const decoded = await validateAndDecodeJwt(token);
+  // console.log({ decoded, appID });
+  if (!decoded.data) return 'token could not be decoded';
+  const now = new Date().getTime();
+  // code valid for 2 minutes 1000 * 60 * 2
+  // while testing, setting to 2 days
+  const expiryDuration = 1000 * 60 * 60 * 24 * 2;
+  // iat is in seconds
+  const difference = now - decoded.iat * 1000;
+  const hasNotExpired = difference < expiryDuration;
+  // console.log({ expiryDuration, hasNotExpired, difference });
+
+  if (!hasNotExpired)
+    return `token issued ${difference} ms ago. longest valid time is: ${expiryDuration}`;
+  const IDMatches = decoded.data.id === appID;
+  if (IDMatches) return decoded.data;
+  else return 'token ID does not match';
+}

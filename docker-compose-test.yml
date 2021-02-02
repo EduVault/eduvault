@@ -1,0 +1,98 @@
+version: '3.7'
+
+services:
+  cypress:
+    # the Docker image to use from https://github.com/cypress-io/cypress-docker-images
+    image: 'cypress/included:6.3.0'
+    depends_on:
+      - nginx
+    environment:
+      # pass base url to test pointing at the web application
+      - CYPRESS_baseUrl=http://app:8081
+    # share the current folder as volume to avoid copying
+    working_dir: /cypress
+    volumes:
+      - ./:/cypress
+  app:
+    container_name: app
+    build:
+      context: ./app
+      target: dev-stage
+    volumes:
+      - './app:/app'
+      - '/app/node_modules'
+    # stdin_open: true
+    ports:
+      - '8081:8081'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+  example:
+    container_name: example
+    build:
+      context: ./example
+      target: dev-stage
+    volumes:
+      - './example:/example'
+      - '/example/node_modules'
+    stdin_open: true
+    ports:
+      - '8082:8082'
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+
+  home-page:
+    container_name: home-page
+    build:
+      context: ./home-page
+      target: dev-stage
+    volumes:
+      - './home-page:/home-page'
+      - '/home-page/node_modules'
+    ports:
+      - '8083'
+    expose:
+      - 8083
+    environment:
+      - NODE_ENV=development
+
+  api:
+    container_name: api
+    build:
+      context: ./api
+      target: dev-stage
+    ports:
+      - '3003:3003'
+    volumes:
+      - './api:/api'
+      - '/api/node_modules'
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=development
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./deploy/nginx/dev:/etc/nginx/conf.d
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - app
+      - api
+      - example
+      - home-page
+volumes:
+  mongo:
+    name: mongo

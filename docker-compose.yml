@@ -1,19 +1,19 @@
 version: '3.7'
 services:
-  app:
-    container_name: app
-    build:
-      context: ./app
-      target: dev-stage
-    volumes:
-      - './app:/app'
-      - '/app/node_modules'
-    # stdin_open: true
-    ports:
-      - '8081:8081'
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
+  # app:
+  #   container_name: app
+  #   build:
+  #     context: ./app
+  #     target: dev-stage
+  #   volumes:
+  #     - './app:/app'
+  #     - '/app/node_modules'
+  #   # stdin_open: true
+  #   ports:
+  #     - '8081:8081'
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - NODE_ENV=development
   example:
     container_name: example
     build:
@@ -29,43 +29,43 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
 
-  home-page:
-    container_name: home-page
-    build:
-      context: ./home-page
-      target: dev-stage
-    volumes:
-      - './home-page:/home-page'
-      - '/home-page/node_modules'
-    ports:
-      - '8083'
-    expose:
-      - 8083
-    environment:
-      - NODE_ENV=development
+  # home-page:
+  #   container_name: home-page
+  #   build:
+  #     context: ./home-page
+  #     target: dev-stage
+  #   volumes:
+  #     - './home-page:/home-page'
+  #     - '/home-page/node_modules'
+  #   ports:
+  #     - '8083'
+  #   expose:
+  #     - 8083
+  #   environment:
+  #     - NODE_ENV=development
 
-  api:
-    container_name: api
-    build:
-      context: ./api
-      target: dev-stage
-    ports:
-      - '3003:3003'
-    volumes:
-      - './api:/api'
-      - '/api/node_modules'
-    depends_on:
-      - mongo
-    environment:
-      - NODE_ENV=development
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo:/data/db
+  # api:
+  #   container_name: api
+  #   build:
+  #     context: ./api
+  #     target: dev-stage
+  #   ports:
+  #     - '3003:3003'
+  #   volumes:
+  #     - './api:/api'
+  #     - '/api/node_modules'
+  #   depends_on:
+  #     - mongo
+  #   environment:
+  #     - NODE_ENV=development
+  # mongo:
+  #   image: mongo
+  #   restart: always
+  #   container_name: mongo
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - mongo:/data/db
 
   nginx:
     image: nginx:1.15-alpine
@@ -76,10 +76,10 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - app
-      - api
+      # - app
+      # - api
       - example
-      - home-page
+      # - home-page
 volumes:
   mongo:
     name: mongo

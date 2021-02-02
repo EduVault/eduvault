@@ -12,7 +12,7 @@
     "build": "tsc",
     "prepub": "run-s clean build",
     "prepublishOnly": "yarn prepub",
-    "watch": "tsc -w"
+    "dev": "tsc -w"
   },
   "keywords": [],
   "author": "",

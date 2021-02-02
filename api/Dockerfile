@@ -1,4 +1,5 @@
-FROM node:15 AS build-stage
+FROM node:14 AS build-stage
+RUN mkdir -p /usr/src/node_modules
 ENV PATH /api/node_modules/.bin:$PATH
 # RUN apk update
 # RUN apk add git
@@ -9,14 +10,13 @@ ENV PATH /api/node_modules/.bin:$PATH
 
 # RUN rm -rf node_modules
 COPY package.json ./
-COPY yarn.lock ./
-COPY .env ./
+# COPY yarn.lock ./
 
 # RUN yarn config set registry 'https://registry.npmjs.org/'
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 
 RUN yarn install
-RUN yarn install --frozen-lockfile
+# RUN yarn install --frozen-lockfile
 COPY . .
 # RUN yarn build
 # RUN cd ./node_modules/multiformats && ls

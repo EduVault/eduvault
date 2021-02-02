@@ -6,8 +6,9 @@ import websockify from 'koa-websocket';
 
 import { newClientDB, getAPISig } from '../textile/helpers';
 import Person, { IPerson } from '../models/person';
-import { validateJwt } from '../utils/jwt';
-import { TEXTILE_USER_API_KEY } from '../config';
+import App, { IApp } from '../models/app';
+import { validateAndDecodeJwt } from '../utils/jwt';
+import { config } from '../config';
 import { DefaultState, Context, Middleware } from 'koa';
 
 interface wsMessageData {
@@ -36,22 +37,29 @@ const personAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContex
         if (!data.jwt) {
           throw new Error('missing jwt');
         }
-        const jwtCheck = await validateJwt(data.jwt);
-        console.log('jwtCheck', !!jwtCheck);
-        if (!jwtCheck || !jwtCheck.pubKey || !jwtCheck.accountID) {
+
+        const jwtDecoded = await validateAndDecodeJwt(data.jwt);
+        console.log({ jwtDecoded });
+
+        if (!jwtDecoded || !jwtDecoded.data.id) {
           throw new Error('invalid jwt');
         }
-        const person = jwtCheck;
+        // add a param isPerson or isApp
+        const person = await Person.findOne({ accountID: jwtDecoded.data.id });
+        const app = await App.findOne({ appID: jwtDecoded.data.id });
+        console.log({ person });
+        if (!(person || app)) {
+          throw new Error('could not finde person/app');
+        }
         switch (data.type) {
           case 'keys-request': {
           }
           case 'token-request': {
-            const pubKey = person.pubKey;
-            if (!pubKey) {
+            if (!data.pubKey) {
               throw new Error('missing pubkey');
             }
             const db = await newClientDB();
-            const token = await db.getTokenChallenge(pubKey, (challenge: Uint8Array) => {
+            const token = await db.getTokenChallenge(data.pubKey, (challenge: Uint8Array) => {
               return new Promise((resolve, reject) => {
                 let response = {} as any;
                 response.type = 'challenge-request';
@@ -80,7 +88,7 @@ const personAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContex
             const personAuth: PersonAuth = {
               ...apiSig,
               token: token,
-              key: TEXTILE_USER_API_KEY,
+              key: config.TEXTILE_USER_API_KEY,
             };
             ctx.websocket.send(
               JSON.stringify({

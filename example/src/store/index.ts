@@ -7,7 +7,7 @@ import localForage from 'localforage';
 import { STORAGE_KEY } from '../config';
 
 import { RootState } from '../types';
-import authModule from './authModule';
+// import authModule from './authModule';
 import decksModule from './decksModule';
 
 // import defaultDeck from '@/assets/defaultDeck.json';
@@ -35,17 +35,17 @@ import decksModule from './decksModule';
 // });
 const vuexLocalStorage = new VuexPersistence<RootState>({
   storage: window.localStorage,
-  reducer: (state) => ({
+  reducer: (state: any) => ({
     decksMod: {
       decks: state.decksMod.decks,
       backlog: state.decksMod.backlog,
     },
-    authMod: {
-      jwtEncryptedKeyPair: state.authMod.jwtEncryptedKeyPair,
-      pubKey: state.authMod.pubKey,
-      threadIDStr: state.authMod.threadIDStr,
-      authType: state.authMod.authType,
-    },
+    // authMod: {
+    //   jwtEncryptedPrivateKey: state.authMod.jwtEncryptedPrivateKey,
+    //   pubKey: state.authMod.pubKey,
+    //   threadIDStr: state.authMod.threadIDStr,
+    //   authType: state.authMod.authType,
+    // },
   }),
 });
 // const vuexCookie = new VuexPersistence<State>({
@@ -68,7 +68,7 @@ const {
   moduleGetterContext,
 } = createDirectStore({
   modules: {
-    authMod: authModule,
+    // authMod: authModule,
     decksMod: decksModule,
   },
   plugins: [

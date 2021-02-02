@@ -58,7 +58,6 @@ import { v4 as uuid } from 'uuid';
 import { Quill, quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.snow.css';
 import imageUpload from 'quill-plugin-image-upload';
-import { uploadPictureToBucket } from '../store/textileHelpers';
 
 Quill.register('modules/imageUpload', imageUpload);
 const toolbarContent = [
@@ -126,7 +125,7 @@ export default {
         modules: {
           imageUpload: {
             upload: async (file) => {
-              return await uploadPictureToBucket(file);
+              // return await uploadPictureToBucket(file);
             },
           },
           toolbar: toolbarContent,

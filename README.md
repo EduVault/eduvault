@@ -86,10 +86,24 @@ optional: full docker dev setup with hot reloading.
 note: this reads the published version of 'shared', so config changes might not update without publishing. to do- set up symlinks in docker?
 
 ```bash
+#
 yarn d-dev
 ```
 
 Note: Doesn't include sdk development. Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
+
+### Test
+
+```bash
+yarn test-watch:e2e
+yarn test-watch:api
+```
+
+with debugger:
+run vscode debugger start prompts:
+`Attach to Cypress`
+`Launch Chrome against localhost`
+`Run Script: test-watch:api`
 
 ### Dev deploy
 

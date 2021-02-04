@@ -61,6 +61,11 @@ The auth server and data home app will be found in this repo and the SDKs will b
 
 ## To dev
 
+Install the dependencies:
+```bash
+npm install --also=dev
+```
+
 Run just the api in docker and the rest locally
 
 ```bash
@@ -70,7 +75,7 @@ yarn dev
 optional: full docker dev setup with hot reloading.
 
 ```bash
-yarn d-dev
+yarn d-dev:up
 ```
 
 Note: Doesn't include sdk dev. Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example

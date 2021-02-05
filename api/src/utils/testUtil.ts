@@ -3,7 +3,7 @@ import { types } from '../types';
 import { ThreadID, PrivateKey } from '@textile/hub';
 import { encrypt, hash } from '../utils/encryption';
 import supertest from 'supertest';
-import { testApp } from '..';
+import { testApp } from '../index';
 import * as http from 'http';
 import { ROUTES } from '../config';
 export { ROUTES } from '../config';

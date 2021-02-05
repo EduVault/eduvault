@@ -8,7 +8,10 @@ import { StrategyOptionWithRequest } from 'passport-facebook';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
-export const APP_SECRET = process.env.APP_SECRET;
+export const APP_SECRET = process.env.APP_SECRET ?? 'VerySecretPassword';
+if (utils.isProdEnv() && APP_SECRET === 'VerySecretPassword') {
+  throw new Error('APP_SECRET missing in production');
+}
 
 // this might be incorrect. need to test where docker is sending requests. chould be process.env.IN_DOCKER ? local : prod
 export const URL_API = utils.isProdEnv() ? config.URL_API_PROD : config.URL_API_LOCAL;

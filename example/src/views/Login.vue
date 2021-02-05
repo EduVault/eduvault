@@ -3,10 +3,7 @@
     <div class="login-page">
       <b-img class="landing-img" src="/img/icons/flashy-cards-cover-square.png" />
       <a id="eduvault-login-button">
-        <img
-          src="@/assets/eduvault-button.png"
-          class="oauth-login-button eduvault-button"
-          width="256px"
+        <img src="@/assets/eduvault-button.png" class="eduvault-button" width="256px"
       /></a>
     </div>
   </div>
@@ -36,12 +33,11 @@ export default {
 
     onMounted(async () => {
       // if initiated with options, will a
-      const reset = true;
+      const connnect = true;
 
-      let appID = '50eb35c1-4cb0-4f6c-b406-404eb2468915';
-      if (reset) {
+      let appID: string;
+      if (connnect) {
         console.log({ APP_SECRET });
-
         if (!APP_SECRET) return;
         devVerify(APP_SECRET, 'jacobcoro@qq.com');
         const appInfo = await appRegister(
@@ -51,18 +47,19 @@ export default {
           'a testing app',
         );
         console.log({ appInfo });
-        if (appInfo) appID = appInfo.appID;
+        if (!appInfo) return;
+        appID = appInfo.appID;
+        const eduvault = new EduVault({
+          appID,
+          redirectURL,
+          buttonID: 'eduvault-login-button',
+          log: true,
+          onReady: (db) => {
+            alert('database ready!');
+            state.db = db;
+          },
+        });
       }
-      const eduvault = new EduVault({
-        appID,
-        redirectURL,
-        buttonID: 'eduvault-login-button',
-        log: true,
-        onReady: (db) => {
-          alert('database ready!');
-          state.db = db;
-        },
-      });
     });
     const state = reactive({
       db,
@@ -78,8 +75,14 @@ export default {
 <style scoped>
 .eduvault-button {
   margin-bottom: auto;
-}
 
+  box-shadow: 1px 1px 3px 1px #00000063;
+  border-radius: 5px;
+}
+.eduvault-button:hover {
+  box-shadow: 1px 1px 3px 1px #000000a8;
+  cursor: pointer;
+}
 .login-page {
   display: flex;
   align-items: center;

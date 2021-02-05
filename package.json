@@ -5,14 +5,15 @@
   "private": "true",
   "devDependencies": {
     "cypress": "^6.3.0",
+    "dotenv": "^8.2.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2"
   },
   "scripts": {
     "pub-shared": "cd ./shared && publish && cd ../api && yarn add @eduvault/shared",
-    "link-set": "cd ./shared && npm link && cd ../example && npm link @eduvault/shared && cd ../app && npm link @eduvault/shared && cd ../api && npm link @eduvault/shared && cd ../sdk/js && npm link @eduvault/shared && npm link && cd ../../example && npm link @eduvault/eduvault-js && cd ../api && npm link @eduvault/eduvault-js",
+    "link-set": "cd ./shared && npm link && cd ../ && npm link @eduvault/shared && cd ./example && npm link @eduvault/shared && cd ../app && npm link @eduvault/shared && cd ../api && npm link @eduvault/shared && cd ../sdk/js && npm link @eduvault/shared && npm link && cd ../ && npm link @eduvault/eduvault-js && cd ../../example && npm link @eduvault/eduvault-js && cd ../api && npm link @eduvault/eduvault-js",
     "dev": "run-p dev:*",
-    "test:e2e": "yarn cypress run",
+    "test:e2e": " yarn cypress run",
     "test-watch:api": "cd ./api && yarn test",
     "test-watch:e2e": "yarn cypress open",
     "test-docker:e2e": "docker-compose -f docker-compose-test.yml up  --exit-code-from cypress",

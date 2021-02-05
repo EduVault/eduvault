@@ -101,8 +101,8 @@ yarn test-watch:api
 
 with debugger:
 run vscode debugger start prompts:
-`Attach to Cypress`
-`Launch Chrome against localhost`
+`Attach to Cypress` - remember to `yarn test-watch:api` first
+`Launch Chrome against localhost` - remember to `yarn dev` first
 `Run Script: test-watch:api`
 
 ### Dev deploy

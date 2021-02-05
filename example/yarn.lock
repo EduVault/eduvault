@@ -873,9 +873,9 @@
     "exec-sh" "^0.3.2"
     "minimist" "^1.2.0"
 
-"@eduvault/eduvault-js@^1.0.0":
+"@eduvault/eduvault-js@file:../sdk/js":
   "resolved" "file:../sdk/js"
-  "version" "1.0.13"
+  "version" "1.1.0"
   dependencies:
     "@eduvault/shared" "^1.0.16"
     "@textile/hub" "^5.2.0"
@@ -885,10 +885,6 @@
     "core-js" "^3.8.3"
     "crypto-js" "^4.0.0"
     "ulid" "^2.3.0"
-
-"@eduvault/shared@file:../shared":
-  "resolved" "file:../shared"
-  "version" "1.0.16"
 
 "@eslint/eslintrc@^0.3.0":
   "integrity" "sha512-1JTKgrOKAHVivSvOYw+sJOunkBjUOvjqWk1DPja7ZFhIS2mX/4EgTT8M7eTK9jrKhL/FvXXEbQwIs3pg1xp3dg=="

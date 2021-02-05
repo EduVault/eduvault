@@ -42,9 +42,16 @@ export default function (router: Router<DefaultState, Context>, passport: typeof
             ctx.conflict({ error: 'app name exists', appID: apps[0].appID }, 'app name exists');
           }
         });
+        await App.find({ appID: data.appID }, (err, apps) => {
+          if (apps.length >= 1) {
+            console.log({ apps });
+            exists = true;
+            ctx.conflict({ error: 'appID exists', appID: apps[0].appID }, 'appID exists');
+          }
+        });
         if (exists) throw 'app name exists';
         const newApp = new App();
-        newApp.appID = uuid();
+        newApp.appID = data.appID ?? uuid();
         newApp.devID = data.accountID;
         newApp.name = data.name;
         newApp.description = data.description;

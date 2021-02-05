@@ -32,6 +32,7 @@ export interface AppAuthRes {
   oldJwt: string;
   decryptToken: string;
 }
+
 export interface AppTokenData extends IApp {
   data: { id: string; decryptToken: string };
   iat: number;
@@ -39,6 +40,7 @@ export interface AppTokenData extends IApp {
 }
 
 export interface AppRegisterReq {
+  appID?: string;
   accountID: string;
   password: string;
   name: string;

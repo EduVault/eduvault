@@ -1,10 +1,35 @@
+/// <reference types="cypress" />
+
 export const exampleURL = 'localhost:8082';
 const dummyEmail = 'person@email.com';
 const dummyPassword = 'password123';
-const exampleLoginButton = '.oauth-login-button';
+const exampleLoginButton = '#eduvault-login-button';
 const emailInput = 'input[type="email"]';
 const passwordInput = 'input[type="password"]';
-const pwSignupSubmit = 'button[type=submit]';
+const pwSignupSubmit = '.btn__login-signup';
+
+// add app signup stuff here.
+
+// we want app to have been registered before calls
+// testing registering on api unit tests check for double register
+//
+
+import { config } from '../../shared';
+
+import { appRegister, devVerify } from '../../sdk/js';
+
+console.log('E2E test', APP_SECRET);
+const appSetup = () => {
+  devVerify();
+};
+
+const loginSignup = () => {
+  cy.get(exampleLoginButton).click();
+  cy.get(emailInput).type(dummyEmail);
+  cy.get(passwordInput).type(dummyPassword);
+  cy.get(pwSignupSubmit).click();
+};
+
 describe('Password Login', () => {
   beforeEach(() => {
     cy.visit(exampleURL + '/login');
@@ -12,10 +37,11 @@ describe('Password Login', () => {
   it('loads components', () => {
     cy.get('.landing-img').should('exist');
   });
-  it('clicks login', () => {
-    cy.get(exampleLoginButton).click();
-    cy.get(emailInput).type(dummyEmail);
-    cy.get(passwordInput).type(dummyPassword);
-    cy.get(pwSignupSubmit).click();
+  it('login', () => {
+    loginSignup();
+  });
+  it('can log back in', () => {
+    loginSignup();
+    loginSignup();
   });
 });

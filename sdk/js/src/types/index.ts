@@ -1,41 +1,8 @@
 import { CollectionConfig } from '@textile/threaddb/dist/esm/local/collection';
 import { JSONSchema } from '@textile/threaddb';
+import { types } from '@eduvault/shared';
 
-export interface AppRegisterReq {
-  accountID: string;
-  password: string;
-  name: string;
-  description?: string;
-}
-
-export interface AppUpdateReq {
-  accountID: string;
-  password: string;
-  appID: string;
-  name?: string;
-  description?: string;
-  authorizedDomains?: string[];
-  persons?: string[];
-}
-export interface DevVerifyReq {
-  appSecret: string;
-  devID: string;
-}
-
-export interface ApiRes<T> {
-  data: T;
-  code: number;
-  message: string;
-}
-export interface AppAuthRes {
-  jwt: string;
-  oldJwt: string;
-  decryptToken: string;
-}
-export interface AppAuthReq {
-  appLoginToken: string;
-  appID: string;
-}
+export { types };
 
 export const dummyPersonSchema: JSONSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',

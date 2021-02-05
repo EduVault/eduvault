@@ -1,9 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { URL_API, ROUTES } from '../config';
-import { DevVerifyReq, AppRegisterReq } from '../types';
-import { hash } from './utils';
+import { types } from '../types';
 
+import { hash } from './utils';
+type DevVerifyReq = types.DevVerifyReq;
+type AppRegisterReq = types.AppRegisterReq;
 export const devVerify = async (appSecret: string, devID: string) => {
   try {
     const postData: DevVerifyReq = { appSecret, devID };
@@ -30,7 +32,8 @@ export const appRegister = async (
   accountID: string,
   password: string,
   name: string,
-  description?: string
+  description?: string,
+  appID?: string
 ) => {
   try {
     const postData: AppRegisterReq = {
@@ -38,6 +41,7 @@ export const appRegister = async (
       password: hash(password),
       name,
       description,
+      appID,
     };
     const options: AxiosRequestConfig = {
       url: URL_API + ROUTES.APP_REGISTER,

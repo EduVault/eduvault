@@ -45,6 +45,7 @@ export const connectDB = async () => {
     console.log({ connectionError });
   }
 };
+//
 export const stopDB = async (db: mongoose.Connection) => {
   try {
     await db.dropCollection('person');

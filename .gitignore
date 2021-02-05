@@ -117,3 +117,7 @@ dist
 # TernJS port file
 .tern-port
 
+cypress/examples/
+cypress/videos/
+cypress/fixtures/
+EduVault.code-workspace

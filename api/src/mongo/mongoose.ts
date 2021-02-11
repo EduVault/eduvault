@@ -1,19 +1,25 @@
 import mongoose from 'mongoose';
-import { MONGO_URI } from '../config';
+import { MONGO_URI, MONGO_DB_NAME } from '../config';
 
-const connectDb = () => {
+const connectDB = () => {
   try {
-    console.log('connecting');
+    console.log('connecting', MONGO_DB_NAME, MONGO_URI);
     const db = mongoose.connection;
-    mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    mongoose.connect(MONGO_URI, {
+      dbName: MONGO_DB_NAME,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-    db.on('error', console.error);
+    db.on('error', (err) => {
+      throw new Error(err);
+    });
     db.on('connected', () => console.log('connected to mongo'));
     db.on('diconnected', () => console.log('Mongo is disconnected'));
     db.on('open', () => console.log('Connection Made!'));
     return db;
-  } catch (err) {
-    console.log(err);
+  } catch (connectionError) {
+    console.log({ connectionError });
   }
 };
-export default connectDb;
+export default connectDB;

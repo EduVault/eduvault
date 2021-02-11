@@ -22,7 +22,7 @@ async function reHydrateStorage(to: Route, from: Route, next: any) {
 /**More strict check */
 async function routeGuard(to: Route, from: Route, next: any) {
   // might want to do a more strict local check
-  if (store.state.authMod.keyPair) {
+  if (store.state.authMod.privateKey) {
     next();
   } else {
     // call the server

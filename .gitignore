@@ -5,8 +5,8 @@
 **/tests
 **/test-output
 **/log
-
-
+cypress/screenshots/
+cypress/videos/
 # Logs
 logs
 *.log

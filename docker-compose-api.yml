@@ -7,9 +7,15 @@ services:
       target: dev-stage
     volumes:
       - './api:/api'
+      - './shared:/api/node_modules/@eduvault/shared'
+      - './shared:/shared'
       - '/api/node_modules'
+
     environment:
+      - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=development
+    env_file:
+      - ./.env
     ports:
       - '3003:3003'
     depends_on:

@@ -40,7 +40,7 @@ const vuexLocalStorage = new VuexPersistence<RootState>({
     //   backlog: state.decksMod.backlog,
     // },
     authMod: {
-      jwtEncryptedKeyPair: state.authMod.jwtEncryptedKeyPair,
+      jwtEncryptedPrivateKey: state.authMod.jwtEncryptedPrivateKey,
       pubKey: state.authMod.pubKey,
       threadIDStr: state.authMod.threadIDStr,
       authType: state.authMod.authType,

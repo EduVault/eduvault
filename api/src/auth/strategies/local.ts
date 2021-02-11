@@ -1,25 +1,25 @@
 import * as passportLocal from 'passport-local';
 import Person, { IPerson } from '../../models/person';
-import * as bcrypt from 'bcryptjs';
+import { validPassword } from '../../utils/encryption';
 
 const LocalStrategy = passportLocal.Strategy;
 
-const localStrat = new LocalStrategy(
-  async (accountID: IPerson['accountID'], password: IPerson['password'], done) => {
-    const person = await Person.findOne({ accountID: accountID });
-    if (!person) {
-      done('Personon not found', false);
-    } else {
-      bcrypt.compare(password, person.password, (error, result) => {
-        if (error) {
-          done(error, false);
-        } else if (result) {
-          done(null, person);
-        } else {
-          done('Password does not match', false);
-        }
-      });
-    }
-  },
-);
+const localStrat = new LocalStrategy(async (username: string, password: string, done) => {
+  try {
+    console.log('localstrat', { username, password });
+    Person.findOne({ accountID: username }, undefined, undefined, (error, person) => {
+      console.log('localStrat', { error, person });
+      if (error) done(error);
+      else if (!person) {
+        done('Person not found');
+      } else {
+        const valid = validPassword(password, person.password);
+        if (valid) done(null, person);
+        else done('password does not match');
+      }
+    });
+  } catch (error) {
+    done(error);
+  }
+});
 export default localStrat;

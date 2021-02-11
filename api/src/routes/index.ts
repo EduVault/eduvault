@@ -8,9 +8,10 @@ import facebook from './facebook';
 import google from './google';
 import dotwallet from './dotwallet';
 import saveOnChain from './saveOnChain';
-import checkAuth from './checkAuth';
-import { DefaultState, Context, Middleware } from 'koa';
-import { CLIENT_CALLBACK } from '../config';
+import checkAuth from '../utils/checkAuth';
+import appAuth from './appAuth';
+import appManage from './appManage';
+import { DefaultState, Context } from 'koa';
 import getPerson from '../utils/getPersonFromSession';
 
 const startRouter = (
@@ -19,6 +20,7 @@ const startRouter = (
 ) => {
   const router = new Router<DefaultState, Context>();
   router.get('/ping', async (ctx) => {
+    console.log('pingged');
     ctx.oK(null, 'pong!');
   });
   /** Get Person and JWT */
@@ -65,6 +67,9 @@ const startRouter = (
     await person.save();
     ctx.oK({ DbInfo: person.DbInfo });
   });
+
+  appManage(router, passport);
+  appAuth(router, passport);
   local(router, passport);
   facebook(router, passport);
   google(router, passport);

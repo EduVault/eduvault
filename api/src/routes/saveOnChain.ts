@@ -2,10 +2,10 @@ import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
 import { DefaultState, Context } from 'koa';
 import axios, { AxiosRequestConfig } from 'axios';
-import { ROUTES, CLIENT_CALLBACK, DOTWALLET_APP_ID, DOTWALLET_SECRET } from '../config';
+import { ROUTES, CLIENT_CALLBACK, config, DOTWALLET_SECRET } from '../config';
 import TxList, { IRecord } from '../models/txlist';
 import { createJwt } from '../utils/jwt';
-import checkAuth from './checkAuth';
+import checkAuth from '../utils/checkAuth';
 
 const saveOnChain = function (router: Router<DefaultState, Context>) {
   router.post('/save-data', checkAuth, async (ctx) => {
@@ -16,7 +16,7 @@ const saveOnChain = function (router: Router<DefaultState, Context>) {
       const getHostedOptions: AxiosRequestConfig = {
         headers: {
           'Content-Type': 'application/json',
-          appid: DOTWALLET_APP_ID,
+          appid: config.DOTWALLET_APP_ID,
           appsecret: DOTWALLET_SECRET,
         },
         method: 'POST',
@@ -36,7 +36,7 @@ const saveOnChain = function (router: Router<DefaultState, Context>) {
       const getBalanceOptions: AxiosRequestConfig = {
         headers: {
           'Content-Type': 'application/json',
-          appid: DOTWALLET_APP_ID,
+          appid: config.DOTWALLET_APP_ID,
           appsecret: DOTWALLET_SECRET,
         },
         method: 'POST',
@@ -63,7 +63,7 @@ const saveOnChain = function (router: Router<DefaultState, Context>) {
       const saveDataOptions: AxiosRequestConfig = {
         headers: {
           'Content-Type': 'application/json',
-          appid: DOTWALLET_APP_ID,
+          appid: config.DOTWALLET_APP_ID,
           appsecret: DOTWALLET_SECRET,
         },
         method: 'POST',

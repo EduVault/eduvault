@@ -59,21 +59,51 @@ The auth server and data home app will be found in this repo and the SDKs will b
  ┗ 📂 deploy      nginx and ssl config files
 ```
 
+## project setup
+
+### config and env
+
+Changing the .env file in the root to your own secrets, and updating the config.ts file in 'shared' should be enough to fork and run the project with your own domain name and Google/Facebook/Dotwllet credentials.
+
 ## To dev
 
-Run just the api in docker and the rest locally
+```bash
+# will install everything
+yarn inst
+# build the shared library and sdk
+yarn build:shared && yarn build:sdk-js
+# set up symlinks
+yarn link-set
+```
+
+This will run just the api in docker and the rest locally
 
 ```bash
 yarn dev
 ```
 
 optional: full docker dev setup with hot reloading.
+note: this reads the published version of 'shared', so config changes might not update without publishing. to do- set up symlinks in docker?
 
 ```bash
+#
 yarn d-dev
 ```
 
-Note: Doesn't include sdk dev. Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
+Note: Doesn't include sdk development. Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
+
+### Test
+
+```bash
+yarn test-watch:e2e
+yarn test-watch:api
+```
+
+with debugger:
+run vscode debugger start prompts:
+`Attach to Cypress` - remember to `yarn test-watch:api` first
+`Launch Chrome against localhost` - remember to `yarn dev` first
+`Run Script: test-watch:api`
 
 ### Dev deploy
 

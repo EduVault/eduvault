@@ -1,5 +1,5 @@
-import { IPerson } from '../types';
-
+import { types } from '../types';
+type IPerson = types.IPerson;
 // import localForage from 'localforage';
 import Vue from 'vue';
 import Vuecookies from 'vue-cookies';

@@ -7,7 +7,7 @@
   "env": {
     "es6": true
   },
-  "ignorePatterns": ["node_modules", "build", "coverage"],
+  "ignorePatterns": ["node_modules", "dist", "coverage"],
   "plugins": ["import", "eslint-comments"],
   "extends": [
     "eslint:recommended",
@@ -24,6 +24,7 @@
   },
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": "error",
     "eslint-comments/disable-enable-pair": [
       "error",
       {
@@ -32,7 +33,7 @@
     ],
     "eslint-comments/no-unused-disable": "error",
     "import/order": [
-      "error",
+      "warn",
       {
         "newlines-between": "always",
         "alphabetize": {
@@ -41,7 +42,7 @@
       }
     ],
     "sort-imports": [
-      "error",
+      "warn",
       {
         "ignoreDeclarationSort": true,
         "ignoreCase": true

@@ -1,11 +1,11 @@
 {
-    preset: [
-        '@babel/preset-env',
-        {
-            targets: {
-                node: 'current',
-            },
-            modules: 'commonjs',
-        },
-    ];
+  preset: [
+    '@babel/preset-env',
+    {
+      targets: {
+        node: 'current',
+      },
+      modules: 'ES6',
+    },
+  ];
 }

@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // Configuration used to debug the application (default configuration created by Visual Studio Code )
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome against localhost",
+      "url": "http://localhost:8082",
+      "webRoot": "${workspaceFolder}"
+    },
+    // Configuration used to debug Cypress tests
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Cypress",
+      "port": 9222,
+      "url": "http://localhost*",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true,
+      "skipFiles": ["cypress_runner.js"]
+    }
+  ]
+}

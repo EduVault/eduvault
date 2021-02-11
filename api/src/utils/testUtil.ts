@@ -56,25 +56,6 @@ export const stopDB = async (db: mongoose.Connection) => {
   await db.close();
 };
 
-export const devRegisterReq: types.DevVerifyReq = {
-  appSecret: APP_SECRET,
-  devID: accountID,
-};
-export const appRegisterReq: types.AppRegisterReq = {
-  accountID,
-  password,
-  name: 'Awesome New App',
-  description: 'An app so cool it defies description',
-};
-
-export const registerApp = async () => {
-  await pwAuthReq({ password, accountID });
-  await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
-  const registerRes = await request().post(ROUTES.APP_REGISTER).send(appRegisterReq);
-  const appID: string = registerRes.body.data.appID;
-  return appID;
-};
-
 export const pwAuthReq = async (options: {
   accountID?: string;
   password?: string;
@@ -97,9 +78,55 @@ export const pwAuthReq = async (options: {
   return await agent.post(ROUTES.LOCAL).send(newPersonReq).set('Accept', 'application/json');
 };
 
-export const withCookie = async (req: supertest.Test) => {
+export const pwAuthWithCookie = async (req: supertest.Test) => {
   const res = await pwAuthReq({ password, accountID });
   const cookie: string = res.headers['set-cookie'];
+  req.set('Cookie', cookie);
+  return await req;
+};
+
+export const devRegisterReq: types.DevVerifyReq = {
+  appSecret: APP_SECRET,
+  devID: accountID,
+};
+export const appRegisterReq: types.AppRegisterReq = {
+  accountID,
+  password,
+  name: 'Awesome New App',
+  description: 'An app so cool it defies description',
+};
+
+export const registerApp = async () => {
+  const db = connectDB(); //reset DB
+  await pwAuthReq({ password, accountID });
+  await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
+  const registerRes = await request().post(ROUTES.APP_REGISTER).send(appRegisterReq);
+  // console.log({ registerRes: registerRes.body });
+  const appID: string = registerRes.body.data.appID;
+  return appID;
+};
+export const appUserLogin = async () => {
+  const appID = await registerApp();
+  const loginRes = await pwAuthReq({
+    accountID,
+    password,
+    appID,
+    redirectURL: 'https://somewhere.com',
+  });
+  const appLoginToken = loginRes.body.data.appLoginToken;
+  const appAuthReq: types.AppAuthReq = {
+    appID,
+    appLoginToken,
+  };
+  const authRes = await request().post(ROUTES.APP_AUTH).send(appAuthReq);
+  // console.log({ authRes: authRes.body });
+  const cookie = authRes.headers['set-cookie'];
+  // console.log({ cookie });
+  return cookie;
+};
+
+export const appAuthWithCookie = async (req: supertest.Test) => {
+  const cookie: string = await appUserLogin();
   req.set('Cookie', cookie);
   return await req;
 };

@@ -95,7 +95,7 @@ class EduVault {
   constructor(options?: initOptions) {
     this.appID = options?.appID;
     this.buttonID = options?.buttonID;
-    this.autoRedirect = options?.autoRedirect ?? false;
+    this.autoRedirect = options?.autoRedirect || false;
     this.redirectURL = options?.redirectURL;
     this.log = options?.log;
     this.onReady = options?.onReady;

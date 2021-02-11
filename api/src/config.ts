@@ -8,7 +8,7 @@ import { StrategyOptionWithRequest } from 'passport-facebook';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
-export const APP_SECRET = process.env.APP_SECRET ?? 'VerySecretPassword';
+export const APP_SECRET = process.env.APP_SECRET || 'VerySecretPassword';
 if (utils.isProdEnv() && APP_SECRET === 'VerySecretPassword') {
   throw new Error('APP_SECRET missing in production');
 }

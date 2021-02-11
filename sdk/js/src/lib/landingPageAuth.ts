@@ -7,7 +7,10 @@ import axios, { AxiosRequestConfig } from 'axios';
 // import { ulid } from 'ulid';
 
 import { ROUTES, URL_API, URL_APP, WS_API } from '../config';
-import { ApiRes, AppAuthReq, AppAuthRes } from '../types';
+import { types } from '../types';
+
+type AppAuthReq = types.AppAuthReq;
+type AppAuthRes = types.AppAuthRes;
 
 import { decrypt, isServerConnected } from './utils';
 
@@ -83,7 +86,7 @@ const appLogin = async (appLoginToken: string, appID: string) => {
       method: 'POST',
     };
     const res = await axios(options);
-    const resData: ApiRes<AppAuthRes> = res.data;
+    const resData: types.ApiRes<AppAuthRes> = res.data;
     console.log('app-login', res.data);
     if (!resData || !resData.data || !resData.data.jwt) return null;
     else return resData.data;

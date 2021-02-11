@@ -66,6 +66,7 @@
   "dependencies": {
     "absolutize-links": "^0.1.0",
     "git": "^0.1.5",
-    "global": "^4.4.0"
+    "global": "^4.4.0",
+    "typescript": "^4.1.3"
   }
 }

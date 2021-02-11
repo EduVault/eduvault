@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { request, connectDB, stopDB, pwAuthReq, withCookie, ROUTES } from '../utils/testUtil';
+import { request, connectDB, stopDB, pwAuthReq, pwAuthWithCookie, ROUTES } from '../utils/testUtil';
 
 const password = 'Password123';
 const accountID = 'person@email.com';
 
-export const appAuth = describe(`POST '/auth/local'`, () => {
+describe(`POST '/auth/local'`, () => {
   let db: mongoose.Connection;
   beforeAll(async () => {
     db = await connectDB();
@@ -58,7 +58,7 @@ export const appAuth = describe(`POST '/auth/local'`, () => {
     // console.log(res.body);
   });
   it('Can get jwts', async () => {
-    const res = await withCookie(request().get(ROUTES.GET_JWT));
+    const res = await pwAuthWithCookie(request().get(ROUTES.GET_JWT));
     // console.log('jwts', res.body.data.jwt);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);

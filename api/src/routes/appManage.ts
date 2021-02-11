@@ -23,7 +23,7 @@ export default function (router: Router<DefaultState, Context>, passport: typeof
 
   router.post(ROUTES.APP_REGISTER, async (ctx, next) => {
     const data: types.AppRegisterReq = ctx.request.body;
-    console.log({ data });
+    // console.log({ data });
     return passport.authenticate('dev', async (err: string, foundPerson: IPerson) => {
       // passport isnt returning person...
       try {
@@ -37,21 +37,21 @@ export default function (router: Router<DefaultState, Context>, passport: typeof
         let exists = false;
         await App.find({ name: data.name }, (err, apps) => {
           if (apps.length >= 1) {
-            console.log({ apps });
+            // console.log({ apps });
             exists = true;
             ctx.conflict({ error: 'app name exists', appID: apps[0].appID }, 'app name exists');
           }
         });
         await App.find({ appID: data.appID }, (err, apps) => {
           if (apps.length >= 1) {
-            console.log({ apps });
+            // console.log({ apps });
             exists = true;
             ctx.conflict({ error: 'appID exists', appID: apps[0].appID }, 'appID exists');
           }
         });
         if (exists) throw 'app name exists';
         const newApp = new App();
-        newApp.appID = data.appID ?? uuid();
+        newApp.appID = data.appID || uuid();
         newApp.devID = data.accountID;
         newApp.name = data.name;
         newApp.description = data.description;

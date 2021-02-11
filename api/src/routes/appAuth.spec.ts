@@ -7,11 +7,12 @@ import {
   password,
   accountID,
   registerApp,
+  appAuthWithCookie,
   ROUTES,
 } from '../utils/testUtil';
 import { types } from '../types';
 
-export const appAuth = describe(`POST '/auth/app`, () => {
+describe(`POST '/auth/app`, () => {
   let db: mongoose.Connection;
   beforeAll(async () => {
     db = await connectDB();
@@ -19,7 +20,7 @@ export const appAuth = describe(`POST '/auth/app`, () => {
   afterAll(async () => {
     await stopDB(db);
   });
-
+  let cookie: string;
   let appID: string;
   it('can authenticate an app from login redirect appLoginToken', async () => {
     appID = await registerApp();
@@ -38,6 +39,21 @@ export const appAuth = describe(`POST '/auth/app`, () => {
       appLoginToken,
     };
     const authRes = await request().post(ROUTES.APP_AUTH).send(appAuthReq);
-    console.log({ authRes: authRes.body.data });
+    // console.log({ authRes: authRes.body.data });
+    expect(typeof authRes.body.data.jwt).toBe('string');
+    expect(typeof authRes.body.data.decryptToken).toBe('string');
+    expect(authRes.body.data.decryptToken.length).toBe(36);
+    expect(authRes.body.data.jwt.length).toBeGreaterThan(50);
+    expect(authRes.headers['set-cookie'][0]).toContain('koa.sess=');
+    cookie = authRes.headers['set-cookie'];
+  });
+  it('Can authenticate app from cookie and return jwts', async () => {
+    const res = await appAuthWithCookie(request().get(ROUTES.GET_JWT));
+    // console.log('jwts', res.body.data);
+    expect(res.status).toEqual(200);
+    expect(res.body.code).toEqual(200);
+    expect(res.body.data).toHaveProperty('jwt');
+    expect(typeof res.body.data.jwt).toBe('string');
+    expect(res.body.data.jwt.length).toBeGreaterThan(10);
   });
 });

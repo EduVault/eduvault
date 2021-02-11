@@ -18,7 +18,7 @@ export default (app: Koa) => {
   app.use(session(SESSION_OPTIONS, app));
   passport.serializeUser(function (personOrApp: IPerson | IApp, done) {
     if (!personOrApp) done(personOrApp, null);
-    console.log('serializing: ', { personOrApp });
+    // console.log('serializing: ', { personOrApp });
     done(null, personOrApp._id);
   });
 

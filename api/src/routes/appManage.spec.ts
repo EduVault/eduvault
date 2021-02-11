@@ -11,7 +11,7 @@ import {
   ROUTES,
 } from '../utils/testUtil';
 
-export const appAuth = describe(`POST '/dev/verify'`, () => {
+describe(`POST '/dev/verify'`, () => {
   let db: mongoose.Connection;
   beforeAll(async () => {
     db = await connectDB();

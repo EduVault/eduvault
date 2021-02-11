@@ -33,12 +33,6 @@ export interface AppAuthRes {
   decryptToken: string;
 }
 
-export interface AppTokenData extends IApp {
-  data: { id: string; decryptToken: string };
-  iat: number;
-  exp: number;
-}
-
 export interface AppRegisterReq {
   appID?: string;
   accountID: string;

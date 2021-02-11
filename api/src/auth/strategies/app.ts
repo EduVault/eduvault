@@ -1,7 +1,7 @@
 import App, { IApp } from '../../models/app';
 import { compareAppLoginToken } from '../../utils/jwt';
 import * as passportCustom from 'passport-custom';
-import { types } from 'types';
+import { types, AppAndTokenData, AppTokenData } from 'types';
 
 const CustomStrategy = passportCustom.Strategy;
 
@@ -13,11 +13,12 @@ const appStrat = new CustomStrategy(async (req, done) => {
   if (!app) {
     done('app not found', false);
   } else {
-    console.log({ app });
+    // console.log({ app });
     const tokenData = await compareAppLoginToken(token, appID);
     if (typeof tokenData === 'string') done(tokenData);
     else {
-      done(null, { ...tokenData, ...app });
+      const result: AppAndTokenData = { ...tokenData.data, ...app.toObject() };
+      done(null, result);
     }
   }
 });

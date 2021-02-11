@@ -2,7 +2,7 @@ import App, { IApp } from '../models/app';
 import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
 import { DefaultState, Context } from 'koa';
-import { types } from '../types';
+import { types, AppAndTokenData } from '../types';
 import { ROUTES } from '../config';
 import { createJwt, getJwtExpiry, compareAppLoginToken } from '../utils/jwt';
 
@@ -10,9 +10,9 @@ import { createJwt, getJwtExpiry, compareAppLoginToken } from '../utils/jwt';
 const appAuth = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   router.post(ROUTES.APP_AUTH, async (ctx, next) => {
     const data: types.AppAuthReq = ctx.request.body;
-    // console.log({ data }); 
-    return passport.authenticate('app', async (error: string, tokenData: types.AppTokenData) => {
-      console.log({ error, tokenData });
+    // console.log({ data });
+    return passport.authenticate('app', async (error: string, tokenData: AppAndTokenData) => {
+      // console.log({ error, tokenData });
       if (error) {
         ctx.unauthorized({ error }, error);
       } else {
@@ -32,9 +32,9 @@ const appAuth = function (router: Router<DefaultState, Context>, passport: typeo
         const returnData: types.AppAuthRes = {
           jwt: ctx.session.jwt,
           oldJwt: ctx.session.oldJwt,
-          decryptToken: tokenData.data.decryptToken,
+          decryptToken: tokenData.decryptToken,
         };
-        console.log('login authorized. returnData: ', returnData);
+        // console.log('login authorized. returnData: ', returnData);
         ctx.oK(returnData);
       }
     })(ctx, next);

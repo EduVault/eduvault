@@ -67,6 +67,8 @@ Changing the .env file in the root to your own secrets, and updating the config.
 
 ## To dev
 
+you will need to [install mongo-db](https://docs.mongodb.com/manual/administration/install-community/) for the local dev
+
 ```bash
 # will install everything
 yarn inst

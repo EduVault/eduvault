@@ -2,7 +2,7 @@ import { APP_SECRET, JWT_EXPIRY } from '../config';
 import Person, { IPerson } from '../models/person';
 import jwt from 'jsonwebtoken';
 import App, { IApp } from '../models/app';
-import { types } from 'types';
+import { types, AppTokenData } from 'types';
 
 export const createJwt = (id: string) => {
   const newJwt = jwt.sign({ data: { id } }, APP_SECRET, {
@@ -55,7 +55,7 @@ export async function createAppLoginToken(appID: string, decryptToken: string) {
 export async function compareAppLoginToken(
   token: string,
   appID: string,
-): Promise<string | types.AppTokenData> {
+): Promise<string | AppTokenData> {
   const decoded = await validateAndDecodeJwt(token);
   // console.log({ decoded, appID });
   if (!decoded.data) return 'token could not be decoded';
@@ -71,6 +71,6 @@ export async function compareAppLoginToken(
   if (!hasNotExpired)
     return `token issued ${difference} ms ago. longest valid time is: ${expiryDuration}`;
   const IDMatches = decoded.data.id === appID;
-  if (IDMatches) return decoded.data;
+  if (IDMatches) return decoded;
   else return 'token ID does not match';
 }

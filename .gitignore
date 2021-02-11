@@ -117,27 +117,7 @@ dist
 # TernJS port file
 .tern-port
 
-
-cypress/examples/actions.spec.js
-cypress/examples/aliasing.spec.js
-cypress/examples/assertions.spec.js
-cypress/examples/connectors.spec.js
-cypress/examples/cookies.spec.js
-cypress/examples/cypress_api.spec.js
-cypress/examples/files.spec.js
-cypress/examples/local_storage.spec.js
-cypress/examples/location.spec.js
-cypress/examples/misc.spec.js
-cypress/examples/navigation.spec.js
-cypress/examples/network_requests.spec.js
-cypress/examples/querying.spec.js
-cypress/examples/spies_stubs_clocks.spec.js
-cypress/examples/traversal.spec.js
-cypress/examples/utilities.spec.js
-cypress/examples/viewport.spec.js
-cypress/examples/waiting.spec.js
-cypress/examples/window.spec.js
-cypress/fixtures/example.json
-cypress/fixtures/profile.json
-cypress/fixtures/users.json
-EduVAult.code-workspace
+cypress/examples/
+cypress/videos/
+cypress/fixtures/
+EduVault.code-workspace

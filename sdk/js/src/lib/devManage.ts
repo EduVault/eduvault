@@ -6,6 +6,7 @@ import { types } from '../types';
 import { hash } from './utils';
 type DevVerifyReq = types.DevVerifyReq;
 type AppRegisterReq = types.AppRegisterReq;
+
 export const devVerify = async (appSecret: string, devID: string) => {
   try {
     const postData: DevVerifyReq = { appSecret, devID };

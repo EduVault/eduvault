@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { types } from '../types';
-import { ThreadID, PrivateKey } from '@textile/hub';
-import { encrypt, hash } from '../utils/encryption';
+import { utils } from '../utils';
 import supertest from 'supertest';
 import { testApp } from '../index';
 import * as http from 'http';
@@ -11,6 +10,8 @@ import { APP_SECRET } from '../config';
 
 export const password = 'Password123';
 export const accountID = 'person@email.com';
+
+const pwAuthReq = utils.pwAuthReq;
 
 export const request = () => supertest(http.createServer(testApp.callback()));
 export const agent = supertest.agent(http.createServer(testApp.callback()));
@@ -56,30 +57,18 @@ export const stopDB = async (db: mongoose.Connection) => {
   await db.close();
 };
 
-export const pwAuthReq = async (options: {
+export const pwAuthTestReq = async (options: {
   accountID?: string;
   password?: string;
   redirectURL?: string;
   appID?: string;
 }) => {
-  const privateKey = await PrivateKey.fromRandom();
-  const pubKey = await privateKey.public.toString();
-  const newThreadID = await ThreadID.fromRandom();
-  const threadIDStr = newThreadID.toString();
-  const newPersonReq: types.PasswordLoginReq = {
-    accountID: options.accountID,
-    password: options.password ? hash(options.password) : null,
-    pwEncryptedPrivateKey: encrypt(privateKey.toString(), password),
-    threadIDStr,
-    pubKey,
-    redirectURL: options.redirectURL,
-    appID: options.appID,
-  };
-  return await agent.post(ROUTES.LOCAL).send(newPersonReq).set('Accept', 'application/json');
+  const personAuthReq = await pwAuthReq(options);
+  return await agent.post(ROUTES.LOCAL).send(personAuthReq).set('Accept', 'application/json');
 };
 
 export const pwAuthWithCookie = async (req: supertest.Test) => {
-  const res = await pwAuthReq({ password, accountID });
+  const res = await pwAuthTestReq({ password, accountID });
   const cookie: string = res.headers['set-cookie'];
   req.set('Cookie', cookie);
   return await req;
@@ -107,7 +96,7 @@ export const registerApp = async () => {
 };
 export const appUserLogin = async () => {
   const appID = await registerApp();
-  const loginRes = await pwAuthReq({
+  const loginRes = await pwAuthTestReq({
     accountID,
     password,
     appID,

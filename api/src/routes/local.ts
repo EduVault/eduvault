@@ -6,8 +6,9 @@ import { DefaultState, Context } from 'koa';
 import { types } from '../types';
 import { ROUTES } from '../config';
 import { createJwt, getJwtExpiry, createAppLoginToken } from '../utils/jwt';
-import { hashPassword, validPassword } from '../utils/encryption';
+import { utils } from '../utils';
 import { v4 as uuid } from 'uuid';
+const { hashPassword, validPassword } = utils;
 const local = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   async function signup(ctx: Context, appLoginToken?: string, decryptToken?: string) {
     const data: types.PasswordLoginReq = ctx.request.body;
@@ -29,7 +30,7 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
     ctx.session.jwt = createJwt(newPerson.accountID);
     await ctx.session.save();
 
-    const returnData: types.PasswordLoginRes = {
+    const returnData: types.PasswordLoginRes['data'] = {
       pwEncryptedPrivateKey: newPerson.pwEncryptedPrivateKey,
       jwt: ctx.session.jwt,
       pubKey: newPerson.pubKey,
@@ -83,7 +84,7 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
             }
           } else ctx.session.jwt = createJwt(person.accountID);
           await ctx.session.save();
-          const returnData: types.PasswordLoginRes = {
+          const returnData: types.PasswordLoginRes['data'] = {
             pwEncryptedPrivateKey: person.pwEncryptedPrivateKey,
             jwt: ctx.session.jwt,
             pubKey: person.pubKey,

@@ -151,14 +151,14 @@ export default {
         };
 
         const response = await axios(options);
-        const responseData = response.data;
+        const responseData: types.PasswordLoginRes = response.data;
         console.log('login cookie: ' + JSON.stringify(Vue.$cookies.get('koa.sess')));
         console.log('login/signup data: ' + JSON.stringify(responseData));
         if (responseData.code !== 200) {
           if (responseData.message) return responseData.message;
           else return 'Unable to connect to database';
         } else {
-          const loginRes: types.PasswordLoginRes = responseData.data;
+          const loginRes = responseData.data;
           console.log('login result Data', loginRes);
           const keyStr = decrypt(loginRes.pwEncryptedPrivateKey, payload.password);
           if (!keyStr) return 'Could not decrypt PrivateKey';

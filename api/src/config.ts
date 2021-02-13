@@ -28,11 +28,11 @@ export const ROUTES = config.ROUTES;
 export const CORS_CONFIG: cors.Options = {
   credentials: true,
   origin: (ctx) => {
-    console.log(
-      '===================================ctx.request.header.origin===================================\n',
-      process.env.NODE_ENV,
-      ctx.request.header.origin,
-    );
+    // console.log(
+    //   '===================================ctx.request.header.origin===================================\n',
+    //   process.env.NODE_ENV,
+    //   ctx.request.header.origin,
+    // );
 
     // this might be incorrect. need to test where docker is sending requests. chould be process.env.IN_DOCKER ? local : prod
 
@@ -40,7 +40,7 @@ export const CORS_CONFIG: cors.Options = {
       ? config.PROD_DOMAINS
       : config.PROD_DOMAINS.concat([...config.DEV_DOMAINS]);
 
-    console.log(validDomains);
+    // console.log(validDomains);
     if (validDomains.indexOf(ctx.request.header.origin) !== -1) {
       // console.log('\n is valid domain');
       return ctx.request.header.origin;

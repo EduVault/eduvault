@@ -29,7 +29,7 @@ const appAuth = function (router: Router<DefaultState, Context>, passport: typeo
           }
         } else ctx.session.jwt = createJwt(data.appID);
         await ctx.session.save();
-        const returnData: types.AppAuthRes = {
+        const returnData: types.AppAuthRes['data'] = {
           jwt: ctx.session.jwt,
           oldJwt: ctx.session.oldJwt,
           decryptToken: tokenData.decryptToken,

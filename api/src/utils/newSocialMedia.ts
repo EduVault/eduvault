@@ -1,9 +1,9 @@
 import { IPerson, DotwalletProfile } from '../models/person';
 import { Profile as FBProfile } from 'passport-facebook';
 import { Profile as GProfile } from 'passport-google-oauth20';
-import { encrypt, decrypt } from './encryption';
+import { utils } from './';
 import { ThreadID, PrivateKey } from '@textile/hub';
-
+const { encrypt, decrypt } = utils;
 export async function createSocialMediaAccount(
   person: IPerson,
   type: 'facebook' | 'google',

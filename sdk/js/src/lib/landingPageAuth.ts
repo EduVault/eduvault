@@ -86,7 +86,7 @@ const appLogin = async (appLoginToken: string, appID: string) => {
       method: 'POST',
     };
     const res = await axios(options);
-    const resData: types.ApiRes<AppAuthRes> = res.data;
+    const resData: AppAuthRes = res.data;
     console.log('app-login', res.data);
     if (!resData || !resData.data || !resData.data.jwt) return null;
     else return resData.data;

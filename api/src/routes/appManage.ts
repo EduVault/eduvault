@@ -10,10 +10,16 @@ import { v4 as uuid } from 'uuid';
 export default function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   router.post(ROUTES.DEV_VERIFY, async (ctx, next) => {
     const data: types.DevVerifyReq = ctx.request.body;
-    if (data.appSecret !== APP_SECRET) ctx.unauthorized();
+    console.log({ devVerifyData: data });
+    if (data.appSecret !== APP_SECRET)
+      ctx.unauthorized(null, 'No secret found. Only administrators may verify devs');
     else {
       const dev: IPerson = await Person.findOne({ accountID: data.devID });
-      if (!dev) ctx.notFound();
+      if (!dev)
+        ctx.unauthorized(
+          null,
+          'Dev account not found. Developers must register a personal EduVault account first',
+        );
       else {
         dev.dev = { isVerified: true };
         ctx.oK(dev);
@@ -31,7 +37,7 @@ export default function (router: Router<DefaultState, Context>, passport: typeof
         const person = await Person.findOne({ accountID: data.accountID });
         if (err) {
           console.log({ err });
-          ctx.unauthorized(err, err);
+          ctx.unauthorized(err, 'dev person account not found');
           return;
         }
         let exists = false;
@@ -39,7 +45,10 @@ export default function (router: Router<DefaultState, Context>, passport: typeof
           if (apps.length >= 1) {
             // console.log({ apps });
             exists = true;
-            ctx.conflict({ error: 'app name exists', appID: apps[0].appID }, 'app name exists');
+            ctx.conflict(
+              { error: 'app with same name exists', appID: apps[0].appID },
+              'app with same name exists',
+            );
           }
         });
         await App.find({ appID: data.appID }, (err, apps) => {

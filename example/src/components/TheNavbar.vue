@@ -66,6 +66,7 @@ export default {
       // const threadView = `https://${store.state.authMod.threadIDStr}.thread.hub.textile.io/Deck/`;
       // window.open(threadView + deckID);
     };
+    const loggedIn = false;
     // const loggedIn = computed(() => store.getters.authMod.loggedIn);
     // const syncing = computed(() => store.getters.authMod.syncing);
     const logout = () => {
@@ -73,7 +74,7 @@ export default {
       // store.commit.authMod.LOGGEDIN(false);
     };
 
-    return { logout, openBucket, decks, viewDeck };
+    return { logout, openBucket, decks, viewDeck, loggedIn };
   },
 };
 </script>

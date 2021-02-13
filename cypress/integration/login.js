@@ -7,7 +7,7 @@ const exampleLoginButton = '#eduvault-login-button';
 const emailInput = 'input[type="email"]';
 const passwordInput = 'input[type="password"]';
 const pwSignupSubmit = '.btn__login-signup';
-
+const APP_SECRET = Cypress.env('APP_SECRET');
 // add app signup stuff here.
 
 // we want app to have been registered before calls

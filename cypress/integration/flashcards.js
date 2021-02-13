@@ -6,8 +6,8 @@ describe('Flashcards Suite', () => {
     cy.visit(exampleURL + '/home');
   });
   it('contains the basic components', () => {
-    cy.contains('h2', 'Create a Deck');
-    cy.contains('h2', 'Create a Card');
+    cy.contains('h2', 'Deck');
+    cy.contains('h2', 'Card');
     cy.contains('.deck-display__title', 'Animal facts');
   });
   it('loaded default deck JSON', () => {
@@ -15,14 +15,14 @@ describe('Flashcards Suite', () => {
     cy.contains('A zeal');
   });
   it('can create a deck', () => {
-    cy.get('.deck-input > .form__text-input').type('Test Deck');
-    cy.get('.deck-input__add-icon').click();
-
+    cy.get('.new-deck-btn').click();
+    cy.get('.form__text-input').type('Test Deck');
+    cy.get('.form__button--confirm').click();
     cy.contains('.deck-display__title', 'Test Deck');
   });
   it('can create a card', () => {
-    cy.get('.deck-input > .form__text-input').type('Test Deck');
-    cy.get('.deck-input__add-icon').click();
+    cy.get('.new-card-btn').click();
+    cy.get('.form__text-input').type('Test Deck');
 
     cy.get('.form__text-input[name=card-front-input]').type('Test card front');
     cy.get('.form__text-input[name=card-back-input]').type('Test card back');

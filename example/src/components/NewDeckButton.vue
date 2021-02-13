@@ -2,7 +2,7 @@
   <div class="d-flex">
     <h2 class="mr-3">Deck</h2>
     <font-awesome-icon
-      class="button primary"
+      class="button secondary new-deck-btn"
       icon="plus-square"
       size="2x"
       @click="$emit('newDeck')"

@@ -30,7 +30,7 @@ export const ROUTES = {
   GOOGLE_AUTH: '/auth/google',
   GOOGLE_AUTH_CALLBACK: '/auth/google/callback',
   DOTWALLET_AUTH: '/auth/dotwallet',
-  LOCAL: '/auth/local',
+  LOCAL_AUTH: '/auth/local',
 
   APP_AUTH: '/auth/app',
   APP_TOKEN_ISSUE: '/auth/app/issue-token',

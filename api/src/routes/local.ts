@@ -44,7 +44,7 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
     ctx.oK(returnData);
   }
 
-  router.post(ROUTES.LOCAL, async (ctx, next) => {
+  router.post(ROUTES.LOCAL_AUTH, async (ctx, next) => {
     const data: types.PasswordLoginReq = ctx.request.body;
     // console.log({ data });
     if (!data.password || !data.accountID) {

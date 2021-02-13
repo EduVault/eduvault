@@ -1,11 +1,39 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { URL_API, ROUTES } from '../config';
+import { ROUTES, URL_API } from '../config';
 import { types } from '../types';
 
-import { hash } from './utils';
+import { hash, utils } from './utils';
 type DevVerifyReq = types.DevVerifyReq;
 type AppRegisterReq = types.AppRegisterReq;
+type PasswordLoginReq = types.PasswordLoginReq;
+
+export const registerUser = async (options: {
+  accountID: string | undefined;
+  password: string | undefined;
+  redirectURL?: string | undefined;
+  appID?: string | undefined;
+}) => {
+  try {
+    const postData: PasswordLoginReq = await utils.pwAuthReq(options);
+    const axiosOptions: AxiosRequestConfig = {
+      url: URL_API + ROUTES.LOCAL_AUTH,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Forwarded-Proto': 'https',
+      },
+      data: postData,
+      method: 'POST',
+    };
+    const res = await axios(axiosOptions);
+    const resData: types.PasswordLoginRes = res.data;
+    console.log('/auth/local', resData);
+    return resData;
+  } catch (error) {
+    console.log({ error });
+    return null;
+  }
+};
 
 export const devVerify = async (appSecret: string, devID: string) => {
   try {

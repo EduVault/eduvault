@@ -64,7 +64,7 @@ export const pwAuthTestReq = async (options: {
   appID?: string;
 }) => {
   const personAuthReq = await pwAuthReq(options);
-  return await agent.post(ROUTES.LOCAL).send(personAuthReq).set('Accept', 'application/json');
+  return await agent.post(ROUTES.LOCAL_AUTH).send(personAuthReq).set('Accept', 'application/json');
 };
 
 export const pwAuthWithCookie = async (req: supertest.Test) => {

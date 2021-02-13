@@ -1,7 +1,7 @@
-import { PrivateKey, ThreadID, Database, JSONSchema } from '@textile/threaddb';
 import { Buckets } from '@textile/hub';
+import { Database, JSONSchema, PrivateKey, ThreadID } from '@textile/threaddb';
 
-import { appRegister, devVerify } from './lib/devManage';
+import { appRegister, devVerify, registerUser } from './lib/devManage';
 import {
   pageLoadChecks,
   setupButton,
@@ -9,7 +9,6 @@ import {
   startRemoteDB,
   syncChanges,
 } from './lib/landingPageAuth';
-
 import { dummyCollections } from './types';
 
 /* new problem... 
@@ -38,6 +37,7 @@ export interface initOptions {
 class EduVault {
   devVerify = devVerify;
   appRegister = appRegister;
+  registerUser = registerUser;
   pageLoadChecks = pageLoadChecks;
   setupButton = setupButton;
   startLocalDB = startLocalDB;

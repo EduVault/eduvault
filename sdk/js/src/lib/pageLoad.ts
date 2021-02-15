@@ -115,7 +115,15 @@ export async function pageLoadChecks({
         return { error: 'incomplete returning login info' };
       }
     } else if (online && !returningLogin) {
-      if (appLoginToken && appID && encryptedPrivateKey && pubKey && threadID) {
+      if (
+        appLoginToken &&
+        appID &&
+        encryptedPrivateKey &&
+        pubKey &&
+        threadID &&
+        threadIDStr &&
+        pwEncryptedPrivateKey
+      ) {
         const appLoginRes = await appLogin(appLoginToken, appID);
         if (appLoginRes) {
           const { jwt, decryptToken } = appLoginRes;
@@ -126,6 +134,12 @@ export async function pageLoadChecks({
               'jwtEncryptedPrivateKey',
               encrypt(keyStr, jwt)
             );
+            localStorage.setItem(
+              'pwEncryptedPrivateKey',
+              pwEncryptedPrivateKey
+            );
+            localStorage.setItem('threadIDStr', threadIDStr);
+            localStorage.setItem('pubKey', pubKey);
             return { privateKey, threadID, jwt };
           } else {
             return { error: 'private key could not be rehydrated' };

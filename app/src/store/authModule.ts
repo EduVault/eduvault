@@ -126,6 +126,7 @@ export default {
         const privateKey = await PrivateKey.fromRandom();
         const pubKey = privateKey.public.toString();
         const pwEncryptedPrivateKey = encrypt(privateKey.toString(), payload.password);
+        if (!pwEncryptedPrivateKey) throw 'error encrypting pwEncryptedPrivateKey';
         const newThreadID = ThreadID.fromRandom();
 
         const loginData: types.PasswordLoginReq = {
@@ -166,7 +167,7 @@ export default {
           if (!retrievedKey || !testPrivateKey(retrievedKey, loginRes.pubKey))
             return 'Could not retrieve PrivateKey';
           const jwts = await store.dispatch.authMod.getJwt();
-          if (!jwts || !jwts.jwt) return 'coud not get JWT';
+          if (!jwts || !jwts.jwt) return 'could not get JWT';
           const {
             pwEncryptedPrivateKey,
             threadIDStr,
@@ -174,8 +175,10 @@ export default {
             appLoginToken,
             decryptToken,
           } = loginRes;
+          const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+          if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
           storePersistentAuthData(
-            encrypt(keyStr, jwts.jwt),
+            jwtEncryptedPrivateKey,
             pwEncryptedPrivateKey,
             threadIDStr,
             pubKey,
@@ -185,6 +188,7 @@ export default {
             if (!appLoginToken || !decryptToken) console.log('app auth failed');
             else {
               const encryptedPrivateKey = encrypt(keyStr, decryptToken);
+              if (!encryptedPrivateKey) return 'error encrypting encryptedPrivateKey';
               const outRedirectURL = formatOutRedirectURL({
                 redirectURL,
                 threadIDStr,
@@ -317,6 +321,7 @@ export default {
       ) => {
         if (redirectURL && appID && pwEncryptedPrivateKey && pubKey) {
           const encryptedPrivateKey = encrypt(privateKey.toString(), decryptToken);
+          if (!encryptedPrivateKey) return 'error encrypting encryptedPrivateKey';
           const outRedirectURL = formatOutRedirectURL({
             redirectURL,
             threadIDStr,
@@ -391,8 +396,10 @@ export default {
             const keys = await rehydratePrivateKey(keyStr);
             if (keys && testPrivateKey(keys, person.pubKey)) {
               // success!
+              const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+              if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
               storePersistentAuthData(
-                encrypt(keyStr, jwts.jwt),
+                jwtEncryptedPrivateKey,
                 undefined,
                 person.threadIDStr,
                 person.pubKey,
@@ -427,33 +434,37 @@ export default {
         pubKey: string,
       ) => {
         console.log('case 3: hasAllPersistentData');
-        //    if fromExternal: get jwt, decrypt and redirect
-        const jwts = await store.dispatch.authMod.getJwt();
-        //save jwt
-        if (jwts?.jwt) store.commit.authMod.JWT(jwts.jwt);
-        //    if not: get person, full dehydrate, redirect home
-        if (jwts && jwts.jwt) {
-          // get jwt
-          // try to decrypt
-          console.log({ jwtEncryptedPrivateKey, jwts });
-          let keyStr = decrypt(jwtEncryptedPrivateKey, jwts.jwt);
-          // use oldJWT if it didn't work
-          if (!keyStr && jwts.oldJwt) keyStr = decrypt(jwtEncryptedPrivateKey, jwts.oldJwt);
-          if (!keyStr) {
-            onlyCookie();
-            return null;
-          }
-          const keys = await rehydratePrivateKey(keyStr);
-          console.log({ keys });
 
-          //should we test the keys better? might require getting ID
-          if (keys && testPrivateKey(keys, pubKey)) {
-            storePersistentAuthData(encrypt(keyStr, jwts.jwt));
-            if (fromExternal) {
-              // success - redirect out
-              // window.location.href = toExternalPath(keys, threadIDStr);
+        if (fromExternal) {
+          // TO DO!
+          // if fromExternal: get appLoginToken and redirect toExternalPath(keys, threadIDStr);
+          // need to create a new GetAppLoginToken API endpoint when authing app from here.
+          // check that the person has authorized before
+          router.push(toLoginPath);
+        } else {
+          const jwts = await store.dispatch.authMod.getJwt();
+          //save jwt
+          if (jwts?.jwt) store.commit.authMod.JWT(jwts.jwt);
+          //    if not: get person, full dehydrate, redirect home
+          if (jwts && jwts.jwt) {
+            // get jwt
+            // try to decrypt
+            console.log({ jwtEncryptedPrivateKey, jwts });
+            let keyStr = decrypt(jwtEncryptedPrivateKey, jwts.jwt);
+            // use oldJWT if it didn't work
+            if (!keyStr && jwts.oldJwt) keyStr = decrypt(jwtEncryptedPrivateKey, jwts.oldJwt);
+            if (!keyStr) {
+              onlyCookie();
               return null;
-            } else {
+            }
+            const keys = await rehydratePrivateKey(keyStr);
+            console.log({ keys });
+
+            //should we test the keys better? might require getting ID
+            if (keys && testPrivateKey(keys, pubKey)) {
+              const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+              if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
+              storePersistentAuthData(jwtEncryptedPrivateKey);
               // check to make sure person isn't already there?
               const person = await store.dispatch.authMod.getPerson();
               if (person && person.accountID) {
@@ -465,15 +476,15 @@ export default {
                 router.push(toLoginPath);
                 return null;
               }
+            } else {
+              // failure, maybe it's a problem with the jwt decryption, we can fallback and try case 2
+              onlyCookie();
+              return null;
             }
           } else {
-            // failure, maybe it's a problem with the jwt decryption, we can fallback and try case 2
-            onlyCookie();
+            router.push(toLoginPath);
             return null;
           }
-        } else {
-          router.push(toLoginPath);
-          return null;
         }
       };
       try {

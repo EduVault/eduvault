@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
 import * as bcrypt from 'bcryptjs';
 
-export function encrypt(content: string, encryptKey: string) {
+export function encrypt(content: any, encryptKey: string) {
   // console.log('encrypting', { content, encryptKey });
   if (!content) {
     console.log('no encryption content');
@@ -11,10 +11,15 @@ export function encrypt(content: string, encryptKey: string) {
     console.log('no encryption key');
     return null;
   }
-  let encJson = CryptoJS.AES.encrypt(JSON.stringify(content), encryptKey).toString();
-  const encrypted = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
-  // console.log({ encrypted });
-  return encrypted;
+  try {
+    let encJson = CryptoJS.AES.encrypt(JSON.stringify(content), encryptKey).toString();
+    const encrypted = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
+    // console.log({ encrypted });
+    return encrypted;
+  } catch (error) {
+    console.log('error encrypting', error);
+    return null;
+  }
 }
 
 export function decrypt(content: string, decryptKey: string) {

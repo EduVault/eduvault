@@ -11,17 +11,18 @@ export function encrypt(content: string, encryptKey: string) {
     console.log('no encryption key');
     return null;
   }
-  const encrypted = CryptoJS.AES.encrypt(content, encryptKey).toString();
+  let encJson = CryptoJS.AES.encrypt(JSON.stringify(content), encryptKey).toString();
+  const encrypted = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encJson));
   // console.log({ encrypted });
   return encrypted;
 }
 
 export function decrypt(content: string, decryptKey: string) {
-  // console.log('decrypting', { content, decryptKey });
+  console.log('decrypting', { content, decryptKey });
   try {
-    const decrypted = CryptoJS.AES.decrypt(content, decryptKey).toString(CryptoJS.enc.Utf8);
-    // console.log({ decrypted });
-    return decrypted;
+    let decData = CryptoJS.enc.Base64.parse(content).toString(CryptoJS.enc.Utf8);
+    let decryptedBytes = CryptoJS.AES.decrypt(decData, decryptKey).toString(CryptoJS.enc.Utf8);
+    return JSON.parse(decryptedBytes);
   } catch (error) {
     console.log('decryption error', error);
     return false;

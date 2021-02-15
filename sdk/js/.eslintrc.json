@@ -5,8 +5,8 @@
     "project": "sdk/js/tsconfig.json"
   },
   "env": {
-    "es6": true,
-    "jest/globals": true
+    "es6": true
+    // "jest/globals": true
   },
   "ignorePatterns": [
     "node_modules",

@@ -7,8 +7,23 @@ import { getJWT, appLogin } from './APICalls';
 import { pageLoadOptions, PageLoadChecksResult } from '../types';
 
 import { utils, isServerConnected } from '../utils';
-const { decrypt } = utils;
+const { decrypt, encrypt } = utils;
 
+/**
+ * Checks queries for login redirect info:
+ *  appLoginToken, threadID, pwEncryptedPrivateKey, pubKey, encryptedPrivateKey
+ *  see: app/src/store/utils/index => formatOutRedirectURL for what is being sent
+ * Checks local storage for jwtEncryptedPrivateKey
+ *
+ * flow:
+ *  first time login:
+ *    uses appLoginToken to start session and get jwt and decode token. uses decode token to decrypt keys.
+ *  returning login:
+ *    uses jwtEncryptedPrivateKey from localStorage,
+ *    then uses cookie to get JWT from server to decrypt privateKey
+ *  in both cases:
+ *    use jwt to get userAuth  (for now must be online. look into whether userAuth can be in localStorage too)
+ *    userAuth to start DB */
 export async function pageLoadChecks({
   autoRedirect = false,
   redirectURL,
@@ -16,27 +31,34 @@ export async function pageLoadChecks({
   log = false,
 }: pageLoadOptions): Promise<PageLoadChecksResult> {
   try {
-    const queries = new URL(window.location.href).searchParams;
-    // accepts appLoginToken, threadID, pwEncryptedPrivateKey and tokenEncryptedPrivateKey
-    // uses appLoginToken to start session and get jwt and decode token.
-    // first time uses decode token to decrypt keys.
-    // subsequent loadings uses jwtEncryptedPrivateKey from localStorage,
-    // then uses cookie to get JWT from server to decrypt
-    // in both cases:
-    // use jwt to get userAuth
-    // userAuth to start DB
     const online = await isServerConnected();
-    const threadIDStr = queries.get('thread_id');
-    const pwEncryptedPrivateKey = queries.get('pw_encrypted_key_pair');
-    const oldPwEncryptedPrivateKey = localStorage.getItem(
-      'pwEncryptedPrivateKey'
-    );
-    const jwtEncryptedPrivateKey = queries.get('jwt_encrypted_key_pair');
-    const oldJwtEncryptedPrivateKey = localStorage.getItem(
+    const queries = new URL(window.location.href).searchParams;
+
+    /** Returning login */
+    // should also have threadID, pubKey, etc. (check app)
+    // to do, save persistent data
+    const jwtEncryptedPrivateKey = localStorage.getItem(
       'jwtEncryptedPrivateKey'
     );
-    const appLoginToken = queries.get('app_login_token');
-    const pubKey = queries.get('pubkey');
+    let threadIDStr = localStorage.getItem('threadIDStr');
+    let pwEncryptedPrivateKey = localStorage.getItem('pwEncryptedPrivateKey');
+    let pubKey = localStorage.getItem('pubKey');
+    const returningLogin =
+      jwtEncryptedPrivateKey && threadIDStr && pwEncryptedPrivateKey && pubKey
+        ? true
+        : false;
+
+    /** New login */
+    let appLoginToken;
+    let encryptedPrivateKey;
+    if (!returningLogin) {
+      threadIDStr = queries.get('thread_id');
+      pwEncryptedPrivateKey = queries.get('pw_encrypted_private_key');
+      appLoginToken = queries.get('app_login_token');
+      encryptedPrivateKey = queries.get('encrypted_private_key');
+      pubKey = queries.get('pub_key');
+    }
+
     let threadID: ThreadID | undefined;
     if (threadIDStr)
       try {
@@ -53,56 +75,69 @@ export async function pageLoadChecks({
         online,
         threadIDStr,
         threadID,
-        oldPwEncryptedPrivateKey,
         pwEncryptedPrivateKey,
         jwtEncryptedPrivateKey,
-        oldJwtEncryptedPrivateKey,
         appLoginToken,
         pubKey,
       });
     }
 
     let jwts = null;
-    if (online) {
-      // coming back to page
-      if (jwtEncryptedPrivateKey && !appLoginToken) {
-        jwts = await getJWT();
-      }
-      // coming from login redirect
-      else if (appLoginToken && appID) {
-        jwts = await appLogin(appLoginToken, appID);
-      }
+    if (online && returningLogin) {
+      jwts = await getJWT();
       if (log) console.log({ jwts });
       if (jwtEncryptedPrivateKey && jwts && jwts.jwt && threadID && pubKey) {
-        // get jwt
-        // try to decrypt
         console.log({ jwtEncryptedPrivateKey, jwts });
         let keyStr = decrypt(jwtEncryptedPrivateKey, jwts.jwt);
+        let usedOldJwt = false;
         // use oldJWT if it didn't work
         if (!keyStr && jwts.oldJwt)
           keyStr = decrypt(jwtEncryptedPrivateKey, jwts.oldJwt);
-        if (!keyStr) {
-          return { error: 'unable to decrypt keys' };
-        }
+        if (keyStr) {
+          usedOldJwt = true;
+        } else return { error: 'unable to decrypt keys' };
+
         const privateKey = await rehydratePrivateKey(keyStr);
         console.log({ privateKey });
 
         //should we test the keys better? might require getting ID
         if (privateKey && testPrivateKey(privateKey, pubKey)) {
+          if (usedOldJwt)
+            localStorage.setItem(
+              'jwtEncryptedPrivateKey',
+              encrypt(keyStr, jwts.jwt)
+            );
           return { privateKey, threadID, jwt: jwts.jwt };
         } else {
-          return { error: 'login failed' };
+          return { error: 'private key could not be rehydrated' };
         }
       } else {
-        return { error: 'login failed' };
+        return { error: 'incomplete returning login info' };
       }
-    } // coming back, but offline
-    else if (pwEncryptedPrivateKey) {
+    } else if (online && !returningLogin) {
+      if (appLoginToken && appID && encryptedPrivateKey && pubKey && threadID) {
+        const appLoginRes = await appLogin(appLoginToken, appID);
+        if (appLoginRes) {
+          const { jwt, decryptToken } = appLoginRes;
+          const keyStr = decrypt(encryptedPrivateKey, decryptToken);
+          const privateKey = await rehydratePrivateKey(keyStr);
+          if (privateKey && testPrivateKey(privateKey, pubKey)) {
+            localStorage.setItem(
+              'jwtEncryptedPrivateKey',
+              encrypt(keyStr, jwt)
+            );
+            return { privateKey, threadID, jwt };
+          } else {
+            return { error: 'private key could not be rehydrated' };
+          }
+        } else return { error: 'appLogin failed' };
+      } else return { error: 'incomplete appLogin redirect data' };
+    } else if (!online && returningLogin) {
       // create a password input
       console.log('use your password to unlock the database while offline');
       // this mode will only allow local use, can't connect to remote.
-      // connect local and connect remote must be separate funcitons
-      return { threadID, pwEncryptedPrivateKey };
+      // connect local and connect remote must be separate functions
+      return { error: 'offline unlocking not yet available' };
     } else return { error: 'no credentials found' };
   } catch (error) {
     return { error };

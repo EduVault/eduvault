@@ -28,7 +28,7 @@ const password = function (router: Router<DefaultState, Context>, passport: type
     newPerson.save();
     await ctx.login(newPerson);
     ctx.session.jwt = createJwt(newPerson.accountID);
-    await ctx.session.save();
+    ctx.session.save();
 
     const returnData: types.PasswordLoginRes['data'] = {
       pwEncryptedPrivateKey: newPerson.pwEncryptedPrivateKey,
@@ -83,7 +83,7 @@ const password = function (router: Router<DefaultState, Context>, passport: type
               ctx.session.jwt = createJwt(person.accountID);
             }
           } else ctx.session.jwt = createJwt(person.accountID);
-          await ctx.session.save();
+          ctx.session.save();
           const returnData: types.PasswordLoginRes['data'] = {
             pwEncryptedPrivateKey: person.pwEncryptedPrivateKey,
             jwt: ctx.session.jwt,

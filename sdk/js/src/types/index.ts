@@ -21,9 +21,9 @@ export interface pageLoadOptions {
 }
 
 export interface PageLoadChecksResult {
-  error?: string;
   threadID?: ThreadID | null;
-  pwEncryptedPrivateKey?: string | null;
   privateKey?: PrivateKey;
   jwt?: string;
+
+  error?: string | Error;
 }

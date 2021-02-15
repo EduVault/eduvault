@@ -46,11 +46,13 @@ export default {
         if (!APP_SECRET) return;
         const accountID = 'person@email.com';
         const password = 'Password123';
-        const devPersonRegister = await personRegister({ accountID, password });
-        const dev = await devVerify(APP_SECRET, accountID);
         // to do: appregister req/res types
+        const devPersonRegister = await personRegister({ accountID, password });
+        console.log({ devPersonRegister });
+        const dev = await devVerify(APP_SECRET, accountID);
+        console.log({ dev });
         let appInfo = await appRegister(accountID, password, 'test app', 'a testing app');
-        // console.log({ appInfo });
+        console.log({ appInfo });
         if (appInfo.appID) appID = appInfo.appID;
         if (!appInfo) return;
         appID = appInfo.appID;

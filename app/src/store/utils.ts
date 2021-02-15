@@ -1,36 +1,31 @@
 import { types, AuthState } from '../types';
 // import { orderBy } from 'lodash';
-import CryptoJS from 'crypto-js';
+import { utils } from '@eduvault/shared';
+export { utils };
 import store from './index';
 import router from '../router';
 import { ThreadID, PrivateKey } from '@textile/hub';
 
-export function hash(content: string) {
-  return CryptoJS.SHA256(content).toString();
-}
-
-export function encrypt(content: string, encryptKey: string) {
-  console.log('encrypting', { content, encryptKey });
-  const encrypted = CryptoJS.AES.encrypt(content, encryptKey).toString();
-  console.log({ encrypted });
-  return encrypted;
-}
-
-export function decrypt(content: string, decryptKey: string) {
-  console.log('decrypting', { content, decryptKey });
-  try {
-    const decrypted = CryptoJS.AES.decrypt(content, decryptKey).toString(CryptoJS.enc.Utf8);
-    console.log({ decrypted });
-    return decrypted;
-  } catch (error) {
-    console.log('decryption error', error);
-    return false;
-  }
-}
-export function encryptionSanityCheck(str: string) {
-  const encypted = encrypt(str, 'password');
-  const decrypted = decrypt(encypted, 'password');
-}
+export const formatOutRedirectURL = ({
+  redirectURL,
+  threadIDStr,
+  pwEncryptedPrivateKey,
+  encryptedPrivateKey,
+  appLoginToken,
+  pubKey,
+}: {
+  redirectURL: string;
+  threadIDStr: string;
+  pwEncryptedPrivateKey: string;
+  encryptedPrivateKey: string;
+  appLoginToken: string;
+  pubKey: string;
+}): string => {
+  return (
+    redirectURL +
+    `?thread_id=${threadIDStr}&pw_encrypted_private_key=${pwEncryptedPrivateKey}&encrypted_private_key=${encryptedPrivateKey}&app_login_token=${appLoginToken}&pub_key=${pubKey}`
+  );
+};
 
 export async function rehydratePrivateKey(keyStr: string) {
   try {

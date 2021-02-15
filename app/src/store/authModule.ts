@@ -5,15 +5,14 @@ import store from '../store';
 import router from '@/router';
 import { ThreadID, PrivateKey } from '@textile/hub';
 import {
-  encrypt,
-  decrypt,
   storePersistentAuthData,
   storeNonPersistentAuthData,
   testPrivateKey,
   rehydratePrivateKey,
   setQueriesForSocialMediaRedirect,
   getQueriesForSocialMediaRedirect,
-  hash,
+  formatOutRedirectURL,
+  utils,
 } from './utils';
 import { ROUTES, API_URL, API_WS, APP_URL } from '../config';
 // import { connectClient } from '../store/textileHelpers';
@@ -21,6 +20,7 @@ import { ROUTES, API_URL, API_WS, APP_URL } from '../config';
 import Vue from 'vue';
 import Vuecookies from 'vue-cookies';
 Vue.use(Vuecookies);
+const { encrypt, decrypt, hash } = utils;
 
 const defaultState: AuthState = {
   loggedIn: false,
@@ -137,7 +137,7 @@ export default {
           redirectURL: redirectURL,
           appID: appID,
         };
-        console.log({ loginData });
+        // console.log({ loginData });
 
         const options: AxiosRequestConfig = {
           url: API_URL + ROUTES.PASSWORD_AUTH,
@@ -167,29 +167,37 @@ export default {
             return 'Could not retrieve PrivateKey';
           const jwts = await store.dispatch.authMod.getJwt();
           if (!jwts || !jwts.jwt) return 'coud not get JWT';
+          const {
+            pwEncryptedPrivateKey,
+            threadIDStr,
+            pubKey,
+            appLoginToken,
+            decryptToken,
+          } = loginRes;
           storePersistentAuthData(
             encrypt(keyStr, jwts.jwt),
-            loginRes.pwEncryptedPrivateKey,
-            loginRes.threadIDStr,
-            loginRes.pubKey,
+            pwEncryptedPrivateKey,
+            threadIDStr,
+            pubKey,
             'password',
           );
           if (redirectURL && appID) {
-            if (!loginRes.appLoginToken || !loginRes.decryptToken) console.log('app auth failed');
+            if (!appLoginToken || !decryptToken) console.log('app auth failed');
             else {
-              const encryptedPrivateKey = encrypt(keyStr, loginRes.decryptToken);
-              const outRedirectURL =
-                redirectURL +
-                `?thread_id=${loginRes.threadIDStr}&pw_encrypted_key_pair=${loginRes.pwEncryptedPrivateKey}&encrypted_key_pair=${encryptedPrivateKey}&app_login_token=${loginRes.appLoginToken}`;
+              const encryptedPrivateKey = encrypt(keyStr, decryptToken);
+              const outRedirectURL = formatOutRedirectURL({
+                redirectURL,
+                threadIDStr,
+                pwEncryptedPrivateKey,
+                encryptedPrivateKey,
+                appLoginToken,
+                pubKey,
+              });
               console.log(outRedirectURL);
               window.location.href = outRedirectURL;
             }
           } else {
-            storeNonPersistentAuthData(
-              retrievedKey,
-              jwts.jwt,
-              ThreadID.fromString(loginRes.threadIDStr),
-            );
+            storeNonPersistentAuthData(retrievedKey, jwts.jwt, ThreadID.fromString(threadIDStr));
             router.push('/home');
           }
           return 'Success';
@@ -202,6 +210,7 @@ export default {
         else return 'Issue connecting to database';
       }
     },
+
     async logout({ state }: ActionContext<AuthState, RootState>) {
       const options: AxiosRequestConfig = {
         url: API_URL + ROUTES.LOGOUT,
@@ -254,8 +263,10 @@ export default {
     },
 
     async loadingPageAuthCheck(): Promise<null | undefined> {
+      // to do: get appLoginToken from social media login redirect
+
       // possibilities:
-      // case 1) has privateKey (unlikely), case 2) has cookie and jwtEncryptedPrivateKey. case 3) only has cookie. case 4) has neither
+      // case 1) has privateKey (unlikely cause we don't persist it), case 2) has cookie and jwtEncryptedPrivateKey. case 3) only has cookie. case 4) has neither
       // case 1)
       //  redirect to home or to external with key
       // problem. facebook redirect is going straight back to the eduvault app homepage without queries
@@ -265,7 +276,7 @@ export default {
 
       // case 3) returning:
       // if has jwtEncryptedPrivateKey and cookie:
-      //    if fromExternal: get jwt, decrypt and redirect
+      //    if fromExternal: get app loginToken and redirect
       //    if not: get person, full dehydrate, redirect home
 
       // case 4)
@@ -297,19 +308,26 @@ export default {
       const toLoginPath = fromExternal
         ? `/login/?redirect_url=${redirectURL}&app_id=${appID}`
         : '/login/';
+
       const toExternalPath = (
         privateKey: PrivateKey,
         threadIDStr: string,
         decryptToken: string,
         appLoginToken: string,
       ) => {
-        if (redirectURL && appID) {
-          const outRedirectURL = `${redirectURL}/?thread_id=${threadIDStr}&pw_encrypted_key_pair=${pwEncryptedPrivateKey}&encrypted_key_pair=${encrypt(
-            privateKey.toString(),
-            decryptToken,
-          )}&app_login_token=${appLoginToken}`;
+        if (redirectURL && appID && pwEncryptedPrivateKey && pubKey) {
+          const encryptedPrivateKey = encrypt(privateKey.toString(), decryptToken);
+          const outRedirectURL = formatOutRedirectURL({
+            redirectURL,
+            threadIDStr,
+            pwEncryptedPrivateKey,
+            encryptedPrivateKey,
+            appLoginToken,
+            pubKey,
+          });
           console.log({ outRedirectURL });
-        } else return '';
+          return outRedirectURL;
+        } else return null;
       };
       console.log('loadingPageAuthCheck', {
         queries,

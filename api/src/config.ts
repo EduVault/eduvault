@@ -17,9 +17,9 @@ if (utils.isProdEnv() && APP_SECRET === 'VerySecretPassword') {
 export const URL_API = utils.isProdEnv() ? config.URL_API_PROD : config.URL_API_LOCAL;
 /** for dev, needs to match service name from docker-compose file. if hosting on heroku MONGO_URI will be an env, if not you need to manually create one*/
 export const MONGO_URI =
-  process.env.MONGODB_URI || process.env.IN_DOCKER
+  process.env.MONGODB_URI || utils.isDockerEnv()
     ? 'mongodb://mongo:27017'
-    : 'mongodb://127.0.0.1/';
+    : 'mongodb://127.0.0.1:27017';
 
 export const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'eduvault';
 

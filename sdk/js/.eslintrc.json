@@ -5,9 +5,16 @@
     "project": "sdk/js/tsconfig.json"
   },
   "env": {
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
-  "ignorePatterns": ["node_modules", "dist", "coverage"],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "jest.config.ts",
+    "jest-env.js"
+  ],
   "plugins": ["import", "eslint-comments"],
   "extends": [
     "eslint:recommended",

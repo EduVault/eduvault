@@ -9,13 +9,14 @@
     "mongo-start": "brew services run mongodb-community",
     "mongo-status": "brew services list",
     "mongo-stop": "brew services stop mongodb-community",
-    "dev:watch": "TS_NODE_PROJECT='./tsconfig.json' ts-node-dev --inspect --poll --respawn ./src src/index.ts",
+    "dev:watch": "TS_NODE_PROJECT='./tsconfig.build.json' ts-node-dev --inspect --poll --respawn ./src src/index.ts",
     "dev": "run-s mongo-start dev:watch",
     "start": "node dist/",
-    "watch": "tsc -p ./ -w ",
-    "build:server": "tsc -p ./ ",
+    "watch": "tsc -p tsconfig.build.json -w ",
+    "build:server": "tsc -p tsconfig.build.json ",
     "build": "run-s clean:dist build:server",
-    "test": "env MONGOMS_ARCH=x64 env MONGODB_URI='mongodb://127.0.0.1:53433/jest?' env TEST=true env MONGO_DB_NAME=jest env PORT=3836 jest --watch --detectOpenHandles"
+    "test": "env MONGOMS_ARCH=x64 env MONGODB_URI='mongodb://127.0.0.1:53433/jest?' env TEST=true env MONGO_DB_NAME=jest env PORT=3836 jest --detectOpenHandles",
+    "test:watch": "env MONGOMS_ARCH=x64 env MONGODB_URI='mongodb://127.0.0.1:53433/jest?' env TEST=true env MONGO_DB_NAME=jest env PORT=3836 jest --detectOpenHandles  --watch"
   },
   "author": "Jacob Cohen-Rosenthal",
   "license": "MIT",

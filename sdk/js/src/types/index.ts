@@ -1,34 +1,29 @@
-import { CollectionConfig } from '@textile/threaddb/dist/esm/local/collection';
-import { JSONSchema } from '@textile/threaddb';
 import { types } from '@eduvault/shared';
+import { Database, ThreadID, PrivateKey } from '@textile/threaddb';
 
+export * from './model';
 export { types };
 
-export const dummyPersonSchema: JSONSchema = {
-  $schema: 'http://json-schema.org/draft-07/schema#',
-  type: 'object',
-  title: 'person',
-  properties: {
-    _id: {
-      type: 'string',
-    },
-    accountID: {
-      type: 'string',
-    },
-    birthDay: {
-      type: 'number',
-    },
-  },
-  required: ['_id', 'accountID', 'birthDay'],
-};
+export interface initOptions {
+  appID: string;
+  buttonID?: string;
+  autoRedirect?: boolean;
+  redirectURL?: string;
+  log?: boolean;
+  onReady?: (db: Database) => any;
+}
 
-export const dummyCollections: CollectionConfig[] = [
-  {
-    name: 'Person',
-    schema: dummyPersonSchema,
-  },
-  {
-    name: 'Person2',
-    schema: dummyPersonSchema,
-  },
-];
+export interface pageLoadOptions {
+  autoRedirect?: boolean;
+  redirectURL?: string;
+  appID?: string;
+  log?: boolean;
+}
+
+export interface PageLoadChecksResult {
+  error?: string;
+  threadID?: ThreadID | null;
+  pwEncryptedPrivateKey?: string | null;
+  privateKey?: PrivateKey;
+  jwt?: string;
+}

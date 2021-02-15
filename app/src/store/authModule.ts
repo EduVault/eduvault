@@ -140,7 +140,7 @@ export default {
         console.log({ loginData });
 
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.LOCAL_AUTH,
+          url: API_URL + ROUTES.PASSWORD_AUTH,
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',

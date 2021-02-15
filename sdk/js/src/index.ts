@@ -1,16 +1,11 @@
 import { Buckets } from '@textile/hub';
 import { Database, JSONSchema, PrivateKey, ThreadID } from '@textile/threaddb';
-
-import { appRegister, devVerify, registerUser } from './lib/devManage';
-import {
-  pageLoadChecks,
-  setupButton,
-  startLocalDB,
-  startRemoteDB,
-  syncChanges,
-} from './lib/landingPageAuth';
+import { isServerConnected } from './utils';
+import { appRegister, devVerify, personRegister } from './lib/APICalls';
+import { pageLoadChecks, setupButton } from './lib/pageLoad';
+import { startLocalDB, startRemoteDB, syncChanges } from './lib/db';
 import { dummyCollections } from './types';
-
+import { initOptions } from './types';
 /* new problem... 
 the client here will also need continual access to the keys.
 The keys can't be stored anywhere reproducable client side
@@ -26,18 +21,12 @@ for now:
 just try connecting and using the DB and see how its used. I think we need both the keys and a userAuth object. 
 lets see how they are used
 */
-export interface initOptions {
-  appID: string;
-  buttonID?: string;
-  autoRedirect?: boolean;
-  redirectURL?: string;
-  log?: boolean;
-  onReady?: (db: Database) => any;
-}
+
 class EduVault {
+  isServerConnected = isServerConnected;
   devVerify = devVerify;
   appRegister = appRegister;
-  registerUser = registerUser;
+  personRegister = personRegister;
   pageLoadChecks = pageLoadChecks;
   setupButton = setupButton;
   startLocalDB = startLocalDB;
@@ -109,6 +98,7 @@ export {
   Database,
   Buckets,
   JSONSchema,
+  isServerConnected,
   appRegister,
   devVerify,
   pageLoadChecks,
@@ -116,4 +106,5 @@ export {
   startLocalDB,
   startRemoteDB,
   syncChanges,
+  personRegister,
 };

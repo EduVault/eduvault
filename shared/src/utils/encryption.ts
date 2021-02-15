@@ -3,6 +3,14 @@ import * as bcrypt from 'bcryptjs';
 
 export function encrypt(content: string, encryptKey: string) {
   // console.log('encrypting', { content, encryptKey });
+  if (!content) {
+    console.log('no encryption content');
+    return null;
+  }
+  if (!encryptKey) {
+    console.log('no encryption key');
+    return null;
+  }
   const encrypted = CryptoJS.AES.encrypt(content, encryptKey).toString();
   // console.log({ encrypted });
   return encrypted;

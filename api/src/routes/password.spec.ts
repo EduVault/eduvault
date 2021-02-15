@@ -1,10 +1,17 @@
 import mongoose from 'mongoose';
-import { request, connectDB, stopDB, pwAuthReq, pwAuthWithCookie, ROUTES } from '../utils/testUtil';
+import {
+  request,
+  connectDB,
+  stopDB,
+  pwAuthTestReq,
+  pwAuthWithCookie,
+  ROUTES,
+} from '../utils/testUtil';
 
 const password = 'Password123';
 const accountID = 'person@email.com';
 
-describe(`POST '/auth/local'`, () => {
+describe(`POST '/auth/password'`, () => {
   let db: mongoose.Connection;
   beforeAll(async () => {
     db = await connectDB();
@@ -13,19 +20,19 @@ describe(`POST '/auth/local'`, () => {
     await stopDB(db);
   });
   it('rejects signup with no accountID', async () => {
-    const res = await pwAuthReq({ password, accountID: null });
+    const res = await pwAuthTestReq({ password, accountID: null });
     // console.log('signup result', res.body);
     expect(401);
     expect(res.body.message).toEqual('invalid signup');
   });
   it('rejects signup with no password', async () => {
-    const res = await pwAuthReq({ password: null, accountID });
+    const res = await pwAuthTestReq({ password: null, accountID });
     // console.log('signup result', res.body);
     expect(401);
     expect(res.body.message).toEqual('invalid signup');
   });
   it('Accepts valid signup', async () => {
-    const res = await pwAuthReq({ password, accountID });
+    const res = await pwAuthTestReq({ password, accountID });
     // console.log('signup result', res.body);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);
@@ -41,7 +48,7 @@ describe(`POST '/auth/local'`, () => {
   });
   let cookie: string;
   it('Accepts valid sign in', async () => {
-    const res = await pwAuthReq({ password, accountID });
+    const res = await pwAuthTestReq({ password, accountID });
     // console.log('signup result', res.headers['set-cookie']);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);

@@ -4,7 +4,7 @@ import session from 'koa-session';
 import Person, { IPerson } from '../models/person';
 import App, { IApp } from '../models/app';
 import { APP_SECRET, SESSION_OPTIONS } from '../config';
-import localStrat from './strategies/local';
+import passwordStrat from './strategies/password';
 import devStrat from './strategies/dev';
 import googleStrat from './strategies/google';
 import facebookStrat from './strategies/facebook';
@@ -33,7 +33,7 @@ export default (app: Koa) => {
   });
 
   /** Our strategies here: */
-  passport.use('password', localStrat);
+  passport.use('password', passwordStrat);
   passport.use('dev', devStrat);
   passport.use(googleStrat);
   passport.use(facebookStrat);

@@ -3,7 +3,7 @@ import websockify from 'koa-websocket';
 
 import Koa from 'koa';
 import * as KoaPassport from 'koa-passport';
-import local from './local';
+import password from './password';
 import facebook from './facebook';
 import google from './google';
 import dotwallet from './dotwallet';
@@ -70,7 +70,7 @@ const startRouter = (
 
   appManage(router, passport);
   appAuth(router, passport);
-  local(router, passport);
+  password(router, passport);
   facebook(router, passport);
   google(router, passport);
   dotwallet(router, passport);

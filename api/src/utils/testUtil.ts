@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { types } from '../types';
-import { utils } from '../utils';
+import { types, utils } from '@eduvault/shared';
 import supertest from 'supertest';
-import { testApp } from '../index';
+import { testAPI } from '../index';
 import * as http from 'http';
 import { ROUTES } from '../config';
 export { ROUTES } from '../config';
@@ -11,10 +10,10 @@ import { APP_SECRET } from '../config';
 export const password = 'Password123';
 export const accountID = 'person@email.com';
 
-const pwAuthReq = utils.pwAuthReq;
+const formatPasswordSignIn = utils.formatPasswordSignIn;
 
-export const request = () => supertest(http.createServer(testApp.callback()));
-export const agent = supertest.agent(http.createServer(testApp.callback()));
+export const request = () => supertest(http.createServer(testAPI.callback()));
+export const agent = supertest.agent(http.createServer(testAPI.callback()));
 
 export const connectDB = async () => {
   try {
@@ -63,8 +62,13 @@ export const pwAuthTestReq = async (options: {
   redirectURL?: string;
   appID?: string;
 }) => {
-  const personAuthReq = await pwAuthReq(options);
-  return await agent.post(ROUTES.LOCAL_AUTH).send(personAuthReq).set('Accept', 'application/json');
+  // console.log('pwAuthTestReq', options.appID);
+  const personAuthReq = await formatPasswordSignIn(options);
+  const res = await agent
+    .post(ROUTES.PASSWORD_AUTH)
+    .send(personAuthReq)
+    .set('Accept', 'application/json');
+  return res;
 };
 
 export const pwAuthWithCookie = async (req: supertest.Test) => {
@@ -87,10 +91,14 @@ export const appRegisterReq: types.AppRegisterReq = {
 
 export const registerApp = async () => {
   const db = connectDB(); //reset DB
-  await pwAuthReq({ password, accountID });
-  await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
+  const devPersonSignup = await pwAuthTestReq({ password, accountID });
+  console.log({ devPersonSignup: devPersonSignup.body });
+  console.log('devRegisterReq ', devRegisterReq);
+  const devVerify = await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
+  console.log({ devVerify: devVerify.body });
+
   const registerRes = await request().post(ROUTES.APP_REGISTER).send(appRegisterReq);
-  // console.log({ registerRes: registerRes.body });
+  console.log({ registerRes: registerRes.body });
   const appID: string = registerRes.body.data.appID;
   return appID;
 };

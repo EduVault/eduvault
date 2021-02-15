@@ -27,7 +27,7 @@ if (process.env.TEST !== 'true') connectDB();
 
 // delete collections
 let del = false;
-// del = true;
+// let del = true;
 if (del)
   try {
     mongoose.connection.collections['person'].drop(function (err: any) {
@@ -75,8 +75,8 @@ const router = startRouter(app, passport);
 /** Websockets */
 personAuthRoute(app);
 
-const testApp = app;
-export { testApp };
+const testAPI = app;
+export { testAPI };
 
 if (process.env.TEST !== 'true')
   /** Start the server! */

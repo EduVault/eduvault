@@ -3,7 +3,7 @@ import {
   request,
   connectDB,
   stopDB,
-  pwAuthReq,
+  pwAuthTestReq,
   password,
   accountID,
   appRegisterReq,
@@ -21,11 +21,11 @@ describe(`POST '/dev/verify'`, () => {
   });
 
   it('Can register dev with APP_SECRET', async () => {
-    const devPerson = await pwAuthReq({ password, accountID });
+    const devPerson = await pwAuthTestReq({ password, accountID });
+    // console.log({ devPerson });
     const dev = devPerson.body.data;
-    // console.log({ dev });
     const verifyRes = await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
-    // console.log({ verifyRes: verifyRes.body.data });
+    console.log({ verifyRes: verifyRes.body.data });
     expect(verifyRes.body.data.dev.isVerified).toBe(true);
   });
   let appID: string;

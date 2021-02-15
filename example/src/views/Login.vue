@@ -10,7 +10,12 @@
 </template>
 
 <script lang="ts">
-import EduVault, { appRegister, devVerify, Database } from '@eduvault/eduvault-js/dist/main';
+import EduVault, {
+  appRegister,
+  devVerify,
+  personRegister,
+  Database,
+} from '@eduvault/eduvault-js/dist/main';
 // import EduVault from 'eduvault-js';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
@@ -39,14 +44,14 @@ export default {
       if (connnect) {
         console.log({ APP_SECRET });
         if (!APP_SECRET) return;
-        devVerify(APP_SECRET, 'jacobcoro@qq.com');
-        const appInfo = await appRegister(
-          'jacobcoro@qq.com',
-          'Password123',
-          'test app',
-          'a testing app',
-        );
-        console.log({ appInfo });
+        const accountID = 'person@email.com';
+        const password = 'Password123';
+        const devPersonRegister = await personRegister({ accountID, password });
+        const dev = await devVerify(APP_SECRET, accountID);
+        // to do: appregister req/res types
+        let appInfo = await appRegister(accountID, password, 'test app', 'a testing app');
+        // console.log({ appInfo });
+        if (appInfo.appID) appID = appInfo.appID;
         if (!appInfo) return;
         appID = appInfo.appID;
         const eduvault = new EduVault({

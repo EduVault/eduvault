@@ -3,7 +3,7 @@ import {
   request,
   connectDB,
   stopDB,
-  pwAuthReq,
+  pwAuthTestReq,
   password,
   accountID,
   registerApp,
@@ -24,13 +24,14 @@ describe(`POST '/auth/app`, () => {
   let appID: string;
   it('can authenticate an app from login redirect appLoginToken', async () => {
     appID = await registerApp();
-    const loginRes = await pwAuthReq({
+    console.log('registered app ', appID);
+    const loginRes = await pwAuthTestReq({
       accountID,
       password,
       appID,
       redirectURL: 'https://somewhere.com',
     });
-    // console.log({ loginRes: loginRes.body.data });
+    console.log({ loginRes: loginRes.body.data });
     expect(typeof loginRes.body.data.appLoginToken).toBe('string');
     expect(loginRes.body.data.appLoginToken.length).toBeGreaterThan(50);
     const appLoginToken = loginRes.body.data.appLoginToken;
@@ -48,12 +49,16 @@ describe(`POST '/auth/app`, () => {
     cookie = authRes.headers['set-cookie'];
   });
   it('Can authenticate app from cookie and return jwts', async () => {
-    const res = await appAuthWithCookie(request().get(ROUTES.GET_JWT));
-    // console.log('jwts', res.body.data);
-    expect(res.status).toEqual(200);
-    expect(res.body.code).toEqual(200);
-    expect(res.body.data).toHaveProperty('jwt');
-    expect(typeof res.body.data.jwt).toBe('string');
-    expect(res.body.data.jwt.length).toBeGreaterThan(10);
+    try {
+      const res = await appAuthWithCookie(request().get(ROUTES.GET_JWT));
+      // console.log('jwts', res.body.data);
+      expect(res.status).toEqual(200);
+      expect(res.body.code).toEqual(200);
+      expect(res.body.data).toHaveProperty('jwt');
+      expect(typeof res.body.data.jwt).toBe('string');
+      expect(res.body.data.jwt.length).toBeGreaterThan(10);
+    } catch (error) {
+      console.log({ error });
+    }
   });
 });

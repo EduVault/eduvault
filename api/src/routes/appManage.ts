@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 export default function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   router.post(ROUTES.DEV_VERIFY, async (ctx, next) => {
     const data: types.DevVerifyReq = ctx.request.body;
-    console.log({ devVerifyData: data });
+    // console.log({ devVerifyData: data });
     if (data.appSecret !== APP_SECRET)
       ctx.unauthorized(null, 'No secret found. Only administrators may verify devs');
     else {
@@ -34,40 +34,41 @@ export default function (router: Router<DefaultState, Context>, passport: typeof
       // passport isnt returning person...
       try {
         console.log({ err, foundPerson });
-        const person = await Person.findOne({ accountID: data.accountID });
-        if (err) {
+        const devPerson = await Person.findOne({ accountID: data.accountID });
+        if (err || !devPerson) {
           console.log({ err });
           ctx.unauthorized(err, 'dev person account not found');
           return;
         }
         let exists = false;
+        let existsError = {};
         await App.find({ name: data.name }, (err, apps) => {
           if (apps.length >= 1) {
             // console.log({ apps });
             exists = true;
-            ctx.conflict(
-              { error: 'app with same name exists', appID: apps[0].appID },
-              'app with same name exists',
-            );
+            existsError = { error: 'app with same name exists', appID: apps[0].appID };
+            return;
           }
         });
         await App.find({ appID: data.appID }, (err, apps) => {
           if (apps.length >= 1) {
             // console.log({ apps });
             exists = true;
-            ctx.conflict({ error: 'appID exists', appID: apps[0].appID }, 'appID exists');
+            existsError = { error: 'appID exists', appID: apps[0].appID };
+            return;
           }
         });
-        if (exists) throw 'app name exists';
+        if (exists) throw existsError;
         const newApp = new App();
         newApp.appID = data.appID || uuid();
         newApp.devID = data.accountID;
         newApp.name = data.name;
         newApp.description = data.description;
         newApp.save();
-        if (!person.dev.apps) person.dev.apps = [newApp.appID];
-        else person.dev.apps.push(newApp.appID);
-        person.save();
+        // console.log({ devPerson });
+        if (!devPerson.dev.apps) devPerson.dev.apps = [newApp.appID];
+        else devPerson.dev.apps.push(newApp.appID);
+        devPerson.save();
         ctx.oK(newApp);
       } catch (error) {
         console.log({ error });

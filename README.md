@@ -2,7 +2,7 @@
 
 [Home page](eduvault.org)
 
-## Problems
+## Problems EduVault aims to solve
 
 - Some of the ‘last legs’ are missing for using [Textile](textile.io)/User-owned data in complete, functional and practical interoperable app ecosystem.
 - EdTech apps lack interoperability

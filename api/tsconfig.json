@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-
     "esModuleInterop": true,
     "target": "esnext",
     "noImplicitAny": true,
@@ -13,5 +12,5 @@
     "skipLibCheck": true // this will skip all .d.ts files, but had to add because typescript wasn't ignoring node_modules
   },
 
-  "exclude": ["**/node_modules", "node_modules", "typings"]
+  "exclude": ["node_modules"]
 }

@@ -1,10 +1,11 @@
 import * as passportLocal from 'passport-local';
 import Person, { IPerson } from '../../models/person';
-import { validPassword } from '../../utils/encryption';
+import { utils } from '../../utils';
+const { validPassword } = utils;
 
 const LocalStrategy = passportLocal.Strategy;
 
-const localStrat = new LocalStrategy(async (username: string, password: string, done) => {
+const passwordStrat = new LocalStrategy(async (username: string, password: string, done) => {
   try {
     console.log('localstrat', { username, password });
     Person.findOne({ accountID: username }, undefined, undefined, (error, person) => {
@@ -22,4 +23,4 @@ const localStrat = new LocalStrategy(async (username: string, password: string, 
     done(error);
   }
 });
-export default localStrat;
+export default passwordStrat;

@@ -9,7 +9,7 @@ import { createJwt, getJwtExpiry, createAppLoginToken } from '../utils/jwt';
 import { utils } from '../utils';
 import { v4 as uuid } from 'uuid';
 const { hashPassword, validPassword } = utils;
-const local = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
+const password = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   async function signup(ctx: Context, appLoginToken?: string, decryptToken?: string) {
     const data: types.PasswordLoginReq = ctx.request.body;
     if (!data.pwEncryptedPrivateKey || !data.pubKey || !data.threadIDStr) {
@@ -44,7 +44,7 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
     ctx.oK(returnData);
   }
 
-  router.post(ROUTES.LOCAL_AUTH, async (ctx, next) => {
+  router.post(ROUTES.PASSWORD_AUTH, async (ctx, next) => {
     const data: types.PasswordLoginReq = ctx.request.body;
     // console.log({ data });
     if (!data.password || !data.accountID) {
@@ -60,7 +60,7 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
     const { appLoginToken, decryptToken } = await appLoginTokens();
     // console.log({ appLoginToken, decryptToken });
     const person = await Person.findOne({ accountID: data.accountID });
-    // console.log({ person });
+    console.log({ person });
 
     if (!person) return signup(ctx, appLoginToken, decryptToken);
     else {
@@ -102,4 +102,4 @@ const local = function (router: Router<DefaultState, Context>, passport: typeof 
   });
   return router;
 };
-export default local;
+export default password;

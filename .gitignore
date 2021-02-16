@@ -5,8 +5,8 @@
 **/tests
 **/test-output
 **/log
-
-
+cypress/screenshots/
+cypress/videos/
 # Logs
 logs
 *.log
@@ -117,3 +117,7 @@ dist
 # TernJS port file
 .tern-port
 
+cypress/examples/
+cypress/videos/
+cypress/fixtures/
+EduVault.code-workspace

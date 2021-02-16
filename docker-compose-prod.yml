@@ -5,7 +5,7 @@ services:
     build:
       context: ./app
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     volumes:
       - dist-share:/app/dist
     stdin_open: true
@@ -16,7 +16,7 @@ services:
     build:
       context: ./api
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     ports:
       - '3003:3003'
     depends_on:
@@ -28,7 +28,7 @@ services:
     build:
       context: ./example
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     volumes:
       - example-dist-share:/app/dist
       - './example:/example'

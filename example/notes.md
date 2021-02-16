@@ -1,18 +1,21 @@
 full flow of encrypting/decrypting ID key pairs
 
 ```js
-const keyPair = await PrivateKey.fromRandom();
-const pubKey = keyPair.public.toString();
-const encrypedKeyPair = CryptoJS.AES.encrypt(keyPair.toString(), payload.password);
-const encrypedKeyPairString = CryptoJS.AES.encrypt(keyPair.toString(), payload.password).toString();
+const privateKey = await PrivateKey.fromRandom();
+const pubKey = privateKey.public.toString();
+const encrypedPrivateKey = CryptoJS.AES.encrypt(privateKey.toString(), payload.password);
+const encrypedPrivateKeyString = CryptoJS.AES.encrypt(
+  privateKey.toString(),
+  payload.password,
+).toString();
 // can decrypt from the object or the string
-const decryptedKeyPairBytes = CryptoJS.AES.decrypt(
-  encrypedKeyPair | encrypedKeyPairString,
+const decryptedPrivateKeyBytes = CryptoJS.AES.decrypt(
+  encrypedPrivateKey | encrypedPrivateKeyString,
   payload.password,
 );
-const decryptedKeyPairString = decryptedKeyPairBytes.toString(CryptoJS.enc.Utf8);
-const rehydratedKeyPair = await PrivateKey.fromString(decryptedKeyPairString);
-const testPubKey = rehydratedKeyPair.public.toString();
+const decryptedPrivateKeyString = decryptedPrivateKeyBytes.toString(CryptoJS.enc.Utf8);
+const rehydratedPrivateKey = await PrivateKey.fromString(decryptedPrivateKeyString);
+const testPubKey = rehydratedPrivateKey.public.toString();
 console.log(testPubKey === pubKey);
 ```
 
@@ -22,11 +25,11 @@ console.log(testPubKey === pubKey);
 const connectDB = async (
   API_URL_ROOT: string,
   jwt: string,
-  keyPair: PrivateKey,
+  privateKey: PrivateKey,
   DbInfo: DBInfo
 ): Promise<Database> => {
-  // console.log(API_URL_ROOT, jwt, keyPair, threadID.toString());
-  const loginCallback = loginWithChallenge(API_URL_ROOT, jwt, keyPair);
+  // console.log(API_URL_ROOT, jwt, privateKey, threadID.toString());
+  const loginCallback = loginWithChallenge(API_URL_ROOT, jwt, privateKey);
   const db = await Database.withUserAuth(await loginCallback(), 'eduvault.mvp.flashcards');
   await console.log('created db', db);
   //@ts-ignore
@@ -36,7 +39,7 @@ const connectDB = async (
     DbInfo = data.DbInfo;
   }
   if (!DbInfo) {
-    await db.start(keyPair);
+    await db.start(privateKey);
     console.log(db.threadID?.toString());
     const info = await db.getDBInfo(true);
     await console.log('DB INFO', info);
@@ -45,7 +48,7 @@ const connectDB = async (
   } else {
     await console.log('old Info present', DbInfo);
     //@ts-ignore
-    await db.startFromInfo(keyPair, DBInfo);
+    await db.startFromInfo(privateKey, DBInfo);
     const info = await db.getDBInfo(true);
     await console.log('restored db info', info);
     await console.log('started db from old info', db);

@@ -1,32 +1,31 @@
-import { IPerson, AuthState } from '../types';
+import { types, AuthState } from '../types';
 // import { orderBy } from 'lodash';
-import CryptoJS from 'crypto-js';
+import { utils } from '@eduvault/shared';
+export { utils };
 import store from './index';
 import router from '../router';
 import { ThreadID, PrivateKey } from '@textile/hub';
 
-export function encrypt(content: string, encryptKey: string) {
-  console.log('encrypting', { content, encryptKey });
-  const encrypted = CryptoJS.AES.encrypt(content, encryptKey).toString();
-  console.log({ encrypted });
-  return encrypted;
-}
-
-export function decrypt(content: string, decryptKey: string) {
-  console.log('decrypting', { content, decryptKey });
-  try {
-    const decrypted = CryptoJS.AES.decrypt(content, decryptKey).toString(CryptoJS.enc.Utf8);
-    console.log({ decrypted });
-    return decrypted;
-  } catch (error) {
-    console.log('decryption error', error);
-    return false;
-  }
-}
-export function encryptionSanityCheck(str: string) {
-  const encypted = encrypt(str, 'password');
-  const decrypted = decrypt(encypted, 'password');
-}
+export const formatOutRedirectURL = ({
+  redirectURL,
+  threadIDStr,
+  pwEncryptedPrivateKey,
+  encryptedPrivateKey,
+  appLoginToken,
+  pubKey,
+}: {
+  redirectURL: string;
+  threadIDStr: string;
+  pwEncryptedPrivateKey: string;
+  encryptedPrivateKey: string;
+  appLoginToken: string;
+  pubKey: string;
+}): string => {
+  return (
+    redirectURL +
+    `?thread_id=${threadIDStr}&pw_encrypted_private_key=${pwEncryptedPrivateKey}&encrypted_private_key=${encryptedPrivateKey}&app_login_token=${appLoginToken}&pub_key=${pubKey}`
+  );
+};
 
 export async function rehydratePrivateKey(keyStr: string) {
   try {
@@ -38,43 +37,44 @@ export async function rehydratePrivateKey(keyStr: string) {
 }
 
 /** Rehydrate keys from string and test if they match the provided public key */
-export function testKeyPair(keyPair: PrivateKey, pubKey: string): boolean {
-  const testMatching = keyPair.public.toString() === pubKey;
-  const testWorking = keyPair.canSign();
+export function testPrivateKey(privateKey: PrivateKey, pubKey: string): boolean {
+  const testMatching = privateKey.public.toString() === pubKey;
+  const testWorking = privateKey.canSign();
   console.log('key test result: ', testMatching, testWorking);
   if (!testMatching || !testWorking) return false;
   return true;
 }
 
 export async function storeNonPersistentAuthData(
-  keyPair?: PrivateKey,
+  privateKey?: PrivateKey,
   jwt?: string,
   threadID?: ThreadID,
 ): Promise<void> {
-  console.log('storeNonPersistentAuthData', { keyPair, jwt, threadID });
+  console.log('storeNonPersistentAuthData', { privateKey, jwt, threadID });
 
-  if (keyPair) store.commit.authMod.KEYPAIR(keyPair);
+  if (privateKey) store.commit.authMod.PRIVATE_KEY(privateKey);
   if (jwt) store.commit.authMod.JWT(jwt);
   if (threadID) store.commit.authMod.THREAD_ID(threadID);
 }
 
 export const storePersistentAuthData = (
-  jwtEncryptedKeyPair?: string,
-  pwEncryptedKeyPair?: string,
+  jwtEncryptedPrivateKey?: string,
+  pwEncryptedPrivateKey?: string,
   threadIDStr?: string,
   pubKey?: string,
   authType?: AuthState['authType'],
 ): void => {
   console.log('storePersistentAuthData', {
-    jwtEncryptedKeyPair,
-    pwEncryptedKeyPair,
+    jwtEncryptedPrivateKey,
+    pwEncryptedPrivateKey,
     threadIDStr,
     pubKey,
     authType,
   });
 
-  if (jwtEncryptedKeyPair) store.commit.authMod.JWT_ENCRYPTED_KEYPAIR(jwtEncryptedKeyPair);
-  if (pwEncryptedKeyPair) store.commit.authMod.PW_ENCRYPTED_KEYPAIR(pwEncryptedKeyPair);
+  if (jwtEncryptedPrivateKey)
+    store.commit.authMod.JWT_ENCRYPTED_PRIVATE_KEY(jwtEncryptedPrivateKey);
+  if (pwEncryptedPrivateKey) store.commit.authMod.PW_ENCRYPTED_PRIVATE_KEY(pwEncryptedPrivateKey);
   if (threadIDStr) store.commit.authMod.THREAD_ID_STR(threadIDStr);
   if (pubKey) store.commit.authMod.PUBKEY(pubKey);
   if (authType) store.commit.authMod.AUTHTYPE(authType);
@@ -85,24 +85,26 @@ export function setQueriesForSocialMediaRedirect() {
     'queriesForSocialMediaRedirect',
     JSON.stringify({
       redirectURL: router.currentRoute.query.redirect_url,
-      code: router.currentRoute.query.code,
+      appID: router.currentRoute.query.appID,
       time: new Date().getTime(),
     }),
   );
 }
+
 export function getQueriesForSocialMediaRedirect() {
   const raw = localStorage.getItem('queriesForSocialMediaRedirect');
   if (!raw) return false;
   const queries: {
     redirectURL: string;
-    code: string;
+    appID: string;
     time: number;
   } | null = JSON.parse(raw);
   if (!queries) return false;
   else {
     if (!queries.time) return false;
     const now = new Date().getTime();
+    // if login happened in the last three minutes
     if (now - queries.time >= 1000 * 60 * 3) return false;
-    else return [queries.redirectURL, queries.code];
+    else return [queries.redirectURL, queries.appID];
   }
 }

@@ -1,16 +1,15 @@
 import { Strategy as CustomStrategy } from 'passport-custom';
 import axios from 'axios';
-import Person from '../../models/person';
-import { DOTWALLET_APP_ID, DOTWALLET_SECRET } from '../../config';
+import Person, { DotwalletAccessData, DotwalletProfile } from '../../models/person';
+import { config, DOTWALLET_SECRET } from '../../config';
 import { createDotwalletAccount } from '../../utils/newSocialMedia';
 import url from 'url';
-import { DotwalletAccessData, DotwalletProfile } from '../../types';
 const dotwalletStrat = new CustomStrategy(async (ctx, done) => {
   try {
     const code = ctx.query.code;
     console.log('==============got code==============\n', code);
     const data = {
-      app_id: DOTWALLET_APP_ID,
+      app_id: config.DOTWALLET_APP_ID,
       secret: DOTWALLET_SECRET,
       code: code,
     };

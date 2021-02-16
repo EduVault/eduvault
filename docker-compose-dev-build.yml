@@ -5,7 +5,7 @@ services:
     build:
       context: ./app
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     volumes:
       - dist-share:/app/dist
       - './app:/app'
@@ -18,7 +18,7 @@ services:
     build:
       context: ./example
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     volumes:
       - example-dist-share:/app/dist
       - './example:/example'
@@ -32,7 +32,7 @@ services:
     build:
       context: ./api
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     ports:
       - '3003:3003'
     volumes:
@@ -56,7 +56,7 @@ services:
     build:
       context: ./home-page
       target: prod-stage
-      dockerfile: Dockerfile-prod
+      dockerfile: dockerfile_prod
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'

@@ -14,7 +14,7 @@ This would be fine for native mobile apps where they an store the JWT securely, 
 
 If the person signs up with social media we will store their private key/public key pair on the database, encrypted by a PIN number. If they used password, we will also add a layer of encryption using their password.
 
-On login, they get sent the encrypted key pair. They can save that safely in persisted browser local storage, and store the decrypted keypair in more secure application storage. This means each time they reopen the app, they will need to tpye their pin again, but not their other login info.
+On login, they get sent the encrypted key pair. They can save that safely in persisted browser local storage, and store the decrypted privateKey in more secure application storage. This means each time they reopen the app, they will need to tpye their pin again, but not their other login info.
 
 They can refresh the connection with the ThreadDB by calling our `/renew-textile` endpoint. They will be issued a challenge by our server, which they can sign with their key pair. They will recieve a `personAuth` object in return
 

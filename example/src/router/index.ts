@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig, Route, NavigationGuardNext } from 'vue-router';
 import store from '../store';
 import Login from '../views/Login.vue';
+import Splash from '../views/Splash.vue';
+import Home from '../views/Home.vue';
 Vue.use(VueRouter);
 
 /**undocumented bug in vuex-persist with localforage. Hacky fix from issues forum */
@@ -15,29 +17,15 @@ async function reHydrateStorage(to: Route, from: Route, next: any) {
   next();
 }
 
+function checkAuthValid() {
+  // if (!store.state.authMod.privateKey)
+}
+
 /**More strict check */
-function checkAuthValid(to: Route, from: Route, next: any) {
-  /** Saves the get request queries into vuex, and redirects without them */
-  const query = { ...to.query };
-  /// state is not rehydrated when checking this...
-  if (query !== {} && store.state.authMod.query != query && !query.checkauth) {
-    console.log('commiting query, ', query);
-    store.commit.authMod.QUERY(query);
-    next('/login/?checkauth=yes'); //
-  } else {
-    if (to.query.checkauth == 'no') {
-      next();
-      return null;
-    }
-    if (to.query.checkauth == 'yes') {
-      next();
-      return null;
-    }
-  }
+function beforeEachRoute(to: Route, from: Route, next: any) {
   // reHydrateStorage(to, from, next).then(() => {
   //   store.dispatch.authMod.checkAuth().then((verified: boolean | undefined) => {
   //     console.log('checking auth');
-
   //     console.log('verified', verified);
   //     if (verified) {
   //       if (to.path.includes('/login')) next('/home');
@@ -49,18 +37,29 @@ function checkAuthValid(to: Route, from: Route, next: any) {
   //     }
   //   });
   // });
+  next();
 }
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
-    name: 'Root',
     redirect: '/login',
+    component: Splash,
+  },
+  {
+    path: '/splash',
+    name: 'Splash',
+    component: Splash,
   },
   {
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home,
   },
 ];
 
@@ -69,5 +68,5 @@ const router = new VueRouter({
   base: '/',
   routes,
 });
-router.beforeEach(reHydrateStorage);
+router.beforeEach(beforeEachRoute);
 export default router;

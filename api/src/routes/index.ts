@@ -3,14 +3,15 @@ import websockify from 'koa-websocket';
 
 import Koa from 'koa';
 import * as KoaPassport from 'koa-passport';
-import local from './local';
+import password from './password';
 import facebook from './facebook';
 import google from './google';
 import dotwallet from './dotwallet';
 import saveOnChain from './saveOnChain';
-import checkAuth from './checkAuth';
-import { DefaultState, Context, Middleware } from 'koa';
-import { CLIENT_CALLBACK } from '../config';
+import checkAuth from '../utils/checkAuth';
+import appAuth from './appAuth';
+import appManage from './appManage';
+import { DefaultState, Context } from 'koa';
 import getPerson from '../utils/getPersonFromSession';
 
 const startRouter = (
@@ -19,6 +20,7 @@ const startRouter = (
 ) => {
   const router = new Router<DefaultState, Context>();
   router.get('/ping', async (ctx) => {
+    console.log('pingged');
     ctx.oK(null, 'pong!');
   });
   /** Get Person and JWT */
@@ -65,7 +67,10 @@ const startRouter = (
     await person.save();
     ctx.oK({ DbInfo: person.DbInfo });
   });
-  local(router, passport);
+
+  appManage(router, passport);
+  appAuth(router, passport);
+  password(router, passport);
   facebook(router, passport);
   google(router, passport);
   dotwallet(router, passport);

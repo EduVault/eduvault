@@ -2,9 +2,18 @@
 
 ## TO DO
 
-- [ ] Basic project set up.
+- [ ] Dev ops:
   - [x] Hot reloading for dev, SSL for production. All dockerized
+  - [ ] Move envs, config, types, shared utils to root shared folder
   - [ ] Env variables in docker-compose and nginx
+  - [ ] move to real monorepo with yarn workspaces
+  - [ ] set up CI with automated deploys and tests (tried and failed. Vue webpack not resolving symlinks)
+- [ ] Set up tests:
+  - [ ] unit sets for each API route
+  - [ ] E2E/ integration tests with cypress
+  - [ ] unit tests for sdk (hard to isolate, rely on e2e for now)
+  - [ ] unit tests for app logic(low priority)
+  - [ ] dockerize tests (cypress not working on my mac m1 chip)
 - [x] Migrate old MVPs
   - [x] Move login page to be served by backend (data home app) login should then be a redirect operation.
   - [x] MVP frontend move to 'examples' folder
@@ -23,10 +32,10 @@ eduvault-js-sdk:
 ```js
 checkKeyStorage(){
 // on page load, throw in the <head>
-if pwEncryptedKeypair keys in localstorage:
+if pwEncryptedPrivateKey keys in localstorage:
   if internet connection:
     redirects to eduvault/app/login/?code=<xxx>&redirect_url=<https://www.example.com>
-    use the cookie there to get jwt, decrypt keypair
+    use the cookie there to get jwt, decrypt privateKey
     send it back encrypted by code
   if no internet:
     asks person for password, decrypts localstorage saved pwEncryptedKeys
@@ -70,10 +79,10 @@ loginSignup(type){
 // type is pw, social media
 person inputs email(accountID) and password
 password is hashed
-an identity(keypair) is created
-the keypair is hashed with the plaintext password pwEncryptedKeypair
+an identity(privateKey) is created
+the privateKey is hashed with the plaintext password pwEncryptedPrivateKey
 a ThreadID (DB ID) is created.
-the hashed password, encrypted keypair, and thread ID are sent to the server
+the hashed password, encrypted privateKey, and thread ID are sent to the server
 ```
 
 \*\*server
@@ -92,13 +101,13 @@ sendBackKeys()
 gets cookie, password-encrypted key pair and jwt
 
 storeLoginCredentials(){
-  decrypts keypair with password that is still in local app storage.
-  stores keypair in local storage encrypted with jwt and also encrypted with password
-  encrypts keypair with 'code' from login redirect query.
+  decrypts privateKey with password that is still in local app storage.
+  stores privateKey in local storage encrypted with jwt and also encrypted with password
+  encrypts privateKey with 'code' from login redirect query.
 }
 getUserAuth(){
   // previously loginWithChallenge()
-  calls server again, this time with websockets, uses the keypair to perform a Textile UserAuth key challenge
+  calls server again, this time with websockets, uses the privateKey to perform a Textile UserAuth key challenge
 }
 ```
 
@@ -125,8 +134,8 @@ eduvault-js-sdk:
 
 ```js
 storeCredentials(){
-  receives codeEncrpytedKeypair, pwEncryptedKeypair, personAuth
-  stores pwEncryptedKeypair
+  receives codeEncrpytedPrivateKey, pwEncryptedPrivateKey, personAuth
+  stores pwEncryptedPrivateKey
   decrypts keys with 'code'
 }
 createLocalDB(){
@@ -142,6 +151,8 @@ creates eduvault DB object, can make calls to it based on textile documentated m
 
 ```
 
+sometimes API tests don't run because of arch issues. can add MONGOMS_ARCH=x64
+
 - problem: for local-first, the credentials must be continually available locally(client side). How can you keep them available without letting other apps see it?
   only answer I can think of now is using a PIN or the person's password.
   look into the comment someone said about using PINs. obvs just 6 numbers isn't great security.
@@ -153,6 +164,21 @@ creates eduvault DB object, can make calls to it based on textile documentated m
 - How sensitive is textile personAuth? Can it be saved locally?
 
 ## musings
+
+shared file config file cannot use .env, because it is now a library. each project should extend the config file, and import .envs there. envs should be set by docker-compose (reading from .env file) when IN_DOCKER="true". otherwise use .env file. try to minimize envs and mximize configs, i.e. publick keys can be in conifg.
+
+signup as a dev:
+
+- signup as user with password/metamask
+- apply to be verified (to do: email verification. for now email me)
+- register an app (with dotwallet sdk)
+
+send appID and redirectURL from example
+login/signup, if fromExternal, should display "do you trust this app"
+create app session:
+send back one-time code to example, and jwtEncryptedKeys (app's jwt)
+app uses one-time code to start session and get cookie and jwt and decrypt keys
+use keys to apply for userAuth (original wss route might need to update jwt checking method)
 
 make example old app without login page, make the login actions into an sdk, sdk should be in this repo too so I don't have to npm publish etc every change
 

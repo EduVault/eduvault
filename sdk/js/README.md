@@ -6,10 +6,12 @@ use to connect to an eduvault account and open a user owned database client-side
 build:
 `yarn build`
 
-test
-`yarn watch:build`
-and in another window
-`watch:test`
+> note: must have EduVault API running (on same PORT)
+> test
+> `yarn test`
+> hot reloading tests
+> `yarn test:watch`
+> ``
 
 publish
 **make sure you have commit changes to git!**

@@ -1,12 +1,12 @@
-import { Client, ThreadID, Buckets, PrivateKey } from '@textile/hub';
+import { Buckets } from '@eduvault/eduvault-js';
 // import { DBInfo } from '@textile/threads';
 
 /** @param accountID will be an email for local scheme, for google and facebook will be email if available or id if not */
 export interface Person {
   accountID: string;
   password?: string;
-  pwEncryptedKeyPair?: string;
-  socialMediaKeyPair?: string;
+  pwEncryptedPrivateKey?: string;
+  socialMediaPrivateKey?: string;
   pubKey?: string;
   threadIDStr?: string;
   DbInfo?: string;
@@ -87,31 +87,13 @@ export interface EditCardPayload {
   deckId: string;
 }
 
-export interface AuthState {
-  API_URL: string;
-  API_WS_URL: string;
-  PASSWORD_LOGIN: string;
-  loggedIn: boolean;
-  syncing: boolean;
-  keyPair?: PrivateKey;
-  authType?: 'google' | 'facebook' | 'password' | 'metamask' | 'dotwallet';
-  jwt?: string;
-  pubKey?: string;
-  threadID?: ThreadID;
-  threadIDStr?: string;
-  bucketKey?: string;
-  bucketUrl?: string;
-  jwtEncryptedKeyPair?: string;
-  query?: Record<string, unknown>;
-}
 export interface DecksState {
   decks: Deck[];
-  client?: Client;
+  // client?: Client;
   buckets?: Buckets;
   backlog?: Deck[];
 }
 export interface RootState {
-  authMod: AuthState;
   decksMod: DecksState;
 }
 

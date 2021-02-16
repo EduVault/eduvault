@@ -10,13 +10,13 @@ import { v4 as uuid } from 'uuid';
 
 /** we should have different forms of getting the Textile personAuth,
  * 1. crypto wallet: ask crypto wallet to sign
- * 2. oauth: on log in, get the keypair encrypted by PIN and store in localStorage, challeng person with PIN, and keep the unencrypted keypair in app storage to keep signing
- * 3. password account: same as 2, but the server is storing only encrypted keypair, encryped by password. both 2 and 3 need to keep the plaintext public key for recovery
+ * 2. oauth: on log in, get the privateKey encrypted by PIN and store in localStorage, challeng person with PIN, and keep the unencrypted privateKey in app storage to keep signing
+ * 3. password account: same as 2, but the server is storing only encrypted privateKey, encryped by password. both 2 and 3 need to keep the plaintext public key for recovery
  */
 function loginWithChallenge(
   API_URL_ROOT: string,
   jwt: string,
-  keyPair: PrivateKey,
+  privateKey: PrivateKey,
 ): () => Promise<PersonAuth> {
   // we pass identity into the function returning function to make it
   // available later in the callback
@@ -28,7 +28,7 @@ function loginWithChallenge(
       /** Wait for our socket to open successfully */
       socket.onopen = async () => {
         if (!jwt || jwt === '') throw 'no jwt';
-        if (!keyPair) throw 'no keyPair';
+        if (!privateKey) throw 'no privateKey';
         socket.send(
           JSON.stringify({
             type: 'token-request',
@@ -51,7 +51,7 @@ function loginWithChallenge(
               /** Convert the challenge json to a Buffer */
               const buf = Buffer.from(data.value);
               /** Person our identity to sign the challenge */
-              const signed = await keyPair.sign(buf);
+              const signed = await privateKey.sign(buf);
               /** Send the signed challenge back to the server */
               socket.send(
                 JSON.stringify({
@@ -77,18 +77,18 @@ function loginWithChallenge(
 export async function connectClient(
   API_URL_ROOT: string,
   jwt: string,
-  keyPair: PrivateKey,
+  privateKey: PrivateKey,
   threadID: ThreadID,
 ) {
   async function createClients(
     API_URL_ROOT: string,
     jwt: string,
-    keyPair: PrivateKey,
+    privateKey: PrivateKey,
     threadID: ThreadID,
   ) {
     try {
       let start = new Date().getTime();
-      const loginCallback = loginWithChallenge(API_URL_ROOT, jwt, keyPair);
+      const loginCallback = loginWithChallenge(API_URL_ROOT, jwt, privateKey);
       const threadClient = Client.withUserAuth(await loginCallback());
       console.log('Client.withPersonAuth(await loginCallback())\n', new Date().getTime() - start);
       start = new Date().getTime();
@@ -169,10 +169,10 @@ export async function connectClient(
     return bucketKey;
   }
   store.commit.authMod.SYNCING(true);
-  // console.log('API_URL_ROOT, jwt, keyPair, threadID', API_URL_ROOT, jwt, keyPair, threadID);
+  // console.log('API_URL_ROOT, jwt, privateKey, threadID', API_URL_ROOT, jwt, privateKey, threadID);
   const start = new Date().getTime();
 
-  const client = await createClients(API_URL_ROOT, jwt, keyPair, threadID);
+  const client = await createClients(API_URL_ROOT, jwt, privateKey, threadID);
   if (client && client.threadClient) {
     await findOrCreateDB(client.threadClient, threadID);
     // await createDeckCollection(client.threadClient, threadID);

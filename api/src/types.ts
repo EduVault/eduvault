@@ -1,26 +1,12 @@
-export interface ApiRes<T> {
-  data: T;
-  code: number;
-  message: string;
-}
-export interface PasswordLoginRes {
-  pwEncryptedKeyPair: string;
-  jwt: string;
-  pubKey: string;
-  threadIDStr: string;
+export { types } from '@eduvault/shared';
+import { types } from '@eduvault/shared';
+export interface AppAndTokenData extends types.IApp {
+  id: string;
+  decryptToken: string;
 }
 
-export interface DotwalletProfile {
-  pay_status: number;
-  pre_amount: number;
-  total_amount: number;
-  person_address: string;
-  person_avatar: string;
-  person_name: string;
-  person_open_id: string;
-}
-export interface DotwalletAccessData {
-  access_token: string;
-  expires_in: number;
-  refresh_token: string;
+export interface AppTokenData {
+  data: { id: string; decryptToken: string };
+  iat: number;
+  exp: number;
 }

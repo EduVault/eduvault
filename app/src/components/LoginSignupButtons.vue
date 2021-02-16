@@ -8,7 +8,7 @@
     </p> -->
     <span>
       <b-button
-        class="form__item"
+        class="form__item btn__login-signup"
         :disabled="loginButtonDisable"
         type="submit"
         variant="outline-primary"

@@ -1,58 +1,37 @@
-import {
-  ApiRes,
-  AuthState,
-  IPerson,
-  PasswordLoginReq,
-  PasswordLoginRes,
-  RootState,
-} from '../types';
+import { types, AuthState, RootState } from '../types';
 import { ActionContext, Getter } from 'vuex';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import store from '../store';
 import router from '@/router';
 import { ThreadID, PrivateKey } from '@textile/hub';
-import CryptoJS from 'crypto-js';
 import {
-  encrypt,
-  decrypt,
   storePersistentAuthData,
   storeNonPersistentAuthData,
-  testKeyPair,
+  testPrivateKey,
   rehydratePrivateKey,
   setQueriesForSocialMediaRedirect,
   getQueriesForSocialMediaRedirect,
+  formatOutRedirectURL,
+  utils,
 } from './utils';
-import {
-  API_URL_ROOT,
-  DEV_API_URL_ROOT,
-  PASSWORD_LOGIN,
-  FACEBOOK_AUTH,
-  GOOGLE_AUTH,
-  DOTWALLET_AUTH,
-} from '../config';
+import { ROUTES, API_URL, API_WS, APP_URL } from '../config';
 // import { connectClient } from '../store/textileHelpers';
 // import localForage from 'localforage';
 import Vue from 'vue';
 import Vuecookies from 'vue-cookies';
 Vue.use(Vuecookies);
+const { encrypt, decrypt, hash } = utils;
 
 const defaultState: AuthState = {
   loggedIn: false,
   syncing: false,
-  API_URL:
-    process.env.NODE_ENV === 'production'
-      ? 'https://' + API_URL_ROOT
-      : 'http://' + DEV_API_URL_ROOT,
-  API_WS_URL:
-    process.env.NODE_ENV === 'production' ? 'wss://' + API_URL_ROOT : 'ws://' + DEV_API_URL_ROOT,
-  PASSWORD_LOGIN: PASSWORD_LOGIN,
-  keyPair: undefined,
+  privateKey: undefined,
   authType: undefined,
   jwt: undefined,
   pubKey: undefined,
   threadID: undefined,
   threadIDStr: undefined,
-  jwtEncryptedKeyPair: undefined,
+  jwtEncryptedPrivateKey: undefined,
 };
 const getDefaultState = () => {
   return defaultState;
@@ -80,8 +59,8 @@ export default {
     SYNCING(state: AuthState, bool: boolean): void {
       state.syncing = bool;
     },
-    KEYPAIR(state: AuthState, keyPair: PrivateKey | undefined): void {
-      state.keyPair = keyPair;
+    PRIVATE_KEY(state: AuthState, privateKey: PrivateKey | undefined): void {
+      state.privateKey = privateKey;
     },
     JWT(state: AuthState, jwt: string | undefined): void {
       state.jwt = jwt;
@@ -98,13 +77,15 @@ export default {
       if (key) localStorage.setItem('pubKey', key);
       state.pubKey = key;
     },
-    PW_ENCRYPTED_KEYPAIR(state: AuthState, pwEncryptedKeyPair: string | undefined): void {
-      if (pwEncryptedKeyPair) localStorage.setItem('pwEncryptedKeyPair', pwEncryptedKeyPair);
-      state.pwEncryptedKeyPair = pwEncryptedKeyPair;
+    PW_ENCRYPTED_PRIVATE_KEY(state: AuthState, pwEncryptedPrivateKey: string | undefined): void {
+      if (pwEncryptedPrivateKey)
+        localStorage.setItem('pwEncryptedPrivateKey', pwEncryptedPrivateKey);
+      state.pwEncryptedPrivateKey = pwEncryptedPrivateKey;
     },
-    JWT_ENCRYPTED_KEYPAIR(state: AuthState, jwtEncryptedKeyPair: string | undefined): void {
-      if (jwtEncryptedKeyPair) localStorage.setItem('jwtEncryptedKeyPair', jwtEncryptedKeyPair);
-      state.jwtEncryptedKeyPair = jwtEncryptedKeyPair;
+    JWT_ENCRYPTED_PRIVATE_KEY(state: AuthState, jwtEncryptedPrivateKey: string | undefined): void {
+      if (jwtEncryptedPrivateKey)
+        localStorage.setItem('jwtEncryptedPrivateKey', jwtEncryptedPrivateKey);
+      state.jwtEncryptedPrivateKey = jwtEncryptedPrivateKey;
     },
     THREAD_ID_STR(state: AuthState, ID: string | undefined): void {
       if (ID) localStorage.setItem('threadIDStr', ID);
@@ -133,28 +114,34 @@ export default {
       payload: {
         password: string;
         accountID: string;
-        redirectURL?: string;
-        code?: string;
       },
     ): Promise<string | undefined> {
       try {
-        console.log('API url ==========,', state.API_URL + state.PASSWORD_LOGIN);
+        const queries = router.currentRoute.query;
+        const [redirectURL, appID] = [
+          typeof queries.redirect_url === 'string' ? queries.redirect_url : undefined,
+          typeof queries.app_id === 'string' ? queries.app_id : undefined,
+        ];
         // new person info. generate each time, even if they are a returning person. if they are a returning person the server will just ignore this info. this lets us have a single endpoint for login/signup
-        const keyPair = await PrivateKey.fromRandom();
-        const pubKey = keyPair.public.toString();
-        const pwEncryptedKeyPair = encrypt(keyPair.toString(), payload.password);
+        const privateKey = await PrivateKey.fromRandom();
+        const pubKey = privateKey.public.toString();
+        const pwEncryptedPrivateKey = encrypt(privateKey.toString(), payload.password);
+        if (!pwEncryptedPrivateKey) throw 'error encrypting pwEncryptedPrivateKey';
         const newThreadID = ThreadID.fromRandom();
 
-        const loginData: PasswordLoginReq = {
+        const loginData: types.PasswordLoginReq = {
           accountID: payload.accountID,
-          password: CryptoJS.SHA256(payload.password).toString(),
+          password: hash(payload.password),
           threadIDStr: newThreadID.toString(),
-          pwEncryptedKeyPair: pwEncryptedKeyPair,
+          pwEncryptedPrivateKey: pwEncryptedPrivateKey,
           pubKey: pubKey,
+          redirectURL: redirectURL,
+          appID: appID,
         };
+        // console.log({ loginData });
 
         const options: AxiosRequestConfig = {
-          url: state.API_URL + state.PASSWORD_LOGIN,
+          url: API_URL + ROUTES.PASSWORD_AUTH,
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
@@ -165,40 +152,56 @@ export default {
         };
 
         const response = await axios(options);
-        const responseData = response.data;
+        const responseData: types.PasswordLoginRes = response.data;
         console.log('login cookie: ' + JSON.stringify(Vue.$cookies.get('koa.sess')));
         console.log('login/signup data: ' + JSON.stringify(responseData));
         if (responseData.code !== 200) {
           if (responseData.message) return responseData.message;
           else return 'Unable to connect to database';
         } else {
-          const loginRes: PasswordLoginRes = responseData.data;
+          const loginRes = responseData.data;
           console.log('login result Data', loginRes);
-          const retrievedKeyStr = decrypt(loginRes.pwEncryptedKeyPair, payload.password);
-          if (!retrievedKeyStr) return 'Could not decrypt KeyPair';
-          const retrievedKey = await rehydratePrivateKey(retrievedKeyStr);
-          if (!retrievedKey || !testKeyPair(retrievedKey, loginRes.pubKey))
-            return 'Could not retrieve KeyPair';
+          const keyStr = decrypt(loginRes.pwEncryptedPrivateKey, payload.password);
+          if (!keyStr) return 'Could not decrypt PrivateKey';
+          const retrievedKey = await rehydratePrivateKey(keyStr);
+          if (!retrievedKey || !testPrivateKey(retrievedKey, loginRes.pubKey))
+            return 'Could not retrieve PrivateKey';
           const jwts = await store.dispatch.authMod.getJwt();
-          if (!jwts || !jwts.jwt) return 'coud not get JWT';
+          if (!jwts || !jwts.jwt) return 'could not get JWT';
+          const {
+            pwEncryptedPrivateKey,
+            threadIDStr,
+            pubKey,
+            appLoginToken,
+            decryptToken,
+          } = loginRes;
+          const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+          if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
           storePersistentAuthData(
-            encrypt(retrievedKeyStr, jwts.jwt),
-            loginRes.pwEncryptedKeyPair,
-            loginRes.threadIDStr,
-            loginRes.pubKey,
+            jwtEncryptedPrivateKey,
+            pwEncryptedPrivateKey,
+            threadIDStr,
+            pubKey,
             'password',
           );
-          if (payload.redirectURL && payload.code) {
-            const codeEncryptedKey = encrypt(retrievedKeyStr, payload.code);
-            const outRedirectURL = payload.redirectURL + `?key_pair=${codeEncryptedKey}`;
-            console.log(outRedirectURL);
-            window.location.href = outRedirectURL;
+          if (redirectURL && appID) {
+            if (!appLoginToken || !decryptToken) console.log('app auth failed');
+            else {
+              const encryptedPrivateKey = encrypt(keyStr, decryptToken);
+              if (!encryptedPrivateKey) return 'error encrypting encryptedPrivateKey';
+              const outRedirectURL = formatOutRedirectURL({
+                redirectURL,
+                threadIDStr,
+                pwEncryptedPrivateKey,
+                encryptedPrivateKey,
+                appLoginToken,
+                pubKey,
+              });
+              console.log(outRedirectURL);
+              window.location.href = outRedirectURL;
+            }
           } else {
-            storeNonPersistentAuthData(
-              retrievedKey,
-              jwts.jwt,
-              ThreadID.fromString(loginRes.threadIDStr),
-            );
+            storeNonPersistentAuthData(retrievedKey, jwts.jwt, ThreadID.fromString(threadIDStr));
             router.push('/home');
           }
           return 'Success';
@@ -211,9 +214,10 @@ export default {
         else return 'Issue connecting to database';
       }
     },
+
     async logout({ state }: ActionContext<AuthState, RootState>) {
       const options: AxiosRequestConfig = {
-        url: state.API_URL + '/logout',
+        url: API_URL + ROUTES.LOGOUT,
         method: 'GET',
         headers: {
           'X-Forwarded-Proto': 'https',
@@ -235,7 +239,7 @@ export default {
     }: ActionContext<AuthState, RootState>): Promise<boolean | undefined> {
       try {
         const options: AxiosRequestConfig = {
-          url: state.API_URL + '/auth-check',
+          url: API_URL + ROUTES.AUTH_CHECK,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -263,18 +267,20 @@ export default {
     },
 
     async loadingPageAuthCheck(): Promise<null | undefined> {
+      // to do: get appLoginToken from social media login redirect
+
       // possibilities:
-      // case 1) has keypair (unlikely), case 2) has cookie and jwtEncryptedKeyPair. case 3) only has cookie. case 4) has neither
+      // case 1) has privateKey (unlikely cause we don't persist it), case 2) has cookie and jwtEncryptedPrivateKey. case 3) only has cookie. case 4) has neither
       // case 1)
       //  redirect to home or to external with key
       // problem. facebook redirect is going straight back to the eduvault app homepage without queries
-      // case 2) from facebook login redirect or somehow otherwise has cookie but not jwtEncryptedKeyPair:
+      // case 2) from facebook login redirect or somehow otherwise has cookie but not jwtEncryptedPrivateKey:
       //    use cookie to get keys, then redirect to home or external
       //                if not social media, can't decrypt keys. redirect to /login
 
       // case 3) returning:
-      // if has jwtEncryptedKeyPair and cookie:
-      //    if fromExternal: get jwt, decrypt and redirect
+      // if has jwtEncryptedPrivateKey and cookie:
+      //    if fromExternal: get app loginToken and redirect
       //    if not: get person, full dehydrate, redirect home
 
       // case 4)
@@ -282,52 +288,67 @@ export default {
 
       // set up variables
       const queries = router.currentRoute.query;
-      let [redirectURL, code] = [
+      let [redirectURL, appID] = [
         typeof queries.redirect_url === 'string' ? queries.redirect_url : undefined,
-        typeof queries.code === 'string' ? queries.code : undefined,
+        typeof queries.app_id === 'string' ? queries.app_id : undefined,
       ];
-      if (!redirectURL && !code) {
+      if (!redirectURL && !appID) {
         const queriesSavedFromSocialMediaLogin = getQueriesForSocialMediaRedirect();
         if (queriesSavedFromSocialMediaLogin) {
-          [redirectURL, code] = queriesSavedFromSocialMediaLogin;
-          console.log('got redirect queries from local storage', { redirectURL, code });
+          [redirectURL, appID] = queriesSavedFromSocialMediaLogin;
+          console.log('got redirect queries from local storage', { redirectURL, appID });
         }
       }
-      const fromExternal = !!redirectURL && !!code;
-      const keyPair = store.state.authMod.keyPair;
-      const jwtEncryptedKeyPair =
-        store.state.authMod.jwtEncryptedKeyPair || localStorage.getItem('jwtEncryptedKeyPair');
+      const fromExternal = !!redirectURL && !!appID;
+      const privateKey = store.state.authMod.privateKey;
+      const jwtEncryptedPrivateKey =
+        store.state.authMod.jwtEncryptedPrivateKey ||
+        localStorage.getItem('jwtEncryptedPrivateKey');
       const threadIDStr = store.state.authMod.threadIDStr || localStorage.getItem('threadIDStr');
       const pubKey = store.state.authMod.pubKey || localStorage.getItem('pubKey');
-      const pwEncryptedKeyPair =
-        store.state.authMod.pwEncryptedKeyPair || localStorage.getItem('pwEncryptedKeyPair');
+      const pwEncryptedPrivateKey =
+        store.state.authMod.pwEncryptedPrivateKey || localStorage.getItem('pwEncryptedPrivateKey');
       const cookie = store.getters.authMod.cookies || Vue.$cookies.get('koa.sess');
       const toLoginPath = fromExternal
-        ? `/login/?redirect_url=${redirectURL}&code=${code}`
+        ? `/login/?redirect_url=${redirectURL}&app_id=${appID}`
         : '/login/';
-      const toExternalPath = (keyPair: PrivateKey, threadIDStr: string) => {
-        if (redirectURL && code)
-          return `${redirectURL}/?key=${encrypt(
-            keyPair.toString(),
-            code,
-          )}&thread_id=${threadIDStr}`;
-        else return '';
+
+      const toExternalPath = (
+        privateKey: PrivateKey,
+        threadIDStr: string,
+        decryptToken: string,
+        appLoginToken: string,
+      ) => {
+        if (redirectURL && appID && pwEncryptedPrivateKey && pubKey) {
+          const encryptedPrivateKey = encrypt(privateKey.toString(), decryptToken);
+          if (!encryptedPrivateKey) return 'error encrypting encryptedPrivateKey';
+          const outRedirectURL = formatOutRedirectURL({
+            redirectURL,
+            threadIDStr,
+            pwEncryptedPrivateKey,
+            encryptedPrivateKey,
+            appLoginToken,
+            pubKey,
+          });
+          console.log({ outRedirectURL });
+          return outRedirectURL;
+        } else return null;
       };
       console.log('loadingPageAuthCheck', {
         queries,
         state: store.state.authMod,
-        keyPair,
+        privateKey,
         fromExternal,
         redirectURL,
-        code,
-        jwtEncryptedKeyPair,
+        appID,
+        jwtEncryptedPrivateKey,
         cookie,
         toLoginPath,
       });
-      const hasKeyPair = (keyPair: PrivateKey, threadIDStr: string) => {
-        console.log('case 1: has keyPair');
+      const hasPrivateKey = (privateKey: PrivateKey, threadIDStr: string) => {
+        console.log('case 1: has privateKey');
         if (fromExternal) {
-          window.location.href = toExternalPath(keyPair, threadIDStr);
+          // window.location.href = toExternalPath(privateKey, threadIDStr);
           return null;
         } else {
           // get person
@@ -352,8 +373,8 @@ export default {
           return null;
         }
         const person = await store.dispatch.authMod.getPerson();
-        // once we have ability to rehydrate with password locally, insert here and get rid of check for socialMediaKeyPair
-        if (person && person.socialMediaKeyPair && person.pubKey && person.threadIDStr) {
+        // once we have ability to rehydrate with password locally, insert here and get rid of check for socialMediaPrivateKey
+        if (person && person.socialMediaPrivateKey && person.pubKey && person.threadIDStr) {
           await store.commit.personMod.PERSON(person);
           // decrypt and save keys
           const socialMediatype = person.dotwallet
@@ -365,25 +386,27 @@ export default {
             : undefined;
           const id = person.dotwallet?.person_open_id || person.facebook?.id || person.google?.id;
           if (id) {
-            console.log({ socialMediaKeyPair: person.socialMediaKeyPair, id });
+            console.log({ socialMediaPrivateKey: person.socialMediaPrivateKey, id });
 
-            const keyStr = decrypt(person.socialMediaKeyPair, id);
+            const keyStr = decrypt(person.socialMediaPrivateKey, id);
             if (!keyStr) {
               router.push(toLoginPath);
               return null;
             }
             const keys = await rehydratePrivateKey(keyStr);
-            if (keys && testKeyPair(keys, person.pubKey)) {
+            if (keys && testPrivateKey(keys, person.pubKey)) {
               // success!
+              const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+              if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
               storePersistentAuthData(
-                encrypt(keyStr, jwts.jwt),
+                jwtEncryptedPrivateKey,
                 undefined,
                 person.threadIDStr,
                 person.pubKey,
                 socialMediatype,
               );
               if (fromExternal) {
-                window.location.href = toExternalPath(keys, person.threadIDStr);
+                // window.location.href = toExternalPath(keys, person.threadIDStr);
                 return null;
               } else {
                 storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(person.threadIDStr));
@@ -406,38 +429,42 @@ export default {
         }
       };
       const hasAllPersistentData = async (
-        jwtEncryptedKeyPair: string,
+        jwtEncryptedPrivateKey: string,
         threadIDStr: string,
         pubKey: string,
       ) => {
         console.log('case 3: hasAllPersistentData');
-        //    if fromExternal: get jwt, decrypt and redirect
-        const jwts = await store.dispatch.authMod.getJwt();
-        //save jwt
-        if (jwts?.jwt) store.commit.authMod.JWT(jwts.jwt);
-        //    if not: get person, full dehydrate, redirect home
-        if (jwts && jwts.jwt) {
-          // get jwt
-          // try to decrypt
-          console.log({ jwtEncryptedKeyPair, jwts });
-          const keyStr = decrypt(jwtEncryptedKeyPair, jwts.jwt);
-          if (!keyStr) {
-            onlyCookie();
-            return null;
-          }
-          let keys = await rehydratePrivateKey(keyStr);
 
-          if (!keys && jwts.oldJwt) keys = await rehydratePrivateKey(keyStr);
-          console.log({ keys });
-
-          //should we test the keys better? might require getting ID
-          if (keys && testKeyPair(keys, pubKey)) {
-            storePersistentAuthData(encrypt(keyStr, jwts.jwt));
-            if (fromExternal) {
-              // success - redirect out
-              window.location.href = toExternalPath(keys, threadIDStr);
+        if (fromExternal) {
+          // TO DO!
+          // if fromExternal: get appLoginToken and redirect toExternalPath(keys, threadIDStr);
+          // need to create a new GetAppLoginToken API endpoint when authing app from here.
+          // check that the person has authorized before
+          router.push(toLoginPath);
+        } else {
+          const jwts = await store.dispatch.authMod.getJwt();
+          //save jwt
+          if (jwts?.jwt) store.commit.authMod.JWT(jwts.jwt);
+          //    if not: get person, full dehydrate, redirect home
+          if (jwts && jwts.jwt) {
+            // get jwt
+            // try to decrypt
+            console.log({ jwtEncryptedPrivateKey, jwts });
+            let keyStr = decrypt(jwtEncryptedPrivateKey, jwts.jwt);
+            // use oldJWT if it didn't work
+            if (!keyStr && jwts.oldJwt) keyStr = decrypt(jwtEncryptedPrivateKey, jwts.oldJwt);
+            if (!keyStr) {
+              onlyCookie();
               return null;
-            } else {
+            }
+            const keys = await rehydratePrivateKey(keyStr);
+            console.log({ keys });
+
+            //should we test the keys better? might require getting ID
+            if (keys && testPrivateKey(keys, pubKey)) {
+              const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+              if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
+              storePersistentAuthData(jwtEncryptedPrivateKey);
               // check to make sure person isn't already there?
               const person = await store.dispatch.authMod.getPerson();
               if (person && person.accountID) {
@@ -449,24 +476,25 @@ export default {
                 router.push(toLoginPath);
                 return null;
               }
+            } else {
+              // failure, maybe it's a problem with the jwt decryption, we can fallback and try case 2
+              onlyCookie();
+              return null;
             }
           } else {
-            // failure, maybe it's a problem with the jwt decryption, we can fallback and try case 2
-            onlyCookie();
+            router.push(toLoginPath);
             return null;
           }
-        } else {
-          router.push(toLoginPath);
-          return null;
         }
       };
       try {
-        if (keyPair && keyPair.canSign() && threadIDStr) hasKeyPair(keyPair, threadIDStr);
-        else if (!jwtEncryptedKeyPair && cookie) onlyCookie();
-        else if (jwtEncryptedKeyPair && cookie && threadIDStr && pubKey)
-          hasAllPersistentData(jwtEncryptedKeyPair, threadIDStr, pubKey);
-        // case 3.5) pwEncryptedKeyPair exists. prompt user to unlock with that.
-        else if (!jwtEncryptedKeyPair && !cookie) {
+        if (privateKey && privateKey.canSign() && threadIDStr)
+          hasPrivateKey(privateKey, threadIDStr);
+        else if (!jwtEncryptedPrivateKey && cookie) onlyCookie();
+        else if (jwtEncryptedPrivateKey && cookie && threadIDStr && pubKey)
+          hasAllPersistentData(jwtEncryptedPrivateKey, threadIDStr, pubKey);
+        // case 3.5) pwEncryptedPrivateKey exists. prompt user to unlock with that.
+        else if (!jwtEncryptedPrivateKey && !cookie) {
           console.log('case 4');
           router.push(toLoginPath);
           return null;
@@ -482,10 +510,10 @@ export default {
       }
     },
     /** Get JWT and person info */
-    async getPerson({ state }: ActionContext<AuthState, RootState>): Promise<IPerson | null> {
+    async getPerson({ state }: ActionContext<AuthState, RootState>): Promise<types.IPerson | null> {
       try {
         const options: AxiosRequestConfig = {
-          url: state.API_URL + '/get-person',
+          url: API_URL + ROUTES.GET_PERSON,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -494,7 +522,7 @@ export default {
         };
         const res = await axios(options);
         // console.log({ res });
-        const resData: ApiRes<IPerson> = res.data;
+        const resData: types.ApiRes<types.IPerson> = res.data;
         if (!resData || !resData.data.accountID) return null;
         else return resData.data;
       } catch (err) {
@@ -510,7 +538,7 @@ export default {
     } | null> {
       try {
         const options: AxiosRequestConfig = {
-          url: state.API_URL + '/get-jwt',
+          url: API_URL + ROUTES.GET_JWT,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -518,7 +546,7 @@ export default {
           withCredentials: true,
         };
         const res = await axios(options);
-        const resData: ApiRes<{
+        const resData: types.ApiRes<{
           jwt: string;
           oldJwt: string | null;
         }> = res.data;
@@ -538,22 +566,19 @@ export default {
       let authLink;
       switch (authType) {
         case 'facebook':
-          authLink = FACEBOOK_AUTH;
+          authLink = ROUTES.FACEBOOK_AUTH;
           break;
         case 'google':
-          authLink = GOOGLE_AUTH;
+          authLink = ROUTES.GOOGLE_AUTH;
           break;
       }
-      window.location.href =
-        process.env.NODE_ENV === 'production'
-          ? `https://${API_URL_ROOT}${authLink}`
-          : `http://${DEV_API_URL_ROOT}${authLink}`;
+      window.location.href = `${APP_URL}${authLink}`;
     },
     // async initializeDB(
     //   { state }: ActionContext<AuthState, RootState>,
     //   payload: {
     //     jwt: string;
-    //     keyPair: PrivateKey;
+    //     privateKey: PrivateKey;
     //     threadID: ThreadID;
     //     retry: number;
     //   },
@@ -561,12 +586,12 @@ export default {
     //   console.log('payload.retry', payload.retry);
     //   if (payload.retry > 1) {
     //     alert('Error connecting to database');
-    //   } else if (payload.jwt && payload.keyPair && payload.threadID) {
+    //   } else if (payload.jwt && payload.privateKey && payload.threadID) {
     //     try {
     //       const client = await startDB(
     //         state.API_WS_URL + '/ws/auth',
     //         payload.jwt,
-    //         payload.keyPair,
+    //         payload.privateKey,
     //         payload.threadID,
     //       );
     //       if (client) {

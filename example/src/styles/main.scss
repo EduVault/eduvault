@@ -23,11 +23,11 @@ UTILITIES
 }
 
 .primary {
-  color: $primary
+  color: $primary;
 }
 
 .secondary {
-  color: $secondary
+  color: $secondary;
 }
 
 /* ---------------------------------------------
@@ -67,7 +67,6 @@ COMPONENTS === BLOCKS __ELEMENTS --MODIFIERS
 
 ------------------------------------------------ */
 
-
 .home-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -87,7 +86,7 @@ COMPONENTS === BLOCKS __ELEMENTS --MODIFIERS
 }
 
 .editor {
-  flex-grow: .2;
+  flex-grow: 0.2;
   background-color: white;
   box-shadow: 0px 0px 14px 1px #0000008c;
   text-align: center;
@@ -106,16 +105,6 @@ COMPONENTS === BLOCKS __ELEMENTS --MODIFIERS
 
 .button {
   cursor: pointer;
-}
-
-.oauth-login-button {
-  box-shadow: 1px 1px 3px 1px #00000063;
-  border-radius: 5px;
-
-  &:hover {
-    box-shadow: 1px 1px 3px 1px #000000a8;
-    cursor: pointer
-  }
 }
 
 .form {
@@ -137,8 +126,6 @@ COMPONENTS === BLOCKS __ELEMENTS --MODIFIERS
     cursor: pointer;
   }
 }
-
-
 
 .login-component__body {
   width: 250px;

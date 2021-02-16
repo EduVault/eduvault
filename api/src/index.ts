@@ -12,23 +12,33 @@ import helmet from 'koa-helmet';
 import websockify from 'koa-websocket';
 import ip from 'ip';
 
-import connectDb from './mongo/mongoose';
+import connectDB from './mongo/mongoose';
 import passportInit from './auth/passportInit';
 import startRouter from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
-import { PORT, CORS_CONFIG } from './config';
-
+import { config, CORS_CONFIG } from './config';
+import { utils } from './utils';
 const app = websockify(new Koa());
 
-if (process.env.NODE_ENV === 'production') app.proxy = true;
+if (utils.isProdEnv()) app.proxy = true;
 
 /** Database */
-const db = connectDb();
+if (process.env.TEST !== 'true') connectDB();
 
-// delete person collection
-// mongoose.connection.collections['person'].drop(function (err: any) {
-//   console.log('+++++collection dropped++++');
-// });
+// delete collections
+let del = false;
+// let del = true;
+if (del)
+  try {
+    mongoose.connection.collections['person'].drop(function (err: any) {
+      console.log('+++++1person collection dropped++++', err);
+    });
+    mongoose.connection.collections['app'].drop(function (err: any) {
+      console.log('+++++1app collection dropped++++', err);
+    });
+  } catch (error) {
+    console.log({ error });
+  }
 
 /** Middlewares */
 app.use(async function handleGeneralError(ctx, next) {
@@ -40,7 +50,7 @@ app.use(async function handleGeneralError(ctx, next) {
   }
 });
 app.use(cors(CORS_CONFIG));
-if (process.env.NODE_ENV === 'production') app.use(sslify({ resolver: xForwardedProtoResolver }));
+if (utils.isProdEnv()) app.use(sslify({ resolver: xForwardedProtoResolver }));
 app.use(cookie());
 app.use(logger());
 app.use(bodyParser());
@@ -64,7 +74,14 @@ const passport = passportInit(app);
 const router = startRouter(app, passport);
 /** Websockets */
 personAuthRoute(app);
-/** Start the server! */
-app.listen(PORT, () => console.log(`Koa server listening at ${ip.address()}:${PORT}`));
+
+const testAPI = app;
+export { testAPI };
+
+if (process.env.TEST !== 'true')
+  /** Start the server! */
+  app.listen(config.PORT_API, () =>
+    console.log(`Koa server listening at ${ip.address()}:${config.PORT_API}`),
+  );
 
 export default app;

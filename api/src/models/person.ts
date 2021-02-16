@@ -1,7 +1,4 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { DotwalletProfile } from '../types';
-
-import * as bcrypt from 'bcryptjs';
 
 /** @param accountID will be an email for local scheme, for google and facebook will be email if available or id if not */
 interface Dotwallet extends DotwalletProfile {
@@ -10,14 +7,15 @@ interface Dotwallet extends DotwalletProfile {
 export interface IPerson extends Document {
   accountID: string;
   password?: string;
-  pwEncryptedKeyPair?: string;
-  socialMediaKeyPair?: string;
+  pwEncryptedPrivateKey?: string;
+  socialMediaPrivateKey?: string;
   pubKey?: string;
   threadIDStr?: string;
   DbInfo?: string;
   facebook?: SocialMediaAccount;
   google?: SocialMediaAccount;
   dotwallet?: Dotwallet;
+  dev?: Dev;
 }
 interface SocialMediaAccount {
   id?: string;
@@ -27,7 +25,24 @@ interface SocialMediaAccount {
   familyName?: string;
   picture?: string;
 }
-
+export interface DotwalletProfile {
+  pay_status: number;
+  pre_amount: number;
+  total_amount: number;
+  person_address: string;
+  person_avatar: string;
+  person_name: string;
+  person_open_id: string;
+}
+export interface DotwalletAccessData {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+}
+export interface Dev {
+  isVerified: boolean;
+  apps?: string[];
+}
 /* Mongoose will complain about duplicate keys if we set any of these as unique, 
 because we don't use them in all situations. So we should manually check if these are unique. 
 */
@@ -35,8 +50,8 @@ const PersonSchema = new Schema(
   {
     accountID: { type: String, unique: true, required: false },
     password: { type: String, unique: false, required: false },
-    pwEncryptedKeyPair: { type: String, unique: false, required: false },
-    socialMediaKeyPair: { type: String, unique: false, required: false },
+    pwEncryptedPrivateKey: { type: String, unique: false, required: false },
+    socialMediaPrivateKey: { type: String, unique: false, required: false },
     pubKey: { type: String, unique: false, required: false },
     threadIDStr: { type: String, unique: false, required: false },
     DbInfo: { type: String, unique: false, required: false },
@@ -66,6 +81,10 @@ const PersonSchema = new Schema(
       person_name: { type: String, unique: false, required: false },
       person_open_id: { type: String, unique: false, required: false },
     },
+    dev: {
+      isVerified: { type: Boolean, unique: false, required: false },
+      apps: [{ type: String, unique: false, required: false }],
+    },
   },
   {
     collection: 'person',
@@ -73,13 +92,4 @@ const PersonSchema = new Schema(
   },
 );
 
-export const hashPassword = (password: IPerson['password']) =>
-  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-
-export const validPassword = function (
-  providedPassword: string,
-  storedPassword: IPerson['password'],
-) {
-  return bcrypt.compareSync(providedPassword, storedPassword);
-};
 export default mongoose.model<IPerson>('person', PersonSchema);

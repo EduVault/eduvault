@@ -12,7 +12,7 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const dotenv = require('dotenv');
-dotenv.config({ path: '../../.env' });
+dotenv.config();
 const APP_SECRET = process.env.APP_SECRET;
 console.log({ APP_SECRET });
 /**

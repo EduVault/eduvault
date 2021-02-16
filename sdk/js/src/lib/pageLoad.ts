@@ -168,7 +168,8 @@ export const setupButton = (
   buttonID: string,
   redirectURL?: string,
   appID?: string,
-  log = false
+  log = false,
+  onSucccess?: (loginURL: string) => any
 ) => {
   // console.log({ buttonID, redirectURL });
   const button = buttonID ? document.getElementById(buttonID) : null;
@@ -186,9 +187,8 @@ export const setupButton = (
     if (log) console.log('appID not found');
     return;
   }
-  button.addEventListener('click', () => {
-    if (!redirectURL) redirectURL = window.location.href;
-    const loginURL = `${URL_APP}?app_id=${appID}&redirect_url=${redirectURL}`;
-    window.location.href = loginURL;
-  });
+  if (!redirectURL) redirectURL = window.location.href;
+  const loginURL = `${URL_APP}?app_id=${appID}&redirect_url=${redirectURL}`;
+  button.setAttribute('href', loginURL);
+  if (onSucccess) onSucccess(loginURL);
 };

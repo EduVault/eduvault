@@ -2,8 +2,8 @@
 
 export const exampleURL = 'localhost:8082';
 const dummyEmail = 'person@email.com';
-const dummyPassword = 'password123';
-const exampleLoginButton = '#eduvault-login-button';
+const dummyPassword = 'Password123';
+const exampleLoginButton = 'a[href*="localhost:8081"]';
 const emailInput = 'input[type="email"]';
 const passwordInput = 'input[type="password"]';
 const pwSignupSubmit = '.btn__login-signup';
@@ -40,8 +40,8 @@ describe('Password Login', () => {
   it('login', () => {
     loginSignup();
   });
-  it('can log back in', () => {
-    loginSignup();
-    loginSignup();
-  });
+  // it('can log back in', () => {
+  //   loginSignup();
+  //   loginSignup();
+  // });
 });

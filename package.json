@@ -12,7 +12,7 @@
   "scripts": {
     "publish:shared": "cd ./shared && yarn publish",
     "publish:sdk-js": "cd ./sdk/js && yarn publish",
-    "link-set": "run-s link:*",
+    "link-set": "yarn build:shared && yarn link:shared && yarn build:sdk-js && yarn link:sdk-js",
     "link:shared": "cd ./shared && npm link && cd ../ && npm link @eduvault/shared && cd ./example && npm link @eduvault/shared && cd ../app && npm link @eduvault/shared && cd ../api && npm link @eduvault/shared && cd ../sdk/js && npm link @eduvault/shared",
     "link:sdk-js": "cd ./sdk/js && npm link && cd ../../example && npm link @eduvault/eduvault-js",
     "test:e2e": "yarn cypress run",
@@ -29,7 +29,7 @@
     "inst:sdk-js": "cd ./sdk/js && yarn install",
     "inst:shared": "cd ./shared && yarn install",
     "inst:root": "yarn install",
-    "inst": "run-s inst:*",
+    "inst": "run-s inst:* link-set",
     "clean:app": "cd ./app && rimraf yarn.lock && rimraf node_modules",
     "clean:example": "cd ./example && rimraf yarn.lock && rimraf node_modules",
     "clean:api": "cd ./api && yarn clean",

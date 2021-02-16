@@ -22,9 +22,9 @@
   "license": "MIT",
   "dependencies": {
     "@koa/cors": "^3.1.0",
+    "@textile/hub": "^6.0.2",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
-    "@textile/hub": "^6.0.2",
     "core-js-bundle": "^3.8.1",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",

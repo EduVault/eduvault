@@ -10,7 +10,7 @@
     "mongo-status": "brew services list",
     "mongo-stop": "brew services stop mongodb-community",
     "dev:watch": "TS_NODE_PROJECT='./tsconfig.build.json' ts-node-dev --inspect --poll --respawn ./src src/index.ts",
-    "dev": "run-s mongo-start dev:watch",
+    "dev": "run-s dev:watch",
     "start": "node dist/",
     "watch": "tsc -p tsconfig.build.json -w ",
     "build:server": "tsc -p tsconfig.build.json ",

@@ -75,12 +75,8 @@ Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to
 you will need to [install mongo-db](https://docs.mongodb.com/manual/administration/install-community/) for the local dev
 
 ```bash
-# will install everything
+# will install everything, build the shared library and sdk, and set up symlinks
 yarn inst
-# build the shared library and sdk
-yarn build:shared && yarn build:sdk-js
-# set up symlinks
-yarn link-set
 ```
 
 then

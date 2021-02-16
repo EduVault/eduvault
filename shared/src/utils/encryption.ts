@@ -23,7 +23,7 @@ export function encrypt(content: any, encryptKey: string) {
 }
 
 export function decrypt(content: string, decryptKey: string) {
-  console.log('decrypting', { content, decryptKey });
+  // console.log('decrypting', { content, decryptKey });
   try {
     let decData = CryptoJS.enc.Base64.parse(content).toString(CryptoJS.enc.Utf8);
     let decryptedBytes = CryptoJS.AES.decrypt(decData, decryptKey).toString(CryptoJS.enc.Utf8);

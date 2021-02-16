@@ -1,7 +1,13 @@
-import { Database, PrivateKey, ThreadID } from '@textile/threaddb';
-import { CollectionConfig } from '@textile/threaddb/dist/esm/local/collection';
 import { Buffer } from 'buffer';
-import { UserAuth as PersonAuth } from '@textile/hub';
+
+import {
+  CollectionConfig,
+  UserAuth as PersonAuth,
+  PrivateKey,
+  // Client,
+} from '@textile/hub';
+import { Database, ThreadID } from '@textile/threaddb';
+
 import { WS_API } from '../config';
 
 export const startLocalDB = async (
@@ -10,6 +16,7 @@ export const startLocalDB = async (
   onReady?: (db: Database) => any
 ) => {
   const db = await new Database('eduvault', collections as any).open(version);
+  console.log({ db });
   if (onReady) onReady(db);
   return db;
 };
@@ -21,18 +28,32 @@ export const startRemoteDB = async (
   privateKey: PrivateKey,
   onReady?: (db: Database) => any
 ) => {
-  const remote = await db.remote.setUserAuth(
-    loginWithChallenge(jwt, privateKey)
-  );
-  // Grab the token, save it, or just use it
-  const token = await remote.authorize(privateKey);
-  // save the token encrypted with jwt locally. on refresh, get token with cookie.
-  await remote.initialize(threadID);
-  console.log({ remote, token });
-  remote.config.metadata?.set('x-textile-thread-name', db.dexie.name);
-  remote.config.metadata?.set('x-textile-thread', db.id || '');
-  if (onReady) onReady(db);
-  return { remote, token };
+  try {
+    console.log({ db, threadID, privateKey });
+    const getUserAuth = loginWithChallenge(jwt, privateKey);
+    const userAuth = await getUserAuth();
+    // console.log({ userAuth });
+
+    /** this is only getting a one-time auth.... */
+    const remote = await db.remote.setUserAuth(userAuth);
+    /** can test against client */
+    // const client = Client.withUserAuth(userAuth);
+    // const dbs = await client.listDBs();
+    // console.log({ dbs });
+
+    // Grab the token, save it, or just use it
+    const token = await remote.authorize(privateKey);
+    // save the token encrypted with jwt locally. on refresh, get token with cookie.
+    await remote.initialize(threadID);
+    console.log({ remote, token });
+    remote.config.metadata?.set('x-textile-thread-name', db.dexie.name);
+    remote.config.metadata?.set('x-textile-thread', db.id || '');
+    if (onReady) onReady(db);
+    return { remote, token };
+  } catch (error) {
+    console.log({ error });
+    return error;
+  }
 };
 
 export const syncChanges = async (remote: Database['remote']) => {
@@ -54,7 +75,7 @@ export function loginWithChallenge(
   return () => {
     return new Promise((resolve, reject) => {
       /** Initialize our websocket connection */
-      // console.log('state.jwt', state.jwt);
+      // console.log('jwt', jwt);
       const socket = new WebSocket(WS_API);
       /** Wait for our socket to open successfully */
       socket.onopen = async () => {
@@ -64,10 +85,10 @@ export function loginWithChallenge(
           JSON.stringify({
             type: 'token-request',
             jwt: jwt,
+            pubKey: privateKey.public.toString(),
           })
         );
 
-        /** Listen for messages from the server */
         socket.onmessage = async (msg) => {
           const data = JSON.parse(msg.data);
           console.log('=================wss message===================', data);

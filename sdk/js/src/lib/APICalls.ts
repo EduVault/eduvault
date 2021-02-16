@@ -16,9 +16,9 @@ export const personRegister = async (options: {
   appID?: string | undefined;
 }) => {
   try {
-    const postData: PasswordLoginReq = await utils.formatPasswordSignIn(
-      options
-    );
+    const pwSigninData = await utils.formatPasswordSignIn(options);
+    if (pwSigninData.error) throw pwSigninData.error;
+    const postData: PasswordLoginReq = pwSigninData;
     const axiosOptions: AxiosRequestConfig = {
       url: URL_API + ROUTES.PASSWORD_AUTH,
       headers: {

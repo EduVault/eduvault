@@ -58,7 +58,8 @@ export const GOOGLE_CLIENT_ID =
   '487529271786-09ipprn3fe65lmv5rhgbv10rsp1lnra1.apps.googleusercontent.com';
 export const FACEBOOK_CLIENT_ID = '2837236683270597';
 export const DOTWALLET_APP_ID = '23d00104123806644423fb1409faf6be5';
-export const TEXTILE_USER_API_KEY = 'bfqeahwefqccqreqwfeeq';
+export const TEXTILE_USER_API_KEY = 'bvshw5u4veaarb33afkoyw74k5e';
+export const TEXTILE_ORG_API_KEY = 'bvxy3pdka4kzt2rotbazwrtj55e';
 // set in .env, will be used in API, or sdk/js config.ts
 // export const TEXTILE_USER_API_SECRET = process.env.TEXTILE_USER_API_SECRET;
 // export const DOTWALLET_SECRET = process.env.DOTWALLET_SECRET;

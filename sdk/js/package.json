@@ -28,12 +28,15 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@textile/hub": "^5.2.0",
-    "@textile/threaddb": "^0.0.5",
+    "@textile/hub": "^6.0.2",
+    "@textile/threaddb": "^0.0.6",
     "axios": "^0.21.1",
     "buffer": "^6.0.3",
     "core-js": "^3.8.3",
+    "core-js-bundle": "^3.8.3",
     "crypto-js": "^4.0.0",
+    "google-protobuf": "^3.15.0-rc.1",
+    "node-fetch": "^2.6.1",
     "ulid": "^2.3.0"
   },
   "devDependencies": {

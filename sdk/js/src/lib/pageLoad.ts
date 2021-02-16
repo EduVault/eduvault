@@ -102,11 +102,15 @@ export async function pageLoadChecks({
 
         //should we test the keys better? might require getting ID
         if (privateKey && testPrivateKey(privateKey, pubKey)) {
-          if (usedOldJwt)
-            localStorage.setItem(
-              'jwtEncryptedPrivateKey',
-              encrypt(keyStr, jwts.jwt)
-            );
+          if (usedOldJwt) {
+            const newJwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
+            if (newJwtEncryptedPrivateKey)
+              localStorage.setItem(
+                'jwtEncryptedPrivateKey',
+                newJwtEncryptedPrivateKey
+              );
+          }
+
           return { privateKey, threadID, jwt: jwts.jwt };
         } else {
           return { error: 'private key could not be rehydrated' };
@@ -130,10 +134,12 @@ export async function pageLoadChecks({
           const keyStr = decrypt(encryptedPrivateKey, decryptToken);
           const privateKey = await rehydratePrivateKey(keyStr);
           if (privateKey && testPrivateKey(privateKey, pubKey)) {
-            localStorage.setItem(
-              'jwtEncryptedPrivateKey',
-              encrypt(keyStr, jwt)
-            );
+            const newJwtEncryptedPrivateKey = encrypt(keyStr, jwt);
+            if (newJwtEncryptedPrivateKey)
+              localStorage.setItem(
+                'jwtEncryptedPrivateKey',
+                newJwtEncryptedPrivateKey
+              );
             localStorage.setItem(
               'pwEncryptedPrivateKey',
               pwEncryptedPrivateKey

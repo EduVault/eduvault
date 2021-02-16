@@ -4,13 +4,14 @@ export interface ApiRes<T> {
   message: string;
 }
 export interface PasswordLoginReq {
-  accountID: string;
-  password: string;
-  threadIDStr: string;
-  pwEncryptedPrivateKey: string;
-  pubKey: string;
+  accountID?: string;
+  password?: string;
+  threadIDStr?: string;
+  pwEncryptedPrivateKey?: string;
+  pubKey?: string;
   redirectURL?: string;
   appID?: string;
+  error?: string;
 }
 
 export interface PasswordLoginRes

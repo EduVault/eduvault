@@ -1,5 +1,5 @@
-import { Buckets } from '@textile/hub';
-import { Database, JSONSchema, PrivateKey, ThreadID } from '@textile/threaddb';
+import { Buckets, PrivateKey } from '@textile/hub';
+import { Database, JSONSchema, ThreadID } from '@textile/threaddb';
 import { isServerConnected } from './utils';
 import { appRegister, devVerify, personRegister } from './lib/APICalls';
 import { pageLoadChecks, setupButton } from './lib/pageLoad';
@@ -74,8 +74,9 @@ class EduVault {
           this.jwt,
           this.privateKey
         );
-        this.remote = remoteStart.remote;
-        this.dbToken = remoteStart.token;
+        console.log({ remoteStart });
+        // this.remote = remoteStart.remote;
+        // this.dbToken = remoteStart.token;
         if (this.onReady) this.onReady(this.db);
       }
     }

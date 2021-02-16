@@ -1,4 +1,4 @@
-import { CollectionConfig } from '@textile/threaddb/dist/esm/local/collection';
+import { CollectionConfig } from '@textile/hub';
 import { JSONSchema } from '@textile/threaddb';
 
 export const dummyPersonSchema: JSONSchema = {

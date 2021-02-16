@@ -59,8 +59,12 @@
   "version" "1.1.0"
   dependencies:
     "@textile/hub" "^6.0.2"
+    "@types/bcryptjs" "^2.4.2"
+    "@types/crypto-js" "^4.0.1"
     "bcryptjs" "^2.4.3"
     "crypto-js" "^4.0.0"
+    "google-protobuf" "^3.15.0-rc.1"
+    "node-fetch" "^2.6.1"
 
 "@improbable-eng/grpc-web@^0.12.0":
   "integrity" "sha512-uJjgMPngreRTYPBuo6gswMj1gK39Wbqre/RgE0XnSDXJRg6ST7ZhuS53dFE6Vc2CX4jxgl+cO+0B3op8LA4Q0Q=="
@@ -322,6 +326,16 @@
     "@textile/users-grpc" "2.6.0"
     "event-iterator" "^2.0.0"
     "loglevel" "^1.7.0"
+
+"@types/bcryptjs@^2.4.2":
+  "integrity" "sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ=="
+  "resolved" "https://registry.npmjs.org/@types/bcryptjs/-/bcryptjs-2.4.2.tgz"
+  "version" "2.4.2"
+
+"@types/crypto-js@^4.0.1":
+  "integrity" "sha512-6+OPzqhKX/cx5xh+yO8Cqg3u3alrkhoxhE5ZOdSEv0DOzJ13lwJ6laqGU0Kv6+XDMFmlnGId04LtY22PsFLQUw=="
+  "resolved" "https://registry.npmjs.org/@types/crypto-js/-/crypto-js-4.0.1.tgz"
+  "version" "4.0.1"
 
 "@types/ed2curve@^0.2.2":
   "integrity" "sha512-G1sTX5xo91ydevQPINbL2nfgVAj/s1ZiqZxC8OCWduwu+edoNGUm5JXtTkg9F3LsBZbRI46/0HES4CPUE2wc9g=="
@@ -1162,6 +1176,11 @@
   "resolved" "https://registry.npmjs.org/google-protobuf/-/google-protobuf-3.14.0.tgz"
   "version" "3.14.0"
 
+"google-protobuf@^3.15.0-rc.1":
+  "integrity" "sha512-aDpp0vaiFaM9Thv5H0UC2FJ3x4XzBABM1v+Q5V5GGyTNd1VsZXjKTPdI0ObFgio2tpBWO7nFy2cQmJ9n+6n95A=="
+  "resolved" "https://registry.npmjs.org/google-protobuf/-/google-protobuf-3.15.0-rc.1.tgz"
+  "version" "3.15.0-rc.1"
+
 "graceful-fs@^4.1.2", "graceful-fs@^4.1.6", "graceful-fs@^4.2.0":
   "integrity" "sha1-Ila94U02MpWMRl68ltxGfKB6Kfs="
   "resolved" "https://registry.npm.taobao.org/graceful-fs/download/graceful-fs-4.2.4.tgz?cache=0&sync_timestamp=1588086905523&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fgraceful-fs%2Fdownload%2Fgraceful-fs-4.2.4.tgz"
@@ -1715,7 +1734,7 @@
   "resolved" "https://registry.npm.taobao.org/nice-try/download/nice-try-1.0.5.tgz"
   "version" "1.0.5"
 
-"node-fetch@*":
+"node-fetch@*", "node-fetch@^2.6.1":
   "integrity" "sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw=="
   "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.1.tgz"
   "version" "2.6.1"

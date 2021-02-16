@@ -1,7 +1,6 @@
-import { createAPISig, Client } from '@textile/hub';
+import { createAPISig, Client, UserAuth as PersonAuth, PrivateKey } from '@textile/hub';
 import { config, TEXTILE_USER_API_SECRET } from '../config';
-import { UserAuth as PersonAuth } from '@textile/security';
-import { PrivateKey } from '@textile/crypto';
+
 const newClientDB = async () => {
   const db = await Client.withKeyInfo({
     key: config.TEXTILE_USER_API_KEY,
@@ -13,9 +12,9 @@ const newClientDB = async () => {
 /** @param seconds (300) time until the sig expires */
 const getAPISig = async (seconds: number = 300) => {
   try {
-    await console.log('getting API sig');
+    // await console.log('getting API sig');
     const expiration = await new Date(Date.now() + 1000 * seconds);
-    console.log('expiration', expiration);
+    // console.log('API sig expiration', expiration);
     const signature = await createAPISig(config.TEXTILE_USER_API_KEY, expiration);
     return signature;
   } catch (err) {

@@ -72,31 +72,19 @@ Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to
 
 ## To dev
 
-Install the dependencies:
+Quick way to get running...
 ```bash
+# installs node dependencies
 npm install --also=dev
-```
-
-```bash
-# will install everything
+# will install build dependencies
 yarn inst
 # build the shared library and sdk
-yarn build:shared && yarn build:sdk-js
-# set up symlinks
-yarn link-set
+yarn build:shared && yarn link:shared && yarn build:sdk-js && yarn link:sdk-js
 ```
 
 Run just the api in docker and the rest locally
 you will need to [install mongo-db](https://docs.mongodb.com/manual/administration/install-community/) for the local dev
 
-```bash
-# will install everything
-yarn inst
-# build the shared library and sdk
-yarn build:shared && yarn build:sdk-js
-# set up symlinks
-yarn link-set
-```
 
 ```bash
 yarn dev

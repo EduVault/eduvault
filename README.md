@@ -63,7 +63,7 @@ The auth server and data home app will be found in this repo and the SDKs will b
 
 ### config and env
 
-Changing the .env file in the root to your own secrets, and updating the config.ts file in 'shared' should be enough to fork and run the project with your own domain name and Google/Facebook/Dotwllet credentials.
+Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to your own secrets, and updating the config.ts file in 'shared' should be enough to fork and run the project with your own domain name and Textile/Google/Facebook/DotWallet credentials.
 
 ## To dev
 

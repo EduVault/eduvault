@@ -1,10 +1,15 @@
 # EduVault
 
-[Home page](eduvault.org)
+[Home page](https://eduvault.org)
+
+EduVault provides a truly User-owned (Person-owned) database that syncs across apps.
+Eduvault makes it trivially easy for developers to add such a database into an app.
+
+> Note: the word 'user' has been replaced by the word 'person' across this project.
 
 ## Problems EduVault aims to solve
 
-- Some of the ‘last legs’ are missing for using [Textile](textile.io) and creating a truly User-owned(Person-owned) database with an interoperable app ecosystem. Note: the word 'user' has been replaced by the word 'person' across this project.
+- Some of the ‘last legs’ are missing for using [Textile](textile.io) and creating a truly Person-owned database with an interoperable app ecosystem.
 - EdTech apps lack interoperability
 
 ### Authentication
@@ -17,18 +22,19 @@
 
 - **How to find interoperable apps?**
   - The Data Manager lists them.
-- **How can we deal with the fact that apps still must be trusted?** (as they will have access to the data while in use.
-  - The Data Manager app can audit them, and list only trusted ones.
+- **How can we deal with the fact that apps still must be trusted?** (as they must have access to the person's data while in use)
+  - The Data Manager app can audit them, and list only trusted ones which do not send let person-data leave the app without permission.
+  - The person-owned database can be partitioned, with different permission to different apps (read-only, write only, etc.)
 - **How can devs know beforehand what might be in the person-siloed DB?**
   - have a schema registry on data manager app dev homepage and within the person-owned DB.
 
-### Data management for Persons (persons)
+### Data management for Persons ('users')
 
 - Need an app where persons can browse, edit and mange permissions to all of their data in a friendly GUI.
 
 ### Steep learning curve for devs
 
-- SDKs. Abstract away auth and sync
+- SDKs abstract away connecting DB, auth, and sync complexities.
 
 ### Paying for and backing up person-owned data
 
@@ -36,7 +42,7 @@
 
 ### Handling merge conflicts
 
-- GUI for the person to handle conflicts. —part of SDKs
+- GUI for the person to handle conflicts. —> part of SDKs
 
 ## Solutions (EduVault)
 

@@ -2,10 +2,10 @@
 
 [Home page](https://eduvault.org)
 
-EduVault provides a truly User-owned (Person-owned) database that syncs across apps.
+EduVault provides a truly user-owned database that syncs across apps.
 Eduvault makes it trivially easy for developers to add such a database into an app.
 
-> Note: the word 'user' has been replaced by the word 'person' across this project.
+> Note: the word 'user' has been replaced by the word 'person' across this project
 
 ## Problems EduVault aims to solve
 
@@ -22,10 +22,10 @@ Eduvault makes it trivially easy for developers to add such a database into an a
 
 - **How to find interoperable apps?**
   - The Data Manager lists them.
-- **How can we deal with the fact that apps still must be trusted?** (as they must have access to the person's data while in use)
+- **How can we deal with the fact that apps still need to be trusted?** (as they must have access to the person's data while in use)
   - The Data Manager app can audit them, and list only trusted ones which do not send let person-data leave the app without permission.
   - The person-owned database can be partitioned, with different permission to different apps (read-only, write only, etc.)
-- **How can devs know beforehand what might be in the person-siloed DB?**
+- **How can devs know beforehand what might be in the person-owned DB?**
   - have a schema registry on data manager app dev homepage and within the person-owned DB.
 
 ### Data management for Persons ('users')

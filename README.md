@@ -74,8 +74,13 @@ Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to
 
 Quick way to get running...
 ```bash
+npm install --also=dev
+
 # will install everything, build the shared library and sdk, and set up symlinks
 yarn inst
+
+yarn build:shared && yarn link:shared && yarn build:sdk-js && yarn link:sdk-js
+
 ```
 
 Run just the api in docker and the rest locally

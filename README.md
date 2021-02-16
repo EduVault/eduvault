@@ -4,21 +4,20 @@
 
 ## Problems EduVault aims to solve
 
-- Some of the ‘last legs’ are missing for using [Textile](textile.io)/User-owned data in complete, functional and practical interoperable app ecosystem.
+- Some of the ‘last legs’ are missing for using [Textile](textile.io) and creating a truly User-owned(Person-owned) database with an interoperable app ecosystem. Note: the word 'user' has been replaced by the word 'person' across this project.
 - EdTech apps lack interoperability
 
 ### Authentication
 
 - Because Textile ThreadDB only accepts key pair (PKI) challenges, we need progressive auth choices for easy onboarding:
 
-least control -> more control -> most control
-oAuth2.0 -> password -> crypto wallets/PKI.
+**least control**(oAuth2.0) -> **more control**(password) -> **most control** (crypto wallets/PKI.)
 
 ### Discoverability, trust, and curation
 
 - **How to find interoperable apps?**
   - The Data Manager lists them.
-- **How can we deal with the fact that apps still must be trusted?**, as they will have access to the data while in use.
+- **How can we deal with the fact that apps still must be trusted?** (as they will have access to the data while in use.
   - The Data Manager app can audit them, and list only trusted ones.
 - **How can devs know beforehand what might be in the person-siloed DB?**
   - have a schema registry on data manager app dev homepage and within the person-owned DB.
@@ -46,22 +45,22 @@ oAuth2.0 -> password -> crypto wallets/PKI.
    includes: app store, my data, login page
 3. SDKs/frontend libraries
 
-The auth server and data home app will be found in this repo and the SDKs will be separate repos
-
 ## Project structure
 
 ```
 📦 eduvault
  ┣ 📂 api         An auth server to store person credentials and app registration
- ┣ 📂 app         'Data Home' app, app store, 3rd party login handler
+ ┣ 📂 app         'Data Home' app including app store and 3rd party login handler
  ┣ 📂 example     An example 3rd party app that uses eduvault for login and DB
  ┣ 📂 home-page   The EduVault home and info page
+ ┣ 📂 sdk/js      An SDK for quickly adding EduVault into a frontend js webapp
+ ┣ 📂 cypress     E2E integration tests
  ┗ 📂 deploy      nginx and ssl config files
 ```
 
-## project setup
+## Project setup
 
-### config and env
+### Config and env
 
 Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to your own secrets, and updating the config.ts file in 'shared' should be enough to fork and run the project with your own domain name and Textile/Google/Facebook/DotWallet credentials.
 
@@ -78,34 +77,22 @@ yarn build:shared && yarn build:sdk-js
 yarn link-set
 ```
 
-This will run just the api in docker and the rest locally
+then
 
 ```bash
 yarn dev
 ```
 
-optional: full docker dev setup with hot reloading.
-note: this reads the published version of 'shared', so config changes might not update without publishing. to do- set up symlinks in docker?
-
-```bash
-#
-yarn d-dev
-```
-
-Note: Doesn't include sdk development. Because of some errors with the Vue dev server, app and example are found at localhost:8081 and 8082 not localhost/app and /example
-
 ### Test
 
 ```bash
+# cypress end to end
 yarn test-watch:e2e
+# api unit
 yarn test-watch:api
+# sdk test: somewhat integrated (reduires API to be running -- `yarn dev:api`)
+yarn test-watch:sdk-js
 ```
-
-with debugger:
-run vscode debugger start prompts:
-`Attach to Cypress` - remember to `yarn test-watch:api` first
-`Launch Chrome against localhost` - remember to `yarn dev` first
-`Run Script: test-watch:api`
 
 ### Dev deploy
 
@@ -122,18 +109,18 @@ yarn dev-build
 sudo su
 service docker start
 # copy code into server with git
-rm -fr .git #reset old if need be
+rm -fr .git # Reset old if need be
 git init
 git remote add origin https://github.com/EduVault/eduvault.git
 
-# to clear and start fresh. beware, this can erase configurations like the ssl certs.
+# to clear and start fresh. Beware, this can erase configurations like the ssl certs.
 git reset --hard origin/main
 # otherwise just
 git pull
 
-# ssh copy in .env file?
+# ssh copy in .env file
 
-# script for SSL certificate: init-letsencrypt.sh
+# Run script for SSL certificate: init-letsencrypt.sh
 chmod +x init-letsencrypt.sh
 ./init-letsencrypt.sh
 yarn production

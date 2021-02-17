@@ -2,27 +2,32 @@
 
 ## TO DO
 
+- [ ] Get the example working using the database.
+- [ ] Schema registry
+- [ ] Dev sign up page to register apps to add to cors whitelist
+- [ ] change MetaMask login to generate PrivateKey as per [this example](https://docs.textile.io/tutorials/hub/pki-identities/)
+- [ ] Refactor:
+
+  - [ ] find more reused code and libraries across project and put them in shared (like lodash or @textile/hub)
+  - [ ] Move User Model to a shared folder between app and api
+
+- [ ] Add a 'drop database' api call (only available in development)
+- [ ] validation library
+- [ ] add types for all API req/res
+- [ ] API docs - w/ swagger
+- [ ] detect stored persistent storage on 3rd party login and auto-login/redirect
 - [ ] Dev ops:
-  - [x] Hot reloading for dev, SSL for production. All dockerized
-  - [x] Move envs, config, types, shared utils to root shared folder
+  - [ ] Deploy!
   - [ ] Env variables in docker-compose and nginx
   - [ ] move to real monorepo with yarn workspaces
-  - [ ] set up CI with automated deploys and tests (tried and failed. Vue webpack not resolving symlinks)
+  - [ ] set up CI with automated deploys and tests
 - [ ] Set up tests:
-  - [ ] unit sets for each API route
-  - [ ] E2E/ integration tests with cypress
-  - [ ] unit tests for sdk (hard to isolate)
+  - [x] unit sets for each API route
+  - [x] E2E/ integration tests with cypress
+  - [x] unit tests for sdk (hard to isolate)
   - [ ] unit tests for app logic(low priority)
   - [ ] dockerize tests (cypress not working on my mac m1 chip)
-- [x] Migrate old MVPs
-  - [x] Move login page to be served by backend (data home app) login should then be a redirect operation.
-  - [x] MVP frontend move to 'examples' folder
-- [x] Migrate official site
-- [x] Set up js sdk, use in example app
-- [x] Rework auth flow to allow 3rd party app sign-in
-- [ ] set up a dev sign up page to register apps to add to cors whitelist, and schema registry
-- [ ] change MetaMask login to generate PrivateKey as per [this example](https://docs.textile.io/tutorials/hub/pki-identities/)
-- [ ] move User Model to a shared folder between app and api
+- [ ] More tests!
 
 ## auth flow pseudocode
 

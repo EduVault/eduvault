@@ -58,20 +58,20 @@ export default {
     const decks = computed(() => store.state.decksMod.decks);
 
     const openBucket = (link: string) => {
-      // const bucketLink = store.state.authMod.bucketUrl;
+      // const bucketLink = store.state.dbMod.bucketUrl;
       // console.log('bucketlink', bucketLink);
       // window.open(bucketLink, '_blank');
     };
     const viewDeck = (deckID: string) => {
-      // const threadView = `https://${store.state.authMod.threadIDStr}.thread.hub.textile.io/Deck/`;
+      // const threadView = `https://${store.state.dbMod.threadIDStr}.thread.hub.textile.io/Deck/`;
       // window.open(threadView + deckID);
     };
     const loggedIn = false;
-    // const loggedIn = computed(() => store.getters.authMod.loggedIn);
-    // const syncing = computed(() => store.getters.authMod.syncing);
+    // const loggedIn = computed(() => store.getters.dbMod.loggedIn);
+    // const syncing = computed(() => store.getters.dbMod.syncing);
     const logout = () => {
-      // store.dispatch.authMod.logout();
-      // store.commit.authMod.LOGGEDIN(false);
+      // store.dispatch.dbMod.logout();
+      // store.commit.dbMod.LOGGEDIN(false);
     };
 
     return { logout, openBucket, decks, viewDeck, loggedIn };

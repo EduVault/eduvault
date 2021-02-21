@@ -51,6 +51,7 @@ import {
   onBeforeMount,
   onMounted,
   onBeforeUnmount,
+  ComputedRef,
 } from '@vue/composition-api';
 
 import { Deck, EditCardPayload } from '../types';
@@ -62,6 +63,7 @@ import DeckEditor from '../components/DeckEditor.vue';
 import DeckDisplay from '../components/DeckDisplay.vue';
 import NewCardButton from '../components/NewCardButton.vue';
 import NewDeckButton from '../components/NewDeckButton.vue';
+import defaultDeck from '../assets/defaultDeck.json';
 
 export default {
   name: 'ComposVuexPersist',
@@ -70,16 +72,29 @@ export default {
     onBeforeUnmount(() => {
       //
     });
-    onMounted(() => {
-      function startup(retry: number) {
-        store.dispatch.decksMod.init();
-      }
-      startup(0);
-    });
-
+    // onMounted(async () => {});
+    async function loadDecks() {
+      const loadedDecks = await store.dispatch.dbMod.loadDecks();
+      console.log({ loadedDecks });
+    }
+    const db = store.state.dbMod.eduvault;
+    if (!db) {
+      console.log('local db decks not found');
+    }
     const decks = computed(() => {
-      // console.log('decks changed');
-      return store.getters.decksMod.decks.filter((deck) => !deck.deleted);
+      if (!db) return [defaultDeck];
+      else {
+        loadDecks();
+
+        let decksArray: Deck[] = [];
+        db.db
+          ?.collection('Decks')
+          ?.find({})
+          .each((instance: unknown) => {
+            decksArray.push(instance as Deck);
+          });
+        return decksArray;
+      }
     });
 
     const emptyPayload = {

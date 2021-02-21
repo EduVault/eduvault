@@ -10,66 +10,41 @@
 </template>
 
 <script lang="ts">
-import EduVault, {
-  appRegister,
-  devVerify,
-  personRegister,
-  Database,
-} from '@eduvault/eduvault-js/dist/main';
+import { setupLoginButton } from '@eduvault/eduvault-js';
 // import EduVault from 'eduvault-js';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
 import { APP_SECRET } from '../config';
 // import { log } from 'util';
 // import router from '../router';
-// import store from '../store';
+import store from '../store';
+import router from '@/router';
 // import axios from 'axios'
 
 // import { v4 as uuid } from 'uuid';
-let db: Database;
 
 export default {
   name: 'Login',
   components: { BImg },
 
   setup() {
-    const THIS_SITE_URL = 'http://localhost:8082';
-    const redirectURL = `${THIS_SITE_URL}/login`;
-
     onMounted(async () => {
-      // if initiated with options, will a
-      const connnect = true;
-
-      let appID: string;
-      if (connnect) {
-        console.log({ APP_SECRET });
-        if (!APP_SECRET) return;
-        const accountID = 'person@email.com';
-        const password = 'Password123';
-        // to do: appregister req/res types
-        const devPersonRegister = await personRegister({ accountID, password });
-        console.log({ devPersonRegister });
-        const dev = await devVerify(APP_SECRET, accountID);
-        console.log({ dev });
-        let appInfo = await appRegister(accountID, password, 'test app', 'a testing app');
-        console.log({ appInfo });
-        if (appInfo.appID) appID = appInfo.appID;
-        if (!appInfo) return;
-        appID = appInfo.appID;
-        const eduvault = new EduVault({
-          appID,
-          redirectURL,
-          buttonID: 'eduvault-login-button',
-          log: true,
-          onReady: (db) => {
-            alert('database ready!');
-            state.db = db;
-          },
-        });
+      const buttonID = 'eduvault-login-button';
+      const THIS_SITE_URL = 'http://localhost:8082';
+      const redirectURL = `${THIS_SITE_URL}/login`;
+      /** appID would be hard coded, thus faster in a real app */
+      const appID = store.state.dbMod.appID || (await store.dispatch.dbMod.setupApp());
+      if (!appID) {
+        console.log('unable to get appID, cannot start EduVault');
+        return null;
       }
+      const onSuccess = (loginURL: string) => {
+        console.log('button set up. redirect url: ' + loginURL);
+      };
+      setupLoginButton({ buttonID, appID, redirectURL, onSuccess });
     });
     const state = reactive({
-      db,
+      //
     });
 
     return {

@@ -3,10 +3,22 @@ import { ActionContext } from 'vuex';
 import store from './index';
 import defaultDeck from '../assets/defaultDeck.json';
 
+/**
+ * load decks, should check if localDB has the decks, if not save them there. if so, update state with the decks.
+ * don't use state at all, use getters?
+ * or update state on each db change,
+ * maybe get rid of this module entirely, all use calls from the Home view right to eduvault!
+ * then turn this into a vuex plugin (much more complicated)
+ *
+ * so instead. in Home: on start, load default decks not to fuck up display, or wait to examine local DB
+ * localDB should always be there cause we started it in the router. add the load decks right to that.
+ * then set decks by querying local.
+ * change calls
+ *
+ */
+
 const defaultState: DecksState = {
   decks: [defaultDeck],
-  backlog: [] as Deck[],
-  // client: undefined,
 };
 const getDefaultState = () => {
   return defaultState;
@@ -24,7 +36,6 @@ export default {
     CLEAR_STATE(state: DecksState) {
       Object.assign(state, getDefaultState());
     },
-
     /** Add or update a list of decks */
     DECKS(state: DecksState, decks: Deck[]) {
       decks.forEach((deck) => {
@@ -59,7 +70,6 @@ export default {
         }
       }
     },
-
     editCard(state: DecksState, payload: EditCardPayload) {
       state.decks.forEach((stateDeck) => {
         if (stateDeck._id === payload.deckId) {
@@ -77,9 +87,6 @@ export default {
     },
   },
   actions: {
-    async init({ state }: ActionContext<DecksState, RootState>) {
-      store.commit.decksMod.CLEAR_STATE();
-    },
     async addCard({ state }: ActionContext<DecksState, RootState>, payload: EditCardPayload) {
       await store.commit.decksMod.addCard(payload);
     },

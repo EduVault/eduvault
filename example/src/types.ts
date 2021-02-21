@@ -1,5 +1,4 @@
-import { Buckets } from '@eduvault/eduvault-js';
-// import { DBInfo } from '@textile/threads';
+import EduVault, { Buckets, Database, JSONSchema, CollectionConfig } from '@eduvault/eduvault-js';
 
 /** @param accountID will be an email for local scheme, for google and facebook will be email if available or id if not */
 export interface Person {
@@ -51,7 +50,7 @@ export interface Deck {
   deleted?: boolean;
   ttl?: number;
 }
-export const deckSchema = {
+export const deckSchemaOld = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   id: 'https://github.com/Jewcub/textile-app',
   title: 'Deck',
@@ -89,21 +88,46 @@ export interface EditCardPayload {
 
 export interface DecksState {
   decks: Deck[];
-  // client?: Client;
-  buckets?: Buckets;
-  backlog?: Deck[];
-}
-export interface RootState {
-  decksMod: DecksState;
 }
 
-// export interface ApiRes<T> {
-//   data: T;
-//   code: number;
-//   message: string;
-// }
-// export interface PasswordRes {
-//   accountID: string;
-//   _id: string;
-//   token: string;
-// }
+export interface DBState {
+  eduvault?: EduVault;
+  appID?: string;
+  remoteReady?: boolean;
+  localReady?: boolean;
+}
+
+export interface RootState {
+  decksMod: DecksState;
+  dbMod: DBState;
+}
+
+export const cardSchema: JSONSchema = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  title: 'Card',
+  type: 'object',
+  properties: {
+    _id: { type: 'string' },
+    frontText: { type: 'string' },
+    backText: { type: 'string' },
+    updatedAt: { type: 'integer' },
+  },
+};
+export const deckSchema: JSONSchema = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  title: 'Deck',
+  type: 'object',
+  properties: {
+    _id: { type: 'string' },
+    title: { type: 'string' },
+    updatedAt: { type: 'integer' },
+    cards: {
+      type: 'array',
+      items: [cardSchema],
+    },
+  },
+};
+export const deckSchemaConfig: CollectionConfig = {
+  name: 'Decks',
+  schema: deckSchema,
+};

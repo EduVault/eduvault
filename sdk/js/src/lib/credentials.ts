@@ -1,13 +1,18 @@
 import { ThreadID } from '@textile/threaddb';
-import { URL_APP } from '../config';
 import { rehydratePrivateKey, testPrivateKey } from '../utils';
 import { getJWT, appLogin } from './APICalls';
 // import { ulid } from 'ulid';
 
-import { pageLoadOptions, PageLoadChecksResult } from '../types';
-
 import { utils, isServerConnected } from '../utils';
 const { decrypt, encrypt } = utils;
+
+export interface LoadCredentialsOptions {
+  onStart?: () => any;
+  onReady?: () => any;
+  redirectURL?: string;
+  appID?: string;
+  log?: boolean;
+}
 
 /**
  * Checks queries for login redirect info:
@@ -24,13 +29,16 @@ const { decrypt, encrypt } = utils;
  *  in both cases:
  *    use jwt to get userAuth  (for now must be online. look into whether userAuth can be in localStorage too)
  *    userAuth to start DB */
-export async function pageLoadChecks({
-  autoRedirect = false,
+export async function loadCredentials({
   redirectURL,
   appID,
   log = false,
-}: pageLoadOptions): Promise<PageLoadChecksResult> {
+
+  onStart,
+  onReady,
+}: LoadCredentialsOptions) {
   try {
+    if (onStart) onStart();
     const online = await isServerConnected();
     const queries = new URL(window.location.href).searchParams;
 
@@ -69,7 +77,6 @@ export async function pageLoadChecks({
     if (log) {
       queries.forEach((val, key) => console.log(key + ': ' + val));
       console.log({
-        autoRedirect,
         appID,
         redirectURL,
         online,
@@ -110,7 +117,7 @@ export async function pageLoadChecks({
                 newJwtEncryptedPrivateKey
               );
           }
-
+          if (onReady) onReady();
           return { privateKey, threadID, jwt: jwts.jwt };
         } else {
           return { error: 'private key could not be rehydrated' };
@@ -146,6 +153,7 @@ export async function pageLoadChecks({
             );
             localStorage.setItem('threadIDStr', threadIDStr);
             localStorage.setItem('pubKey', pubKey);
+            if (onReady) onReady();
             return { privateKey, threadID, jwt };
           } else {
             return { error: 'private key could not be rehydrated' };
@@ -163,32 +171,3 @@ export async function pageLoadChecks({
     return { error };
   }
 }
-
-export const setupButton = (
-  buttonID: string,
-  redirectURL?: string,
-  appID?: string,
-  log = false,
-  onSucccess?: (loginURL: string) => any
-) => {
-  // console.log({ buttonID, redirectURL });
-  const button = buttonID ? document.getElementById(buttonID) : null;
-  // console.log({ button });
-
-  if (!button) {
-    if (log) console.log('button not found');
-    return;
-  }
-  if (!redirectURL) {
-    if (log) console.log('redirectURL not found');
-    return;
-  }
-  if (!appID) {
-    if (log) console.log('appID not found');
-    return;
-  }
-  if (!redirectURL) redirectURL = window.location.href;
-  const loginURL = `${URL_APP}?app_id=${appID}&redirect_url=${redirectURL}`;
-  button.setAttribute('href', loginURL);
-  if (onSucccess) onSucccess(loginURL);
-};

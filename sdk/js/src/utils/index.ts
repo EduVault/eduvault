@@ -1,5 +1,6 @@
 export { utils } from '@eduvault/shared';
 import { PrivateKey } from '@textile/threaddb';
+import axios from 'axios';
 
 import {
   URL_API,
@@ -9,7 +10,7 @@ import {
 export const isServerConnected = async () => {
   try {
     // console.log('URL_API', URL_API);
-    const ping = await fetch(URL_API + '/ping');
+    const ping = await axios.get(URL_API + '/ping');
     // console.log({ ping });
     return ping.status >= 200 && ping.status < 300; // either true or false
   } catch (err) {

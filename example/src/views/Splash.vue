@@ -23,7 +23,7 @@ export default {
   setup() {
     // const eduvault = new EduVault();
     onMounted(() => {
-      // eduvault.pageLoadChecks({ autoRedirect: true });
+      // eduvault.loadCredentials({ autoRedirect: true });
       // const db = eduvault.connectDB()
     });
     const state = reactive({

@@ -63,7 +63,7 @@ export const SESSION_OPTIONS = {
   renew: false /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
   secure: utils.isProdEnv() ? true : false /** (boolean) secure cookie*/,
   sameSite: utils.isProdEnv()
-    ? 'none'
+    ? true
     : false /** (string) session cookie sameSite options (default null, don't set it) */,
 } as Partial<session.opts>;
 

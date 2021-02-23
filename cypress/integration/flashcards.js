@@ -1,10 +1,15 @@
 export const exampleURL = 'localhost:8082';
-
+import { loginSignup } from './login';
 describe('Flashcards Suite', () => {
-  beforeEach(() => {
-    // login
-    cy.visit(exampleURL + '/home');
+  cy.on('window:before:load', (win) => {
+    win.indexedDB.deleteDatabase('localforage');
   });
+  it('logs in', () => {
+    cy.visit(exampleURL);
+
+    loginSignup();
+  });
+
   it('contains the basic components', () => {
     cy.contains('h2', 'Deck');
     cy.contains('h2', 'Card');
@@ -22,6 +27,7 @@ describe('Flashcards Suite', () => {
   });
   it('can create a card', () => {
     cy.get('.new-card-btn').click();
+    cy.get('.ql-editor > p').first().focus();
     cy.get('.form__text-input').type('Test Deck');
 
     cy.get('.form__text-input[name=card-front-input]').type('Test card front');

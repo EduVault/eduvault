@@ -23,8 +23,12 @@ export const startLocalDB = async ({
 }: StartLocalDBOptions) => {
   try {
     if (onStart) onStart();
-    const db = await new Database('eduvault', collectionConfig).open(version);
+    const db = await new Database('eduvault', collectionConfig);
+    await db.open(version);
     console.log('started local db', { db });
+    const count = await db.collection('deck')?.count({});
+    console.log('count', { count });
+
     if (onReady) onReady(db);
     return db;
   } catch (error) {
@@ -208,3 +212,25 @@ export function loginWithChallenge(
     });
   };
 }
+
+export const startRemoteWrapped = (self: EduVault) => {
+  return async (options: StartRemoteDBOptions) => {
+    const remoteStart = await startRemoteDB(options);
+    if ('error' in remoteStart) return { error: remoteStart.error };
+    else {
+      self.remoteToken = remoteStart.token;
+      self.db = remoteStart.db;
+      return self.db;
+    }
+  };
+};
+export const startLocalWrapped = (self: EduVault) => {
+  async (options: StartLocalDBOptions) => {
+    const db = await startLocalDB(options);
+    if ('error' in db) return { error: db.error };
+    else {
+      self.db = db;
+      return db;
+    }
+  };
+};

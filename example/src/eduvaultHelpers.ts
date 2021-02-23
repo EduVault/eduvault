@@ -30,28 +30,43 @@ export async function setupApp() {
 }
 
 export async function loadDecks(db: EduVault['db']) {
-  if (!db) return { error: 'db not found' };
-  let decksArray = await findDecks();
-  if ('error' in decksArray) return { error: decksArray.error };
-  console.log({ decksArray, length: decksArray.length });
-  if (decksArray.length === 0) {
-    const deckCollect = db.collection('deck');
-    const insertion = await deckCollect?.insert(defaultDeck);
-    console.log({ insertion });
-    decksArray = await findDecks();
-  }
-  return decksArray;
-
   async function findDecks() {
     const decksArray: Deck[] = [];
     if (!db) return { error: 'db not found' };
     const instances = db.collection('deck')?.find({});
-    // console.log({ instances });
+    console.log({ instances });
     if (instances)
-      await instances.each(async (instance) => {
-        console.log({ instance });
-        decksArray.push(instance as any);
-      });
+      try {
+        await instances.each(async (instance) => {
+          console.log({ instance });
+          if (instance._id) decksArray.push(instance as any);
+        });
+      } catch (error) {
+        return decksArray;
+      }
+
     return decksArray;
+  }
+  try {
+    if (!db) return { error: 'db not found' };
+    let decksArray = await findDecks();
+    if ('error' in decksArray) return { error: decksArray.error };
+    console.log({ decksArray, length: decksArray.length, defaultDeck });
+    if (decksArray.length === 0) {
+      const deckCollect = db.collection('deck');
+      console.log({ deckCollect });
+      if (deckCollect) {
+        // const insertion = await deckCollect.create(defaultDeck);
+        // console.log({ insertion });
+        const savedDeck = await deckCollect.save(defaultDeck);
+        console.log({ savedDeck });
+      }
+
+      decksArray = await findDecks();
+    }
+    return decksArray;
+  } catch (error) {
+    console.log('load decks error', { error });
+    return { error };
   }
 }

@@ -4,7 +4,7 @@
     <login v-if="needsLogin"></login>
     <splash v-else-if="!needsLogin && isLoading"></splash>
     <home
-      v-else-if="!!eduvault"
+      v-else-if="!!eduvault && !!decks"
       :eduvault="eduvault"
       :decks-prop="decks"
       :remote-loaded="remoteLoaded"
@@ -23,6 +23,8 @@ import EduVault from '@eduvault/eduvault-js';
 import { setupApp } from './eduvaultHelpers';
 import { loadDecks } from './eduvaultHelpers';
 import { Deck } from './types';
+import defaultDeck from './assets/defaultDeck.json';
+
 export default Vue.extend({
   components: { Home, Login, Splash, TheNavbar },
   // pass decks and eduvault to home. only load after loaded
@@ -60,16 +62,22 @@ export default Vue.extend({
         },
         onLocalStart: () => (this.loadingStatus = 'Loading Local Database'),
         onLocalReady: async (db) => {
-          const decks = await loadDecks(db);
-          if (!decks || 'error' in decks) {
-            console.log({ deckLoadingError: decks?.error });
-          } else {
-            this.decks = decks;
-            this.loadingStatus =
-              this.loadingStatus === 'Loading Remote Database'
-                ? 'Loading Remote Database'
-                : 'Local Database Ready';
-            this.isLoading = false;
+          try {
+            const decks = await loadDecks(db);
+            if (!decks || 'error' in decks) {
+              this.decks = [defaultDeck];
+              console.log({ deckLoadingError: decks?.error });
+              this.isLoading = false;
+            } else {
+              this.decks = decks;
+              this.loadingStatus =
+                this.loadingStatus === 'Loading Remote Database'
+                  ? 'Loading Remote Database'
+                  : 'Local Database Ready';
+              this.isLoading = false;
+            }
+          } catch (error) {
+            return { deckLoadingError: error };
           }
         },
         onRemoteStart: () => (this.loadingStatus = 'Loading Remote Database'),

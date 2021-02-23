@@ -4,7 +4,7 @@ export const PORT_APP = 8081;
 export const PORT_EXAMPLE = 8082;
 
 export const PORT_HOME_PAGE = 8083;
-
+export const PORT_CYPRESS = 9222;
 export const URL_ROOT_LOCAL = 'http://localhost';
 export const URL_ROOT_PROD = 'https://eduvault.org';
 export const WS_ROOT_LOCAL = 'ws://localhost';
@@ -52,7 +52,12 @@ export const URL_EXAMPLE_PROD = URL_ROOT_PROD + ROUTES.EXAMPLE;
 export const URL_HOME_PAGE_PROD = URL_ROOT_PROD + ROUTES.HOME_PAGE;
 
 export const PROD_DOMAINS = [URL_ROOT_PROD];
-export const DEV_DOMAINS = [URL_APP_LOCAL, URL_EXAMPLE_LOCAL, URL_HOME_PAGE_LOCAL];
+export const DEV_DOMAINS = [
+  URL_APP_LOCAL,
+  URL_EXAMPLE_LOCAL,
+  URL_HOME_PAGE_LOCAL,
+  'http://localhost:' + PORT_CYPRESS,
+];
 
 export const GOOGLE_CLIENT_ID =
   '487529271786-09ipprn3fe65lmv5rhgbv10rsp1lnra1.apps.googleusercontent.com';

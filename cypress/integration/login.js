@@ -3,7 +3,7 @@
 export const exampleURL = 'localhost:8082';
 const dummyEmail = 'person@email.com';
 const dummyPassword = 'Password123';
-const exampleLoginButton = 'a[href*="localhost:8081"]';
+const exampleLoginButton = 'a[href*="app_id"]';
 const emailInput = 'input[type="email"]';
 const passwordInput = 'input[type="password"]';
 const pwSignupSubmit = '.btn__login-signup';
@@ -23,18 +23,22 @@ const appSetup = () => {
   devVerify();
 };
 
-const loginSignup = () => {
+export const loginSignup = () => {
   cy.get(exampleLoginButton).click();
   cy.get(emailInput).type(dummyEmail);
   cy.get(passwordInput).type(dummyPassword);
   cy.get(pwSignupSubmit).click();
+  cy.get('h2', { timeout: 10000 }).contains('Deck');
+  cy.getCookies('koa.sess').then((cookie) => {
+    console.log('cookie');
+    cy.setCookie('koa.sess', cookie[0].value);
+  });
 };
 
 describe('Password Login', () => {
-  beforeEach(() => {
-    cy.visit(exampleURL + '/login');
-  });
   it('loads components', () => {
+    cy.visit(exampleURL);
+
     cy.get('.landing-img').should('exist');
   });
   it('login', () => {

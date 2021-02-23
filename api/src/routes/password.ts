@@ -60,7 +60,7 @@ const password = function (router: Router<DefaultState, Context>, passport: type
     const { appLoginToken, decryptToken } = await appLoginTokens();
     // console.log({ appLoginToken, decryptToken });
     const person = await Person.findOne({ accountID: data.accountID });
-    // console.log({ person });
+    console.log({ person });
 
     if (!person) return signup(ctx, appLoginToken, decryptToken);
     else {

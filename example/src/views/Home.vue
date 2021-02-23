@@ -115,6 +115,7 @@ export default defineComponent({
         refreshLocal();
       },
     );
+    refreshLocal();
     sync('deck');
     const createDeck = async (deck: Deck) => {
       const newDeck = await Deck?.create(deck).save();

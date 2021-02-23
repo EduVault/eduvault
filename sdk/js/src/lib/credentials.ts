@@ -1,9 +1,11 @@
 import { PrivateKey, ThreadID } from '@textile/threaddb';
+
 import { rehydratePrivateKey, testPrivateKey } from '../utils';
-import { getJWT, appLogin } from './APICalls';
+import { isServerOnline, utils } from '../utils';
+
+import { appLogin, getJWT } from './APICalls';
 // import { ulid } from 'ulid';
 
-import { utils, isServerOnline } from '../utils';
 const { decrypt, encrypt } = utils;
 
 export interface Credentials {

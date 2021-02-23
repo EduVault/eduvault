@@ -3,18 +3,18 @@
     <div class="editor">
       <p class="form__top-label">Front</p>
       <quill-editor
-        class="flashcard__content m-2"
         ref="myQuillEditorFront"
         v-model="newFrontText"
+        class="flashcard__content m-2"
         :options="editorOptions"
       ></quill-editor>
       <!-- <input v-model="newFrontText" name="card-front-input" class="form__text-input" type="text" /> -->
       <p class="form__top-label">Back</p>
       <!-- <input v-model="newBackText" name="card-back-input" class="form__text-input" type="text" /> -->
       <quill-editor
-        class="flashcard__content m-2"
         ref="myQuillEditorBack"
         v-model="newBackText"
+        class="flashcard__content m-2"
         :options="editorOptions"
       ></quill-editor>
       <div class="form__button-row">

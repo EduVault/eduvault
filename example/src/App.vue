@@ -20,7 +20,6 @@ import Login from './views/Login.vue';
 import Splash from './views/Splash.vue';
 import TheNavbar from './components/TheNavbar.vue';
 import EduVault from '@eduvault/eduvault-js';
-import { reactive, onMounted } from '@vue/composition-api';
 import { setupApp } from './eduvaultHelpers';
 import { loadDecks } from './eduvaultHelpers';
 import { Deck } from './types';

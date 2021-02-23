@@ -1,7 +1,7 @@
 import { APP_SECRET } from '../config';
+import EduVault from '../index';
 import { accountID, password } from '../utils/testUtils';
 
-import EduVault from '../index';
 const eduvault = new EduVault();
 
 // granted, this is somewhat of an integration test, because it tests the API server as well
@@ -32,7 +32,7 @@ describe('appRegister', () => {
     const appDesc = 'test app';
     await eduvault.personRegister({ accountID, password });
     await eduvault.devVerify(APP_SECRET, accountID);
-    let appInfo = await eduvault.appRegister(
+    const appInfo = await eduvault.appRegister(
       accountID,
       password,
       appName,

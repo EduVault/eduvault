@@ -1,11 +1,12 @@
 import { Buffer } from 'buffer';
-import { EduVault } from '../index';
-import { UserAuth as PersonAuth, PrivateKey } from '@textile/hub';
-import { Database, ThreadID, Collection } from '@textile/threaddb';
 
-import { debounce } from 'lodash';
-import { WS_API } from '../config';
+import { UserAuth as PersonAuth, PrivateKey } from '@textile/hub';
+import { Collection, Database, ThreadID } from '@textile/threaddb';
 import { CollectionConfig } from '@textile/threaddb/dist/cjs/local/collection';
+import { debounce } from 'lodash';
+
+import { WS_API } from '../config';
+import { EduVault } from '../index';
 
 export interface StartLocalDBOptions {
   collectionConfig: CollectionConfig;

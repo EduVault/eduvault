@@ -1,7 +1,7 @@
 import { Buckets, PrivateKey } from '@textile/hub';
-import { Database, JSONSchema, ThreadID, Collection } from '@textile/threaddb';
+import { Database, JSONSchema, ThreadID } from '@textile/threaddb';
 import {
-  // Collection,
+  Collection,
   CollectionConfig,
 } from '@textile/threaddb/dist/cjs/local/collection';
 
@@ -18,20 +18,7 @@ import {
 import { setupLoginButton } from './lib/loginButton';
 import { deckSchemaConfig } from './types';
 import { initOptions } from './types';
-import { isServerOnline, checkConnectivityClearBacklog } from './utils';
-/* new problem... 
-the client here will also need continual access to the keys.
-The keys can't be stored anywhere reproducable client side
-It means on 
-
-solutions:
-when app verifies, redirect gets sent to the server, server redirects to example with a cookie
-use cookie to get unlock token, just like app is doing
-
-for now: 
-just try connecting and using the DB and see how its used. I think we need both the keys and a userAuth object. 
-lets see how they are used
-*/
+import { checkConnectivityClearBacklog, isServerOnline } from './utils';
 
 /** Starts EduVault.
  * 1. If passed a buttonID, will call setupLoginButton() on the provided element ID

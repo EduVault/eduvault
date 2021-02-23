@@ -73,11 +73,11 @@ export const deckSchema: JSONSchema = {
     updatedAt: { type: 'integer' },
     cards: {
       type: 'array',
-      items: [cardSchema],
+      items: cardSchema,
     },
   },
 };
 export const deckSchemaConfig: CollectionConfig = {
-  name: 'Decks',
+  name: 'deck',
   schema: deckSchema,
 };

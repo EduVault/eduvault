@@ -1,14 +1,21 @@
-import { ThreadID } from '@textile/threaddb';
+import { PrivateKey, ThreadID } from '@textile/threaddb';
 import { rehydratePrivateKey, testPrivateKey } from '../utils';
 import { getJWT, appLogin } from './APICalls';
 // import { ulid } from 'ulid';
 
-import { utils, isServerConnected } from '../utils';
+import { utils, isServerOnline } from '../utils';
 const { decrypt, encrypt } = utils;
+
+export interface Credentials {
+  privateKey: PrivateKey;
+  threadID: ThreadID;
+  jwt: string;
+}
 
 export interface LoadCredentialsOptions {
   onStart?: () => any;
-  onReady?: () => any;
+  onReady?: (credentials: Credentials) => any;
+  onError?: (error: string) => any;
   redirectURL?: string;
   appID?: string;
   log?: boolean;
@@ -36,10 +43,11 @@ export async function loadCredentials({
 
   onStart,
   onReady,
+  onError,
 }: LoadCredentialsOptions) {
   try {
     if (onStart) onStart();
-    const online = await isServerConnected();
+    const online = await isServerOnline();
     const queries = new URL(window.location.href).searchParams;
 
     /** Returning login */
@@ -102,7 +110,10 @@ export async function loadCredentials({
           keyStr = decrypt(jwtEncryptedPrivateKey, jwts.oldJwt);
         if (keyStr) {
           usedOldJwt = true;
-        } else return { error: 'unable to decrypt keys' };
+        } else {
+          if (onError) onError('unable to decrypt keys');
+          return { error: 'unable to decrypt keys' };
+        }
 
         const privateKey = await rehydratePrivateKey(keyStr);
         console.log({ privateKey });
@@ -117,12 +128,14 @@ export async function loadCredentials({
                 newJwtEncryptedPrivateKey
               );
           }
-          if (onReady) onReady();
+          if (onReady) onReady({ privateKey, threadID, jwt: jwts.jwt });
           return { privateKey, threadID, jwt: jwts.jwt };
         } else {
+          if (onError) onError('private key could not be rehydrated');
           return { error: 'private key could not be rehydrated' };
         }
       } else {
+        if (onError) onError('incomplete returning login info');
         return { error: 'incomplete returning login info' };
       }
     } else if (online && !returningLogin) {
@@ -153,21 +166,33 @@ export async function loadCredentials({
             );
             localStorage.setItem('threadIDStr', threadIDStr);
             localStorage.setItem('pubKey', pubKey);
-            if (onReady) onReady();
+            if (onReady) onReady({ privateKey, threadID, jwt });
             return { privateKey, threadID, jwt };
           } else {
+            if (onError) onError('private key could not be rehydrated');
             return { error: 'private key could not be rehydrated' };
           }
-        } else return { error: 'appLogin failed' };
-      } else return { error: 'incomplete appLogin redirect data' };
+        } else {
+          if (onError) onError('appLogin failed');
+          return { error: 'appLogin failed' };
+        }
+      } else {
+        if (onError) onError('incomplete appLogin redirect data');
+        return { error: 'incomplete appLogin redirect data' };
+      }
     } else if (!online && returningLogin) {
       // create a password input
       console.log('use your password to unlock the database while offline');
       // this mode will only allow local use, can't connect to remote.
       // connect local and connect remote must be separate functions
+      if (onError) onError('offline unlocking not yet available');
       return { error: 'offline unlocking not yet available' };
-    } else return { error: 'no credentials found' };
+    } else {
+      if (onError) onError('no credentials found');
+      return { error: 'no credentials found' };
+    }
   } catch (error) {
+    if (onError) onError(JSON.stringify(error));
     return { error };
   }
 }

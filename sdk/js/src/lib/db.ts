@@ -1,8 +1,9 @@
 import { Buffer } from 'buffer';
-
+import { EduVault } from '../index';
 import { UserAuth as PersonAuth, PrivateKey } from '@textile/hub';
-import { Database, ThreadID } from '@textile/threaddb';
+import { Database, ThreadID, Collection } from '@textile/threaddb';
 
+import { debounce } from 'lodash';
 import { WS_API } from '../config';
 import { CollectionConfig } from '@textile/threaddb/dist/cjs/local/collection';
 
@@ -69,13 +70,16 @@ export const startRemoteDB = async ({
     // save the token encrypted with jwt locally. on refresh, get token with cookie.
 
     try {
+      remote.id = threadID.toString();
       const DBInfo = await remote.info();
       console.log({ DBInfo });
     } catch (error) {
       try {
         console.log({ DBInfoError: error });
+
         await remote.initialize(threadID);
       } catch (error) {
+        remote.id = threadID.toString();
         console.log({ initializeError: error });
       }
     }
@@ -97,20 +101,50 @@ export const startRemoteDB = async ({
   }
 };
 
-export const syncChanges = async (
-  remote: Database['remote'],
-  collectionName: string
-) => {
-  try {
-    await remote.createStash();
-    const changes = await remote.pull(collectionName);
-    console.log({ changes });
-    await remote.applyStash(collectionName);
-    await remote.push(collectionName);
-    return { changes };
-  } catch (error) {
-    return { error };
-  }
+export const sync = (self: EduVault) => {
+  return async (collectionName: Collection['name'], debounceTime = 500) => {
+    console.log('debouncing', {
+      syncSave: collectionName,
+      remote: !!self.db?.remote,
+      online: await self.isOnline(),
+    });
+    if (!!self.db?.remote && (await self.isOnline())) {
+      const syncToRemote = async () => {
+        console.log('saving changes remotely');
+        const changes = await self.syncChanges(collectionName);
+        if ('error' in changes) return changes;
+        else {
+          self.backlog = undefined;
+          return changes.remoteChanges;
+        }
+      };
+      const debouncedSync = debounce(syncToRemote, debounceTime);
+      return debouncedSync();
+    } else {
+      console.log('adding to backlog');
+      self.backlog = collectionName;
+      self.checkConnectivityClearBacklog();
+      return { error: 'offline' };
+    }
+  };
+};
+
+export const syncChanges = (self: EduVault) => {
+  return async (collectionName: string) => {
+    try {
+      console.log('syncing changes to remote', { remote: self.db?.remote });
+      const remote = self.db?.remote;
+      if (!remote) throw 'no remote found';
+      await remote.createStash();
+      const remoteChanges = await remote.pull(collectionName);
+      console.log({ remoteChanges });
+      await remote.applyStash(collectionName);
+      await remote.push(collectionName);
+      return { remoteChanges };
+    } catch (error) {
+      return { error };
+    }
+  };
 };
 
 export function loginWithChallenge(

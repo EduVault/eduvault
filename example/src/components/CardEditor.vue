@@ -66,7 +66,6 @@ const toolbarContent = [
   ['clean'],
 ];
 
-import store from '../store';
 export default {
   components: { quillEditor },
   props: {

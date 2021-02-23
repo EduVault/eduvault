@@ -8,15 +8,15 @@
     </font-awesome-layers>
     <b-img height="20px" width="20px" src="/img/icons/flashy-cards-logo-white.svg"></b-img>
     <b-collapse class="pt-3" id="nav-collapse" is-nav>
-      <b-link v-if="$router.currentRoute.name == 'Login'" class="nav__link mt-3" to="/home"
+      <!-- <b-link v-if="$router.currentRoute.name == 'Login'" class="nav__link mt-3" to="/home"
         >Home</b-link
       >
       <b-link v-else-if="loggedIn" to="/login" class="nav__link mt-3" @click="logout()"
         >Logout</b-link
-      >
-      <b-link v-else class="nav__link" to="/login">Login</b-link>
+      > -->
+      <!-- <b-link v-else class="nav__link" to="/login">Login</b-link> -->
       <b-navbar-nav>
-        <b-link class="mt-3" to="/txlist">View my saved cards transactions</b-link>
+        <!-- <b-link class="mt-3" to="/txlist">View my saved cards transactions</b-link> -->
         <b-nav-text class="mt-3">View my data on the IPFS</b-nav-text>
       </b-navbar-nav>
     </b-collapse>
@@ -37,13 +37,13 @@ import {
   BCollapse,
 } from 'bootstrap-vue';
 import { computed, reactive } from '@vue/composition-api';
-import store from '../store';
+// import store from '../store';
 import axios from 'axios';
 // import router from '../router';
 export default {
   name: 'Navbar',
   components: {
-    BLink,
+    // BLink,
     BNavbar,
     BNavbarNav,
     BImg,
@@ -55,7 +55,7 @@ export default {
     BCollapse,
   },
   setup() {
-    const decks = computed(() => store.state.decksMod.decks);
+    // const decks = computed(() => store.state.decksMod.decks);
 
     const openBucket = (link: string) => {
       // const bucketLink = store.state.dbMod.bucketUrl;
@@ -74,7 +74,7 @@ export default {
       // store.commit.dbMod.LOGGEDIN(false);
     };
 
-    return { logout, openBucket, decks, viewDeck, loggedIn };
+    return { logout, openBucket, viewDeck, loggedIn };
   },
 };
 </script>

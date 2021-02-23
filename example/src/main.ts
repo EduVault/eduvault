@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
-import './registerServiceWorker';
-import router from './router';
-import store from './store';
+// import router from './router';
+// import store from './store';
 
 import './styles/main.scss';
 import { LayoutPlugin } from 'bootstrap-vue';
@@ -38,7 +37,7 @@ import VueDOMPurifyHTML from 'vue-dompurify-html';
 Vue.use(VueDOMPurifyHTML);
 
 new Vue({
-  router,
-  store: store.original,
-  render: h => h(App),
+  // router,
+  // store: store.original,
+  render: (h) => h(App),
 }).$mount('#app');

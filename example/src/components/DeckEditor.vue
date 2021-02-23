@@ -2,7 +2,12 @@
   <div class="editor-wrapper u-scroller">
     <div class="editor">
       <p class="form__top-label">Title</p>
-      <input v-model="newTitle" class="form__text-input" type="text" />
+      <input
+        v-model="newTitle"
+        class="form__text-input"
+        type="text"
+        @keypress.enter.prevent="newTitle !== '' ? createDeck() : null"
+      />
       <div class="form__button-row">
         <font-awesome-icon
           class="form__button button form__button--cancel"
@@ -11,7 +16,7 @@
           @click="$emit('closeDeckEditor')"
         ></font-awesome-icon>
         <font-awesome-icon
-          class="form__button button form__button--confirm  primary"
+          class="form__button button form__button--confirm primary"
           icon="check"
           size="2x"
           @click="newTitle !== '' ? createDeck() : null"
@@ -33,7 +38,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    createDeck: function() {
+    createDeck: function () {
       const newDeck = {
         cards: [] as Card[],
         title: this.newTitle,

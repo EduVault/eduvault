@@ -2,20 +2,14 @@
   <div>
     <div class="splash-page">
       <b-img class="landing-img" src="/img/icons/flashy-cards-cover-square.png" />
+      <font-awesome-icon class="m-5" size="6x" icon="spinner" spin></font-awesome-icon>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// import EduVault from 'eduvault-js';
-// import EduVault from 'eduvault-js';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
-// import router from '../router';
-// import store from '../store';
-// import axios from 'axios'
-
-// import { v4 as uuid } from 'uuid';
 export default {
   name: 'Login',
   components: { BImg },

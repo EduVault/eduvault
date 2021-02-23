@@ -1,6 +1,6 @@
-import { ThreadID, PrivateKey } from '@textile/hub';
 export { types } from '@eduvault/shared';
-// import { DBInfo } from '@textile/threads';
+import { ThreadID, PrivateKey } from '@textile/hub';
+// import { DBInfo , } from '@textile/threads';
 
 export interface AuthState {
   loggedIn: boolean;

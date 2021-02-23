@@ -17,7 +17,7 @@
     </section>
     <section class="home-section display-section">
       <deck-display
-        v-for="deck in decks"
+        v-for="deck in state.decks"
         :key="deck._id"
         class="display-section__deck-display"
         :deck="deck"
@@ -29,7 +29,7 @@
     <card-editor
       v-if="state.showCardEditor"
       class="display-section__card-editor"
-      :decks="decks"
+      :decks="state.decks"
       :selected-deck="state.selectedDeck"
       :new-card="state.newCard"
       :edit-payload="state.editPayload"
@@ -46,93 +46,129 @@
 
 <script lang="ts">
 import {
+  defineComponent,
   reactive,
   computed,
   onBeforeMount,
   onMounted,
   onBeforeUnmount,
   ComputedRef,
+  PropOptions,
+  watch,
+  Data,
 } from '@vue/composition-api';
 
-import { Deck, EditCardPayload } from '../types';
-import store from '../store';
-import router from '../router';
+import { Card, Deck, EditCardPayload } from '../types';
+import EduVault, { Collection } from '@eduvault/eduvault-js';
 
 import CardEditor from '../components/CardEditor.vue';
 import DeckEditor from '../components/DeckEditor.vue';
 import DeckDisplay from '../components/DeckDisplay.vue';
 import NewCardButton from '../components/NewCardButton.vue';
 import NewDeckButton from '../components/NewDeckButton.vue';
-import defaultDeck from '../assets/defaultDeck.json';
 
-export default {
+import { loadDecks } from '../eduvaultHelpers';
+import { filter } from 'cypress/types/bluebird';
+export default defineComponent({
   name: 'ComposVuexPersist',
   components: { DeckDisplay, DeckEditor, CardEditor, NewCardButton, NewDeckButton },
-  setup() {
-    onBeforeUnmount(() => {
-      //
-    });
+  props: {
+    eduvault: { type: Object as () => EduVault },
+    decksProp: { type: Array as () => Deck[] },
+    remoteLoaded: { type: Boolean, default: false },
+  },
+
+  setup({ decksProp, eduvault, remoteLoaded }) {
+    console.log({ decksProp, eduvault, remoteLoaded });
+    const db = eduvault?.db;
+    const Deck = db?.collection<Deck>('deck');
+    if (!eduvault || !db || !Deck) return;
     // onMounted(async () => {});
-    async function loadDecks() {
-      const loadedDecks = await store.dispatch.dbMod.loadDecks();
-      console.log({ loadedDecks });
-    }
-    const db = store.state.dbMod.eduvault;
-    if (!db) {
-      console.log('local db decks not found');
-    }
-    const decks = computed(() => {
-      if (!db) return [defaultDeck];
-      else {
-        loadDecks();
-
-        let decksArray: Deck[] = [];
-        db.db
-          ?.collection('Decks')
-          ?.find({})
-          .each((instance: unknown) => {
-            decksArray.push(instance as Deck);
-          });
-        return decksArray;
-      }
-    });
-
     const emptyPayload = {
       card: { _id: '', updatedAt: 0, frontText: '', backText: '' },
       deckId: '',
     };
     const state = reactive({
-      selectedDeck: decks ? (decks.value[0] as Deck) : undefined,
-      showCardEditor: false as boolean,
-      showDeckEditor: false as boolean,
-      editPayload: emptyPayload as EditCardPayload,
-      newCard: false as boolean,
+      remoteLoaded: remoteLoaded,
+      decks: decksProp,
+      selectedDeck: decksProp ? decksProp[0] : undefined,
+      showCardEditor: false,
+      showDeckEditor: false,
+      editPayload: emptyPayload,
+      newCard: false,
     });
 
-    const createDeck = async function (deck: Deck) {
-      // await store.dispatch.decksMod.deckMergeToState({ decks: [deck], skipThreadMerge: false });
+    const refreshLocal = async () => {
+      let decks;
+      if (eduvault.db) decks = await loadDecks(eduvault.db);
+      if (decks && !('error' in decks)) state.decks = decks;
+    };
+    const sync = async (collectionName: Collection['name'], debounce = 0) => {
+      const changes = await eduvault.sync(collectionName, debounce);
+      await refreshLocal();
+      return changes;
+    };
+    watch(
+      () => remoteLoaded,
+      async () => {
+        console.log({ remoteLoaded });
+        refreshLocal();
+      },
+    );
+    sync('deck');
+    const createDeck = async (deck: Deck) => {
+      const newDeck = await Deck?.create(deck).save();
+      await refreshLocal();
+      const changed = sync(Deck.name);
+      // console.log('added deck', { newDeck, changed });
       state.selectedDeck = deck;
       state.showDeckEditor = false;
+      // console.log(await Deck?.count({}));
     };
-    const deleteDeck = (deckId: string) => {
-      store.dispatch.decksMod.deleteDeck(deckId);
+    const deleteDeck = async (deckId: string) => {
+      await Deck.delete(deckId);
+      await refreshLocal();
+      const changed = sync(Deck.name);
+      // console.log('deleted deck', { changed });
     };
-    const addNewCard = (payload: EditCardPayload) => {
-      store.dispatch.decksMod.addCard(payload);
-      state.showCardEditor = false;
+    const addNewCard = async (payload: EditCardPayload) => {
       state.newCard = false;
-    };
-    const editCard = (payload: EditCardPayload) => {
-      store.dispatch.decksMod.editCard(payload);
       state.showCardEditor = false;
-      state.newCard = false;
+      const deck = await Deck.findOne({ _id: payload.deckId });
+      if (!deck) return;
+      deck.cards.push(payload.card);
+      await Deck.save(deck);
+      await refreshLocal();
+      const changed = await sync(Deck.name);
+      // console.log('added Card', { changed });
     };
-    const deleteCard = (payload: EditCardPayload) => {
-      store.dispatch.decksMod.editCard(payload);
+    const editCard = async (payload: EditCardPayload) => {
+      state.newCard = false;
+      state.showCardEditor = false;
+      const deck = await Deck.findOne({ _id: payload.deckId });
+      if (!deck) return;
+      for (let card of deck.cards) {
+        if (card._id === payload.card._id) {
+          card = payload.card;
+          break;
+        }
+      }
+      await Deck.save(deck);
+      await refreshLocal();
+      sync(Deck.name);
+    };
+    const deleteCard = async (payload: EditCardPayload) => {
+      const deck = await Deck.findOne({ _id: payload.deckId });
+      if (!deck) return;
+      let replacementCards = deck.cards.filter((card) => card._id !== payload.card._id);
+      deck.cards = replacementCards;
+      await Deck.save(deck);
+      await refreshLocal();
+      sync(Deck.name);
     };
     const changeSelectedDeck = (deckId: string) => {
       console.log('changeSelectedDeck', deckId);
-      decks.value.forEach((deck) => {
+      state.decks?.forEach((deck) => {
         if (deck._id === deckId) state.selectedDeck = deck;
       });
     };
@@ -143,7 +179,6 @@ export default {
     };
 
     return {
-      decks,
       state,
       createDeck,
       deleteDeck,
@@ -155,5 +190,5 @@ export default {
       openCardEditor,
     };
   },
-};
+});
 </script>

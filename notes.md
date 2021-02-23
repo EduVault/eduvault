@@ -2,7 +2,11 @@
 
 ## TO DO
 
+- [ ] add 'onLoading' callback to dbInit() so can display loading bar
+  - remote takes longer, so could first init local db and have a callback for that, then async load the remote, and have a callback for that as well. set a property on eduvault object for whether each of those is loaded. if app tries to use remote when its not loaded, wait and try again.
 - [ ] Get the example working using the database.
+  - threaddb is not accepting array of collection config
+  - set up debouncer call for database saves through eduvault. expose raw db, but also allow calls that sync through eduvault. put in a callback for handling changes from the server
 - [ ] Schema registry
 - [ ] Dev sign up page to register apps to add to cors whitelist
 - [ ] change MetaMask login to generate PrivateKey as per [this example](https://docs.textile.io/tutorials/hub/pki-identities/)
@@ -16,6 +20,7 @@
 - [ ] add types for all API req/res
 - [ ] API docs - w/ swagger
 - [ ] detect stored persistent storage on 3rd party login and auto-login/redirect
+- [ ] password recovery
 - [ ] Dev ops:
   - [ ] Deploy!
   - [ ] Env variables in docker-compose and nginx
@@ -28,6 +33,9 @@
   - [ ] unit tests for app logic(low priority)
   - [ ] dockerize tests (cypress not working on my mac m1 chip)
 - [ ] More tests!
+- [ ] Make accountID -> emails array
+- [ ] Allow linking of accounts, i.e. persons can signup/login with multiple methods all on the same account
+- [ ] vuex/redux plugin
 
 ## auth flow pseudocode
 
@@ -170,6 +178,36 @@ sometimes API tests don't run because of arch issues. can add MONGOMS_ARCH=x64
 - How sensitive is textile personAuth? Can it be saved locally?
 
 ## musings
+
+using eduvault:
+
+1. load credentials
+2. load local DB
+   start working with it immediately. generates a backlog.
+3. load remote DB
+   changes to local DB are debounced after which it syncs and clears backlog
+4. Listen for changes. how are changes from remote merged? automatically, or manually? could choose certain collections or key/values to intercept and handle manually. or in certain situations. conflicts should be brought up, and put in the 'remoteToLocal' backlog/callstack.
+
+It would be nice to have typescript recommendations for how to deal with the data in the db. Almost like an ORM situation. schema registry should also be able to generate typescript types. devs can add @eduvault/personDBTypes which is a repo often updated. that or use a CLI which will download them from the api server database and store them in the developers folder of choice. can my library have a dev-dependency? eduvault looks for @eduvault/personBDTypes in development env but not prod?
+
+loadPageChecks change to loadCredentials
+
+what do i want to happen? how can I make tests to automate the trials and prove the success.
+
+be able to check on page loads if the db is already running. if so do nothing, except load default deck
+if not, run pageLoad checks to find credentials
+if credentials able to be recovered, start local db. App should have all CRUD operations available now.
+intercept all calls to local DB and add them too the backlog
+next() to route, if it is home route, store default deck if need be. and async load remote db. make a method that debounces, and makes a backlog of localDB changes that need to be synced. then call remote sync and clear backlog. Does textile actually already have this? test.
+
+eduvault.save(content, options: { deBounceTime: 300ms})
+eduvault.onRemoteChange()
+eduvault.onRemoteConflict()
+
+what happens when you db.open() and there's already an existing DB?
+
+how does the 'token' work?
+experiment with userAuth expiring. add to test suite.
 
 shared file config file cannot use .env, because it is now a library. each project should extend the config file, and import .envs there. envs should be set by docker-compose (reading from .env file) when IN_DOCKER="true". otherwise use .env file. try to minimize envs and mximize configs, i.e. publick keys can be in conifg.
 

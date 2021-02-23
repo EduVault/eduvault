@@ -1,10 +1,11 @@
 import { types, AuthState } from '../types';
 // import { orderBy } from 'lodash';
 import { utils } from '@eduvault/shared';
+import { ThreadID, PrivateKey } from '@textile/hub';
+
 export { utils };
 import store from './index';
 import router from '../router';
-import { ThreadID, PrivateKey } from '@textile/hub';
 
 export const formatOutRedirectURL = ({
   redirectURL,

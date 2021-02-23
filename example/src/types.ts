@@ -93,7 +93,7 @@ export interface DecksState {
 export interface DBState {
   eduvault?: EduVault;
   appID?: string;
-  remoteReady?: boolean;
+  isRemoteReady?: boolean;
   localReady?: boolean;
 }
 
@@ -128,6 +128,6 @@ export const deckSchema: JSONSchema = {
   },
 };
 export const deckSchemaConfig: CollectionConfig = {
-  name: 'Decks',
+  name: 'Deck',
   schema: deckSchema,
 };

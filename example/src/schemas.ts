@@ -82,7 +82,7 @@ export const fullSchema: JSONSchema = {
     properties: { $ref: '#/definitions/deck' },
   },
   decks: {
-    title: 'Decks',
+    title: 'Deck',
     type: 'array',
     items: { $ref: '#/definitions/deck' },
   },

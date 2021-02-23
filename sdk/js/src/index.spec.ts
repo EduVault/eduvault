@@ -7,7 +7,7 @@ describe('sets up properly', () => {
     expect(APP_SECRET).not.toBe('VerySecretPassword');
   });
   it('Connects to API and can detect server connection', async () => {
-    const connected = await eduvault.isServerConnected();
+    const connected = await eduvault.isServerOnline();
     expect(connected).toBeTruthy();
   });
 });

@@ -52,7 +52,7 @@ class EduVault {
   jwt?: string;
   remoteToken?: string;
 
-  startLocalDB = startLocalWrapped;
+  startLocalDB = startLocalWrapped(this);
   onLocalStart?: () => any;
   onLocalReady?: (db: Database) => any;
 

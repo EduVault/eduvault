@@ -225,7 +225,7 @@ export const startRemoteWrapped = (self: EduVault) => {
   };
 };
 export const startLocalWrapped = (self: EduVault) => {
-  async (options: StartLocalDBOptions) => {
+  return async (options: StartLocalDBOptions) => {
     const db = await startLocalDB(options);
     if ('error' in db) return { error: db.error };
     else {

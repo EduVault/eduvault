@@ -5,7 +5,12 @@ import {
   CollectionConfig,
 } from '@textile/threaddb/dist/cjs/local/collection';
 
-import { appRegister, devVerify, personRegister } from './lib/APICalls';
+import {
+  appRegister,
+  devVerify,
+  personRegister,
+  dropCollections,
+} from './lib/APICalls';
 import { Credentials, loadCredentials } from './lib/credentials';
 import {
   startLocalDB,
@@ -32,6 +37,7 @@ class EduVault {
 
   personRegister = personRegister;
   devVerify = devVerify;
+  dropCollections = dropCollections;
   appRegister = appRegister;
   appID?: string;
 
@@ -82,6 +88,7 @@ export {
   isServerOnline,
   appRegister,
   devVerify,
+  dropCollections,
   loadCredentials,
   setupLoginButton,
   startLocalDB,

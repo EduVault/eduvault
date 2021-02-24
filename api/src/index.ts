@@ -1,6 +1,5 @@
 /** Provides nodejs access to a global Websocket value, required by Hub API */
 (global as any).WebSocket = require('isomorphic-ws');
-import mongoose from 'mongoose';
 import Koa from 'koa';
 import cors from '@koa/cors';
 import cookie from 'koa-cookie';
@@ -24,21 +23,6 @@ if (utils.isProdEnv()) app.proxy = true;
 
 /** Database */
 if (process.env.TEST !== 'true') connectDB();
-
-// delete collections
-let del = false;
-// let del = true;
-if (del)
-  try {
-    mongoose.connection.collections['person'].drop(function (err: any) {
-      console.log('+++++1person collection dropped++++', err);
-    });
-    mongoose.connection.collections['app'].drop(function (err: any) {
-      console.log('+++++1app collection dropped++++', err);
-    });
-  } catch (error) {
-    console.log({ error });
-  }
 
 /** Middlewares */
 app.use(async function handleGeneralError(ctx, next) {

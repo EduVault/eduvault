@@ -16,7 +16,7 @@ const APP_SECRET = Cypress.env('APP_SECRET');
 
 import { config } from '../../shared';
 
-import { appRegister, devVerify } from '../../sdk/js';
+import { appRegister, devVerify, dropCollections } from '../../sdk/js';
 
 console.log('E2E test', APP_SECRET);
 const appSetup = () => {
@@ -35,7 +35,9 @@ export const loginSignup = () => {
   });
 };
 
-describe('Password Login', () => {
+describe('Password Login', async () => {
+  dropCollections(APP_SECRET);
+
   it('loads components', () => {
     cy.visit(exampleURL);
 

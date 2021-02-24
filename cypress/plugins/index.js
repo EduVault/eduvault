@@ -14,7 +14,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const APP_SECRET = process.env.APP_SECRET;
-console.log({ APP_SECRET });
+// console.log({ APP_SECRET });
 /**
  * @type {Cypress.PluginConfig}
  */

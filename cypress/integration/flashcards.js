@@ -1,9 +1,11 @@
 export const exampleURL = 'localhost:8082';
 import { loginSignup } from './login';
-describe('Flashcards Suite', () => {
-  cy.on('window:before:load', (win) => {
-    win.indexedDB.deleteDatabase('localforage');
-  });
+import { dropCollections } from '../../sdk/js';
+const APP_SECRET = Cypress.env('APP_SECRET');
+
+describe('Flashcards Suite', async () => {
+  dropCollections(APP_SECRET);
+
   it('logs in', () => {
     cy.visit(exampleURL);
 

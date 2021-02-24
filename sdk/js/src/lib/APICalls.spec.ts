@@ -46,7 +46,15 @@ describe('appRegister', () => {
       expect(appInfo.appID.length).toBeGreaterThan(20);
   });
 });
+describe('drop collections', () => {
+  it('can drop collections', async () => {
+    const res = await eduvault.dropCollections(APP_SECRET);
 
+    console.log({ dropCollectionsRes: res });
+    // to do: types on this return
+    expect(res).toBeTruthy();
+  });
+});
 // make an API that deletes the db if has app secret? or is that a really bad idea?
 // otherwise mock mongo
 // can I symlink the API into this project? then I can use supertest

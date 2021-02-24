@@ -1,14 +1,14 @@
 export const exampleURL = 'localhost:8082';
 import { loginSignup } from './login';
-import { dropCollections } from '../../sdk/js';
+import { clearCollections } from '../../sdk/js';
 const APP_SECRET = Cypress.env('APP_SECRET');
 
 describe('Flashcards Suite', async () => {
-  dropCollections(APP_SECRET);
+  clearCollections(APP_SECRET);
   localStorage.clear();
   indexedDB.deleteDatabase('eduvault');
   it('logs in', () => {
-    cy.visit(exampleURL);
+    cy.visit('/');
 
     loginSignup();
   });
@@ -48,14 +48,14 @@ describe('Flashcards Suite', async () => {
   });
   it('cancels edit when cancel is clicked', () => {
     cy.get('.deck-display__buttons-col > .buttons-col__button--edit').eq(0).click();
-    cy.get('.ql-editor').first().type('Test card front');
-    cy.get('.ql-editor').last().type('Test card back');
+    cy.get('.ql-editor').first().type('Test card cancel front');
+    cy.get('.ql-editor').last().type('Test card cancel back');
     cy.get('.form__button--cancel').click();
     cy.contains('.flashcard__front', 'What is a group of zebra').should(
       'not.contain.text',
-      'Test card edit front',
+      'Test card cancel front',
     );
-    cy.contains('.flashcard__back', 'A zeal').should('not.contain.text', 'Test card edit back');
+    cy.contains('.flashcard__back', 'A zeal').should('not.contain.text', 'Test card cancel back');
   });
   it('can delete a card', () => {
     cy.contains('.flashcard__front', 'What is a group of zebra');

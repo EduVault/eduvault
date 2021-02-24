@@ -60,7 +60,7 @@ export const devVerify = async (appSecret: string, devID: string) => {
     return null;
   }
 };
-export const dropCollections = async (appSecret: string) => {
+export const clearCollections = async (appSecret: string) => {
   try {
     const postData = { appSecret };
     const options: AxiosRequestConfig = {

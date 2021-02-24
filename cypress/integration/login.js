@@ -16,7 +16,7 @@ const APP_SECRET = Cypress.env('APP_SECRET');
 
 import { config } from '../../shared';
 
-import { appRegister, devVerify, dropCollections } from '../../sdk/js';
+import { appRegister, devVerify, clearCollections } from '../../sdk/js';
 
 console.log('E2E test', APP_SECRET);
 const appSetup = () => {
@@ -36,11 +36,11 @@ export const loginSignup = () => {
 };
 
 describe('Password Login', async () => {
-  dropCollections(APP_SECRET);
+  clearCollections(APP_SECRET);
   localStorage.clear();
   indexedDB.deleteDatabase('eduvault');
   it('loads components', () => {
-    cy.visit(exampleURL);
+    cy.visit('/');
 
     cy.get('.landing-img').should('exist');
   });

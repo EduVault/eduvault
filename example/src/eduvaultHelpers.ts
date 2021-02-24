@@ -58,10 +58,9 @@ export async function loadDecks(db: EduVault['db']) {
       if (deckCollect) {
         // const insertion = await deckCollect.create(defaultDeck);
         // console.log({ insertion });
-        const savedDeck = await deckCollect.save(defaultDeck);
+        const savedDeck = await deckCollect.create(defaultDeck).save();
         console.log({ savedDeck });
-      }
-
+      } else return { error: 'no decks collection' };
       decksArray = await findDecks();
     }
     return decksArray;

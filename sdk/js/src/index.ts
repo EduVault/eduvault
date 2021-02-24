@@ -9,7 +9,7 @@ import {
   appRegister,
   devVerify,
   personRegister,
-  dropCollections,
+  clearCollections,
 } from './lib/APICalls';
 import { Credentials, loadCredentials } from './lib/credentials';
 import {
@@ -37,7 +37,7 @@ class EduVault {
 
   personRegister = personRegister;
   devVerify = devVerify;
-  dropCollections = dropCollections;
+  clearCollections = clearCollections;
   appRegister = appRegister;
   appID?: string;
 
@@ -88,7 +88,7 @@ export {
   isServerOnline,
   appRegister,
   devVerify,
-  dropCollections,
+  clearCollections,
   loadCredentials,
   setupLoginButton,
   startLocalDB,

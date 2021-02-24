@@ -48,9 +48,9 @@ describe('appRegister', () => {
 });
 describe('drop collections', () => {
   it('can drop collections', async () => {
-    const res = await eduvault.dropCollections(APP_SECRET);
+    const res = await eduvault.clearCollections(APP_SECRET);
 
-    console.log({ dropCollectionsRes: res });
+    console.log({ clearCollectionsRes: res });
     // to do: types on this return
     expect(res).toBeTruthy();
   });

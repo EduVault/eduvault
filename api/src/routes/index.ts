@@ -15,7 +15,7 @@ import { DefaultState, Context } from 'koa';
 import getPerson from '../utils/getPersonFromSession';
 import { APP_SECRET } from '../config';
 import { utils } from '../utils';
-import { dropCollections } from '../utils/dropCollections';
+import { clearCollections } from '../utils/clearCollections';
 const startRouter = (
   app: websockify.App<Koa.DefaultState, Koa.DefaultContext>,
   passport: typeof KoaPassport,
@@ -69,11 +69,11 @@ const startRouter = (
     await person.save();
     ctx.oK({ DbInfo: person.DbInfo });
   });
-  router.post('/drop-collections', (ctx) => {
+  router.post('/drop-collections', async (ctx) => {
     const appSecret = ctx.request.body.appSecret;
     if (appSecret !== APP_SECRET) ctx.unauthorized();
     else if (!utils.isProdEnv()) {
-      dropCollections();
+      await clearCollections();
       ctx.oK();
     } else ctx.methodNotAllowed();
   });

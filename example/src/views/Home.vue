@@ -140,7 +140,7 @@ export default defineComponent({
       deck.cards.push(payload.card);
       await Deck.save(deck);
       await refreshLocal();
-      const changed = await sync(Deck.name);
+      const changed = sync(Deck.name);
       // console.log('added Card', { changed });
     };
     const editCard = async (payload: EditCardPayload) => {
@@ -160,6 +160,8 @@ export default defineComponent({
       sync(Deck.name);
     };
     const deleteCard = async (payload: EditCardPayload) => {
+      // something funky here....
+      console.log('delete deck', { payload });
       const deck = await Deck.findOne({ _id: payload.deckId });
       if (!deck) return;
       let replacementCards = deck.cards.filter((card) => card._id !== payload.card._id);

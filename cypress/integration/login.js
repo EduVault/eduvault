@@ -37,7 +37,8 @@ export const loginSignup = () => {
 
 describe('Password Login', async () => {
   dropCollections(APP_SECRET);
-
+  localStorage.clear();
+  indexedDB.deleteDatabase('eduvault');
   it('loads components', () => {
     cy.visit(exampleURL);
 

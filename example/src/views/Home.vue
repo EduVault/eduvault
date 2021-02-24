@@ -150,7 +150,8 @@ export default defineComponent({
       if (!deck) return;
       for (let card of deck.cards) {
         if (card._id === payload.card._id) {
-          card = payload.card;
+          deck.cards.slice(deck.cards.indexOf(card), 1);
+          deck.cards.unshift(payload.card);
           break;
         }
       }

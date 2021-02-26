@@ -122,3 +122,6 @@ cypress/videos/
 cypress/fixtures/
 EduVault.code-workspace
 .DS_Store
+yarn.lock
+package-lock.json
+

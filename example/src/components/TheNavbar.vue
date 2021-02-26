@@ -4,7 +4,7 @@
 
     <font-awesome-layers v-if="loggedIn" class="nav-icon__layers fa-lg">
       <font-awesome-icon class="nav-icon__cloud fa-lg primary" icon="cloud" />
-      <font-awesome-icon id="nav-icon__sync" class="fa-xs secondary" :spin="syncing" icon="sync" />
+      <font-awesome-icon class="nav-icon__sync fa-xs secondary" :spin="syncing" icon="sync" />
     </font-awesome-layers>
     <b-img height="20px" width="20px" src="/img/icons/flashy-cards-logo-white.svg"></b-img>
     <b-collapse class="pt-3" id="nav-collapse" is-nav>
@@ -17,7 +17,10 @@
       <!-- <b-link v-else class="nav__link" to="/login">Login</b-link> -->
       <b-navbar-nav>
         <!-- <b-link class="mt-3" to="/txlist">View my saved cards transactions</b-link> -->
-        <b-nav-text class="mt-3">View my data on the IPFS</b-nav-text>
+        <b-nav-text v-if="devEnv" @click="wipeDatabase" class="mt-3 pointer"
+          >wipe database</b-nav-text
+        >
+        <b-nav-text v-if="devEnv" @click="wipeLocal" class="mt-3 pointer">wipe local</b-nav-text>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -36,11 +39,14 @@ import {
   // BNavItem,
   BCollapse,
 } from 'bootstrap-vue';
-import { computed, reactive } from '@vue/composition-api';
+import { computed, defineComponent, reactive } from '@vue/composition-api';
 // import store from '../store';
 import axios from 'axios';
+import EduVault from '@eduvault/eduvault-js';
+import { APP_SECRET } from '../config';
+import localForage from 'localforage';
 // import router from '../router';
-export default {
+export default defineComponent({
   name: 'Navbar',
   components: {
     // BLink,
@@ -54,7 +60,21 @@ export default {
     // BNavItem,
     BCollapse,
   },
-  setup() {
+  props: {
+    eduvault: { type: Object as () => EduVault },
+  },
+  setup({ eduvault }) {
+    const devEnv = computed(() => process.env.NODE_ENV === 'development');
+    const wipeDatabase = async () => {
+      console.log('wiping db', eduvault);
+      if (eduvault) await eduvault.clearCollections(APP_SECRET);
+    };
+    const wipeLocal = () => {
+      console.log('wiping local');
+      localStorage.clear();
+      localForage.clear();
+      if (eduvault) eduvault.db?.delete();
+    };
     // const decks = computed(() => store.state.decksMod.decks);
 
     const openBucket = (link: string) => {
@@ -74,31 +94,12 @@ export default {
       // store.commit.dbMod.LOGGEDIN(false);
     };
 
-    return { logout, openBucket, viewDeck, loggedIn };
+    return { wipeDatabase, wipeLocal, devEnv, logout, openBucket, viewDeck, loggedIn };
   },
-};
+});
 </script>
 <style lang="scss" scoped>
-#nav-icon__sync {
+.nav-icon__sync {
   margin: 4px 0px 0px 9px;
 }
-
-// .app__nav {
-//   display: flex;
-//   justify-content: space-between;
-//   padding: 10px 25px;
-//   text-align: center;
-//   width: 100%;
-//   background-color: $secondary;
-
-//   &__link {
-//     font-weight: bold;
-//     color: white;
-//     padding: 5px 10px;
-
-//     &.router-link-exact-active {
-//       color: $primary;
-//     }
-//   }
-// }
 </style>

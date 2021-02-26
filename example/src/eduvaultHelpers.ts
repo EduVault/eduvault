@@ -29,41 +29,38 @@ export async function setupApp() {
   } else return null;
 }
 
-export async function loadDecks(db: EduVault['db']) {
-  async function findDecks() {
-    const decksArray: Deck[] = [];
-    if (!db) return { error: 'db not found' };
-    const instances = db.collection('deck')?.find({});
-    console.log({ instances });
-    if (instances)
-      try {
-        await instances.each(async (instance) => {
-          console.log({ instance });
-          if (instance._id) decksArray.push(instance as any);
-        });
-      } catch (error) {
-        return decksArray;
-      }
-
-    return decksArray;
+export async function loadDecks(eduvault: EduVault) {
+  async function findDecks(eduvault: EduVault) {
+    try {
+      const instances = eduvault.db?.collection<Deck>('deck')?.find({});
+      const instanceArray = await instances?.sortBy('_id');
+      if (instanceArray) return instanceArray;
+      else return [];
+    } catch (error) {
+      return { error };
+    }
+  }
+  async function insertDefaultDeck(eduvault: EduVault) {
+    try {
+      const deckCollect = eduvault.db?.collection<Deck>('deck');
+      // console.log({ deckCollect });
+      if (deckCollect) {
+        const savedDeck = await deckCollect.insert(defaultDeck);
+        // console.log({ savedDeck });
+      } else return { error: 'no decks collection' };
+      return await findDecks(eduvault);
+    } catch (error) {
+      return { error: 'no decks collection' };
+    }
   }
   try {
-    if (!db) return { error: 'db not found' };
-    let decksArray = await findDecks();
+    if (!eduvault.db) return { error: 'db not found' };
+    const decksArray = await findDecks(eduvault);
     if ('error' in decksArray) return { error: decksArray.error };
-    console.log({ decksArray, length: decksArray.length, defaultDeck });
+    console.log({ decksArray, length: decksArray.length });
     if (decksArray.length === 0) {
-      const deckCollect = db.collection('deck');
-      console.log({ deckCollect });
-      if (deckCollect) {
-        // const insertion = await deckCollect.create(defaultDeck);
-        // console.log({ insertion });
-        const savedDeck = await deckCollect.create(defaultDeck).save();
-        console.log({ savedDeck });
-      } else return { error: 'no decks collection' };
-      decksArray = await findDecks();
-    }
-    return decksArray;
+      return await insertDefaultDeck(eduvault);
+    } else return decksArray;
   } catch (error) {
     console.log('load decks error', { error });
     return { error };

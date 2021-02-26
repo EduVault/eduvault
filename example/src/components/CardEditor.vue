@@ -25,7 +25,7 @@
           @click="$emit('closeEditor')"
         ></font-awesome-icon>
         <font-awesome-icon
-          class="form__button button form__button--confirm primary"
+          class="form__button button form__button--confirm"
           icon="check"
           size="2x"
           @click="newCard ? addCard() : editCard()"

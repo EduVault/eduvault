@@ -48,6 +48,7 @@
 import {
   defineComponent,
   reactive,
+  ref,
   computed,
   onBeforeMount,
   onMounted,
@@ -68,7 +69,7 @@ import NewCardButton from '../components/NewCardButton.vue';
 import NewDeckButton from '../components/NewDeckButton.vue';
 
 import { loadDecks } from '../eduvaultHelpers';
-import { filter } from 'cypress/types/bluebird';
+
 export default defineComponent({
   name: 'ComposVuexPersist',
   components: { DeckDisplay, DeckEditor, CardEditor, NewCardButton, NewDeckButton },
@@ -80,9 +81,8 @@ export default defineComponent({
 
   setup({ decksProp, eduvault, remoteLoaded }) {
     console.log({ decksProp, eduvault, remoteLoaded });
-    const db = eduvault?.db;
-    const Deck = db?.collection<Deck>('deck');
-    if (!eduvault || !db || !Deck) return;
+    const Deck = eduvault?.db?.collection<Deck>('deck');
+    if (!eduvault || !Deck) return;
     // onMounted(async () => {});
     const emptyPayload = {
       card: { _id: '', updatedAt: 0, frontText: '', backText: '' },
@@ -100,23 +100,24 @@ export default defineComponent({
 
     const refreshLocal = async () => {
       let decks;
-      if (eduvault.db) decks = await loadDecks(eduvault.db);
+      if (eduvault.db) decks = await loadDecks(eduvault);
       if (decks && !('error' in decks)) state.decks = decks;
     };
-    const sync = async (collectionName: Collection['name'], debounce = 0) => {
-      const changes = await eduvault.sync(collectionName, debounce);
+    const sync = async (collectionName: Collection['name'], debounce = 5000) => {
+      const changes = await eduvault.sync<Deck>(collectionName, debounce);
+      // const decks = await loadDecks(eduvault);
       await refreshLocal();
       return changes;
     };
+    const remoteLoad = ref(remoteLoaded);
     watch(
-      () => remoteLoaded,
+      () => remoteLoad,
       async () => {
         console.log({ remoteLoaded });
-        refreshLocal();
+        sync('deck', 0);
       },
     );
     refreshLocal();
-    sync('deck');
     const createDeck = async (deck: Deck) => {
       const newDeck = await Deck?.create(deck).save();
       await refreshLocal();
@@ -161,11 +162,16 @@ export default defineComponent({
     };
     const deleteCard = async (payload: EditCardPayload) => {
       // something funky here....
-      console.log('delete deck', { payload });
+
+      console.log('delete card', { payload });
       const deck = await Deck.findOne({ _id: payload.deckId });
+      console.log({ deck });
       if (!deck) return;
       let replacementCards = deck.cards.filter((card) => card._id !== payload.card._id);
+      console.log({ replacementCards });
       deck.cards = replacementCards;
+      console.log({ deck });
+
       await Deck.save(deck);
       await refreshLocal();
       sync(Deck.name);

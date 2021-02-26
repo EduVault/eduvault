@@ -18,6 +18,7 @@ import {
   startRemoteDB,
   startRemoteWrapped,
   sync,
+  debouncedSync,
   syncChanges,
 } from './lib/db';
 import { init } from './lib/init';
@@ -70,6 +71,10 @@ class EduVault {
   syncChanges = syncChanges(this);
   checkConnectivityClearBacklog = checkConnectivityClearBacklog(this);
   sync = sync(this);
+  debounceTime = 0;
+  setDebounceTime = (time: number) => (this.debounceTime = time);
+  getDebounceTime = () => this.debounceTime;
+  debouncedSync = debouncedSync(this);
 
   constructor(options?: initOptions) {
     if (options) {

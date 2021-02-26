@@ -1,6 +1,6 @@
 <template>
   <div class="app u-scroller">
-    <the-navbar></the-navbar>
+    <the-navbar :eduvault="eduvault"></the-navbar>
     <login v-if="needsLogin"></login>
     <splash v-else-if="!needsLogin && isLoading"></splash>
     <home
@@ -63,10 +63,9 @@ export default Vue.extend({
         onLocalStart: () => (this.loadingStatus = 'Loading Local Database'),
         onLocalReady: async (db) => {
           try {
-            const decks = await loadDecks(db);
-            if (!decks || 'error' in decks) {
+            const decks = await db?.collection<Deck>('deck')?.find({}).sortBy('_id');
+            if (!decks || decks.length === 0) {
               this.decks = [defaultDeck];
-              console.log({ deckLoadingError: decks?.error });
               this.isLoading = false;
             } else {
               this.decks = decks;
@@ -83,7 +82,7 @@ export default Vue.extend({
         onRemoteStart: () => (this.loadingStatus = 'Loading Remote Database'),
         onRemoteReady: async (db) => {
           if (db?.remote) {
-            console.log({ remote: db.remote });
+            console.log('remote loaded', { remote: db.remote });
             this.remoteLoaded = true;
           }
           this.loadingStatus = 'Remote Database Ready';

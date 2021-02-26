@@ -3,7 +3,7 @@ import { Buffer } from 'buffer';
 import { UserAuth as PersonAuth, PrivateKey } from '@textile/hub';
 import { Collection, Database, ThreadID } from '@textile/threaddb';
 import { CollectionConfig } from '@textile/threaddb/dist/cjs/local/collection';
-import { debounce } from 'lodash';
+import { debounce, isEqual, difference } from 'lodash';
 
 import { WS_API } from '../config';
 import { EduVault } from '../index';
@@ -106,46 +106,76 @@ export const startRemoteDB = async ({
   }
 };
 
+export const debouncedSync = (self: EduVault) => {
+  return debounce<T>(self.syncChanges<T>, self.getDebounceTime());
+};
+
 export const sync = (self: EduVault) => {
-  return async (collectionName: Collection['name'], debounceTime = 500) => {
-    console.log('debouncing', {
+  return async <T>(collectionName: Collection['name'], debounceTime = 500) => {
+    console.log('starting sync', {
       syncSave: collectionName,
       remote: !!self.db?.remote,
       online: await self.isOnline(),
+      debounceTime,
     });
-    if (!!self.db?.remote && (await self.isOnline())) {
-      const syncToRemote = async () => {
-        console.log('saving changes remotely');
-        const changes = await self.syncChanges(collectionName);
-        if ('error' in changes) return changes;
-        else {
-          self.backlog = undefined;
-          return changes.remoteChanges;
-        }
-      };
-      const debouncedSync = debounce(syncToRemote, debounceTime);
-      return debouncedSync();
-    } else {
-      console.log('adding to backlog');
-      self.backlog = collectionName;
-      self.checkConnectivityClearBacklog();
-      return { error: 'offline' };
-    }
+    self.setDebounceTime(debounceTime);
+    self.debouncedSync<T>(collectionName);
+
+    // redo offline support stuff,  backlog later
+
+    // if (!!self.db?.remote && (await self.isOnline())) {
+    //   const syncToRemote = async () => {
+    //     console.log('saving changes remotely');
+    //     const changes = await self.syncChanges<T>(collectionName);
+    //     console.log({ changes });
+    //     if ('error' in changes) return changes;
+    //     else {
+    //       self.backlog = undefined;
+    //       return changes;
+    //     }
+    //   };
+    //   const debouncedSync = debounce(syncToRemote, debounceTime);
+    //   return debouncedSync();
+    // } else {
+    //   console.log('adding to backlog');
+    //   self.backlog = collectionName;
+    //   self.checkConnectivityClearBacklog();
+    //   return { error: 'offline' };
+    // }
   };
 };
 
 export const syncChanges = (self: EduVault) => {
-  return async (collectionName: string) => {
+  return async <T>(collectionName: string) => {
+    console.log('starting debounced sync');
     try {
-      console.log('syncing changes to remote', { remote: self.db?.remote });
       const remote = self.db?.remote;
       if (!remote) throw 'no remote found';
+      const localInstances = await self?.db
+        ?.collection<T>(collectionName)
+        ?.find()
+        .sortBy('_id');
       await remote.createStash();
-      const remoteChanges = await remote.pull(collectionName);
-      console.log({ remoteChanges });
+      await remote.pull(collectionName);
+      const remoteInstances = await self?.db
+        ?.collection<T>(collectionName)
+        ?.find()
+        .sortBy('_id');
+      const areEqual = isEqual(localInstances, remoteInstances);
+      console.log({ localInstances, remoteInstances, areEqual });
+      if (!areEqual && !!localInstances && !!remoteInstances) {
+        const remoteDiffs = difference(remoteInstances, localInstances);
+        const localDiffs = difference(localInstances, remoteInstances);
+        console.log({ remoteDiffs, localDiffs });
+      }
       await remote.applyStash(collectionName);
-      await remote.push(collectionName);
-      return { remoteChanges };
+      const afterApplyStash = await self?.db
+        ?.collection<T>(collectionName)
+        ?.find()
+        .sortBy('_id');
+      console.log({ afterApplyStash });
+      if (!areEqual) await remote.push(collectionName);
+      return { remoteInstances };
     } catch (error) {
       return { error };
     }

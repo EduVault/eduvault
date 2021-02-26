@@ -121,3 +121,4 @@ cypress/examples/
 cypress/videos/
 cypress/fixtures/
 EduVault.code-workspace
+.DS_Store

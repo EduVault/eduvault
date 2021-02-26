@@ -106,8 +106,9 @@ export const startRemoteDB = async ({
   }
 };
 
+//** Does not accept collection types */
 export const debouncedSync = (self: EduVault) => {
-  return debounce<T>(self.syncChanges<T>, self.getDebounceTime());
+  return debounce(self.syncChanges, self.getDebounceTime());
 };
 
 export const sync = (self: EduVault) => {
@@ -119,8 +120,10 @@ export const sync = (self: EduVault) => {
       debounceTime,
     });
     self.setDebounceTime(debounceTime);
-    self.debouncedSync<T>(collectionName);
-
+    // self.debouncedSync<T>(collectionName);
+    const syncChangesWithInstanceType = ()=> self.syncChanges<T>(collectionName)
+    const debouncedSyncWithType = debounce(syncChangesWithInstanceType,  self.getDebounceTime())
+    debouncedSyncWithType()
     // redo offline support stuff,  backlog later
 
     // if (!!self.db?.remote && (await self.isOnline())) {

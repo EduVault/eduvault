@@ -67,18 +67,9 @@ services:
     volumes:
       - './api:/api'
       - '/api/node_modules'
-    depends_on:
-      - mongo
+
     environment:
       - NODE_ENV=development
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo:/data/db
 
   nginx:
     image: nginx:1.15-alpine
@@ -93,6 +84,4 @@ services:
       - api
       - example
       - home-page
-volumes:
-  mongo:
-    name: mongo
+

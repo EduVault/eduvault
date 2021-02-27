@@ -1,7 +1,7 @@
 import { APP_SECRET, JWT_EXPIRY } from '../config';
-import Person, { IPerson } from '../models/person';
+import { IPerson } from '../models/person';
 import jwt from 'jsonwebtoken';
-import App, { IApp } from '../models/app';
+import { IApp } from '../models/app';
 import { types, AppTokenData } from 'types';
 
 export const createJwt = (id: string) => {

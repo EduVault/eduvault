@@ -38,18 +38,9 @@ services:
     volumes:
       - './api:/api'
       - '/api/node_modules'
-    depends_on:
-      - mongo
+
     environment:
       - NODE_ENV=production
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo:/data/db
 
   home-page:
     container_name: home-page
@@ -82,5 +73,3 @@ volumes:
     driver: local
   example-dist-share:
     driver: local
-  mongo:
-    name: mongo

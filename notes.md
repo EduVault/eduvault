@@ -161,11 +161,9 @@ syncDB(){}
 DB.insert(); DB.save()....
 wrapper for threadDB
 on changes,or when coming online from being offline, sync again
-creates eduvault DB object, can make calls to it based on textile documentated methods. eduvault DB listens for changes and internect connectivity and syncs to remote
+creates eduvault DB object, can make calls to it based on textile documented methods. eduvault DB listens for changes and internet connectivity and syncs to remote
 
 ```
-
-sometimes API tests don't run because of arch issues. can add MONGOMS_ARCH=x64
 
 - problem: for local-first, the credentials must be continually available locally(client side). How can you keep them available without letting other apps see it?
   only answer I can think of now is using a PIN or the person's password.

@@ -1,5 +1,58 @@
 import { createAPISig, Client, UserAuth as PersonAuth, PrivateKey } from '@textile/hub';
-import { config, TEXTILE_USER_API_SECRET } from '../config';
+import { config, TEXTILE_USER_API_SECRET, SYNC_DEBOUNCE_TIME } from '../config';
+import { CollectionConfig } from '@textile/threaddb/dist/cjs/local/collection';
+
+import { Database, JSONSchema } from '@textile/threaddb';
+import { appSchema } from '../models/app';
+import { personSchema } from '../models/person';
+import { debounce } from 'lodash';
+
+const collectionConfigs: CollectionConfig[] = [
+  { name: 'app', schema: appSchema },
+  { name: 'person', schema: personSchema },
+];
+
+export const newLocalDB = async (dbName: string) => {
+  try {
+    const db = await new Database(dbName, { name: 'app', schema: appSchema });
+    await db.collectionConfig({ name: 'person', schema: personSchema });
+    await db.open(2);
+    // console.log('started local db', { db });
+    // const collections = await db.collections();
+    // console.log({ collections: collections.keys() });
+
+    return db;
+  } catch (error) {
+    console.log({ error });
+    return { error };
+  }
+};
+
+const syncChanges = async (db: Database, collectionName: string) => {
+  console.log('sync called', new Date());
+  if (db.remote && db.remote.id) {
+    try {
+      await db.remote.createStash();
+      const localCollect = await db.collection(collectionName).find({});
+
+      await db.remote.pull();
+      const remoteCollect = await db.collection(collectionName).find({});
+      console.log({ remoteCollect, localCollect });
+
+      await db.remote.applyStash();
+      await db.remote.push();
+    } catch (error) {
+      return { error };
+    }
+  } else return { error: 'remote not started' };
+};
+
+const debouncedSync = debounce(syncChanges, SYNC_DEBOUNCE_TIME);
+
+export const sync = (db: Database, collectionName: string) => {
+  console.log('sync debouncer called', new Date());
+  debouncedSync(db, collectionName);
+};
 
 const newClientDB = async () => {
   const db = await Client.withKeyInfo({

@@ -125,3 +125,7 @@ EduVault.code-workspace
 yarn.lock
 package-lock.json
 
+api/__sysdb__.sqlite
+.gitignore
+api/D_eduvault-test.sqlite
+api/D_eduvault-api.sqlite

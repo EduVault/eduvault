@@ -1,13 +1,19 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { JSONSchema } from '@textile/threaddb';
 import { types } from '../types';
-export interface IApp extends Document, types.IApp {}
+export interface IApp extends types.IApp {}
 
-const AppSchema = new Schema({
-  appID: { type: String, unique: true, required: true },
-  devID: { type: String, unique: false, required: true },
-  name: { type: String, unique: true, required: true },
-  description: { type: String, unique: false, required: false },
-  authorizedDomains: [{ type: String, required: false, unique: false }],
-  persons: [{ type: String, required: false, unique: true }],
-});
-export default mongoose.model<IApp>('app', AppSchema, 'app');
+export const appSchema: JSONSchema = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  // id: 'https://github.com/eduvault/eduvault/app',
+  title: 'App',
+  type: 'object',
+  properties: {
+    _id: { type: 'string' },
+    appID: { type: 'string' },
+    devID: { type: 'string' },
+    name: { type: 'string' },
+    description: { type: 'string' },
+    authorizedDomains: { type: 'array', items: { type: 'string' } },
+    persons: { type: 'array', items: { type: 'string' } },
+  },
+};

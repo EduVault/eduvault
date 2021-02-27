@@ -1,38 +1,45 @@
-import mongoose from 'mongoose';
-import {
-  request,
-  connectDB,
-  stopDB,
-  pwAuthTestReq,
-  pwAuthWithCookie,
-  ROUTES,
-} from '../utils/testUtil';
+import { setupApp, pwAuthTestReq, pwAuthWithCookie, closeApp, ROUTES } from '../utils/testUtil';
+import { Database } from '@textile/threaddb';
+import websockify from 'koa-websocket';
+import supertest from 'supertest';
+import * as http from 'http';
 
 const password = 'Password123';
 const accountID = 'person@email.com';
 
 describe(`POST '/auth/password'`, () => {
-  let db: mongoose.Connection;
+  let db: Database;
+  let request: () => supertest.SuperTest<supertest.Test>;
+  let agent: supertest.SuperAgentTest;
+  let app: websockify.App;
+  let server: http.Server;
+
   beforeAll(async () => {
-    db = await connectDB();
+    const setup = await setupApp();
+    db = setup.db;
+    request = setup.request;
+    agent = setup.agent;
+    app = setup.app;
+    server = setup.server;
   });
   afterAll(async () => {
-    await stopDB(db);
+    await closeApp(request, server, app);
   });
+
   it('rejects signup with no accountID', async () => {
-    const res = await pwAuthTestReq({ password, accountID: null });
+    const res = await pwAuthTestReq({ password, accountID: null }, agent);
     // console.log('signup result', res.body);
     expect(401);
     expect(res.body.message).toEqual('invalid signup');
   });
   it('rejects signup with no password', async () => {
-    const res = await pwAuthTestReq({ password: null, accountID });
+    const res = await pwAuthTestReq({ password: null, accountID }, agent);
     // console.log('signup result', res.body);
     expect(401);
     expect(res.body.message).toEqual('invalid signup');
   });
   it('Accepts valid signup', async () => {
-    const res = await pwAuthTestReq({ password, accountID });
+    const res = await pwAuthTestReq({ password, accountID }, agent);
     // console.log('signup result', res.body);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);
@@ -48,7 +55,7 @@ describe(`POST '/auth/password'`, () => {
   });
   let cookie: string;
   it('Accepts valid sign in', async () => {
-    const res = await pwAuthTestReq({ password, accountID });
+    const res = await pwAuthTestReq({ password, accountID }, agent);
     // console.log('signup result', res.headers['set-cookie']);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);
@@ -65,7 +72,7 @@ describe(`POST '/auth/password'`, () => {
     // console.log(res.body);
   });
   it('Can get jwts', async () => {
-    const res = await pwAuthWithCookie(request().get(ROUTES.GET_JWT));
+    const res = await pwAuthWithCookie(request().get(ROUTES.GET_JWT), agent);
     // console.log('jwts', res.body.data.jwt);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);

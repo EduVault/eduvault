@@ -26,8 +26,8 @@ export const startLocalDB = async ({
     const db = await new Database('eduvault', collectionConfig);
     await db.open(version);
     console.log('started local db', { db });
-    const count = await db.collection('deck')?.count({});
-    console.log('count', { count });
+    // const count = await db.collection('deck')?.count({});
+    // console.log('count', { count });
 
     if (onReady) onReady(db);
     return db;
@@ -121,9 +121,13 @@ export const sync = (self: EduVault) => {
     });
     self.setDebounceTime(debounceTime);
     // self.debouncedSync<T>(collectionName);
-    const syncChangesWithInstanceType = ()=> self.syncChanges<T>(collectionName)
-    const debouncedSyncWithType = debounce(syncChangesWithInstanceType,  self.getDebounceTime())
-    debouncedSyncWithType()
+    const syncChangesWithInstanceType = () =>
+      self.syncChanges<T>(collectionName);
+    const debouncedSyncWithType = debounce(
+      syncChangesWithInstanceType,
+      self.getDebounceTime()
+    );
+    debouncedSyncWithType();
     // redo offline support stuff,  backlog later
 
     // if (!!self.db?.remote && (await self.isOnline())) {

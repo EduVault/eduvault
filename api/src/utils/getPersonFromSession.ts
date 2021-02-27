@@ -1,10 +1,11 @@
-import Person, { IPerson } from '../models/person';
+import { Database } from '@textile/threaddb';
+import { IPerson } from '../models/person';
 
-export default async function getPerson(session: any): Promise<IPerson | null> {
+export default async function getPerson(session: any, db: Database): Promise<IPerson | null> {
   try {
-    console.log('session', session);
-    const person = await Person.findById(session.passport.user);
-    console.log('got person', person);
+    // console.log('session', session);
+    const person = await db.collection<IPerson>('person').findById(session.passport.user);
+    // console.log('got person', person);
     if (person) {
       return person;
     } else {

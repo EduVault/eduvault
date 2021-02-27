@@ -11,18 +11,17 @@ import helmet from 'koa-helmet';
 import websockify from 'koa-websocket';
 import ip from 'ip';
 
-import connectDB from './mongo/mongoose';
+import { newLocalDB } from './textile/helpers';
 import passportInit from './auth/passportInit';
-import startRouter from './routes';
+import routerInit from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
 import { config, CORS_CONFIG } from './config';
 import { utils } from './utils';
+import { appSchema } from './models/app';
+import { personSchema } from './models/person';
 const app = websockify(new Koa());
 
 if (utils.isProdEnv()) app.proxy = true;
-
-/** Database */
-if (process.env.TEST !== 'true') connectDB();
 
 /** Middlewares */
 app.use(async function handleGeneralError(ctx, next) {
@@ -51,21 +50,28 @@ app.use(
   }),
 );
 
-/** Passport */
-const passport = passportInit(app);
-
-/** Routes */
-const router = startRouter(app, passport);
-/** Websockets */
-personAuthRoute(app);
-
 const testAPI = app;
-export { testAPI };
+export { testAPI, newLocalDB, passportInit, routerInit, personAuthRoute };
 
-if (process.env.TEST !== 'true')
+if (process.env.TEST !== 'true') {
   /** Start the server! */
-  app.listen(config.PORT_API, () =>
-    console.log(`Koa server listening at ${ip.address()}:${config.PORT_API}`),
-  );
+  app.listen(config.PORT_API, async () => {
+    /** Database */
+    const db = await newLocalDB('eduvault-api');
+    if ('error' in db) {
+      console.log('error loading db');
+      return;
+    }
+
+    /** Passport */
+    const passport = passportInit(app, db);
+    /** Routes */
+    routerInit(app, passport, db);
+    /** Websockets */
+    personAuthRoute(app, db);
+
+    console.log(`Koa server listening at ${ip.address()}:${config.PORT_API}`);
+  });
+}
 
 export default app;

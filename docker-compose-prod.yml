@@ -19,8 +19,7 @@ services:
       dockerfile: dockerfile_prod
     ports:
       - '3003:3003'
-    depends_on:
-      - mongo
+
     environment:
       - NODE_ENV=production
   example:
@@ -36,15 +35,6 @@ services:
     stdin_open: true
     environment:
       - NODE_ENV=production
-
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo:/data/db
 
   nginx:
     image: nginx:1.15-alpine
@@ -73,5 +63,4 @@ services:
 volumes:
   dist-share:
     driver: local
-  mongo:
-    name: mongo
+

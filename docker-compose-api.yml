@@ -18,18 +18,4 @@ services:
       - ./.env
     ports:
       - '3003:3003'
-    depends_on:
-      - mongo
 
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - '27017:27017'
-    volumes:
-      - mongo:/data/db
-
-volumes:
-  mongo:
-    name: mongo

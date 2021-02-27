@@ -1,14 +1,24 @@
-import mongoose from 'mongoose';
-import { connectDB, stopDB, request } from '../utils/testUtil';
+import { setupApp } from '../utils/testUtil';
+import { Database } from '@textile/threaddb';
+import supertest from 'supertest';
+import websockify from 'koa-websocket';
+
 describe('Pingger', () => {
-  let db: mongoose.Connection;
+  let db: Database;
+  let request: () => supertest.SuperTest<supertest.Test>;
+  let agent: supertest.SuperAgentTest;
+  let app: websockify.App;
 
   beforeAll(async () => {
-    db = await connectDB();
+    const setup = await setupApp();
+    db = setup.db;
+    request = setup.request;
+    agent = setup.agent;
+    app = setup.app;
   });
 
   afterAll(async () => {
-    await stopDB(db);
+    app.removeAllListeners();
   });
   it('Pings successfully', async () => {
     const res = await request().get('/ping').send();

@@ -1,67 +1,62 @@
-import mongoose from 'mongoose';
 import { types, utils } from '@eduvault/shared';
 import supertest from 'supertest';
-import { testAPI } from '../index';
+import { testAPI as app, newLocalDB, passportInit, routerInit, personAuthRoute } from '../index';
 import * as http from 'http';
 import { ROUTES } from '../config';
 export { ROUTES } from '../config';
 import { APP_SECRET } from '../config';
-
+import KoaWebsocket from 'koa-websocket';
 export const password = 'Password123';
 export const accountID = 'person@email.com';
 
 const formatPasswordSignIn = utils.formatPasswordSignIn;
 
-export const request = () => supertest(http.createServer(testAPI.callback()));
-export const agent = supertest.agent(http.createServer(testAPI.callback()));
-
-export const connectDB = async () => {
-  try {
-    // console.log('connecting');
-    const db = mongoose.connection;
-    //@ts-ignore
-    mongoose.connect(global.__MONGO_URI__, {
-      //@ts-ignore
-      dbName: global.__MONGO_DB_NAME__,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    db.on('error', (err) => {
-      throw new Error(err);
-    });
-    // db.on('connected', () => console.log('connected to mongo'));
-    // db.on('diconnected', () => console.log('Mongo is disconnected'));
-    // db.on('open', () => console.log('Connection Made!'));
-
-    try {
-      await db.dropCollection('person');
-      await db.dropCollection('app');
-    } catch (error) {
-      // console.log({ error });
-    }
-    return db;
-  } catch (connectionError) {
-    console.log({ connectionError });
+export const setupApp = async () => {
+  /** Database */
+  const db = await newLocalDB('eduvault-test');
+  if ('error' in db) {
+    console.log('error loading db');
+    return;
   }
+  app.removeAllListeners();
+
+  /** Passport */
+  const passport = passportInit(app, db);
+  /** Routes */
+  routerInit(app, passport, db);
+  /** Websockets */
+  personAuthRoute(app, db);
+  const server = http.createServer(app.callback());
+  const request = () => supertest(server);
+  const agent = supertest.agent(server);
+  console.log(`Koa test server listening`);
+  return { request, agent, db, app, server };
 };
-//
-export const stopDB = async (db: mongoose.Connection) => {
+
+export const closeApp = async (
+  request: () => supertest.SuperTest<supertest.Test>,
+  server: http.Server,
+  app: KoaWebsocket.App,
+) => {
   try {
-    await db.dropCollection('person');
-    await db.dropCollection('app');
+    await request().post('/drop-collections').send({ appSecret: APP_SECRET });
+    app.removeAllListeners();
+    server.removeAllListeners();
+    server.close();
   } catch (error) {
-    // console.log({ error });
+    console.log('error closing', { error });
   }
-  await db.close();
 };
 
-export const pwAuthTestReq = async (options: {
-  accountID?: string;
-  password?: string;
-  redirectURL?: string;
-  appID?: string;
-}) => {
+export const pwAuthTestReq = async (
+  options: {
+    accountID?: string;
+    password?: string;
+    redirectURL?: string;
+    appID?: string;
+  },
+  agent: supertest.SuperAgentTest,
+) => {
   // console.log('pwAuthTestReq', options.appID);
   const personAuthReq = await formatPasswordSignIn(options);
   const res = await agent
@@ -71,8 +66,8 @@ export const pwAuthTestReq = async (options: {
   return res;
 };
 
-export const pwAuthWithCookie = async (req: supertest.Test) => {
-  const res = await pwAuthTestReq({ password, accountID });
+export const pwAuthWithCookie = async (req: supertest.Test, agent: supertest.SuperAgentTest) => {
+  const res = await pwAuthTestReq({ password, accountID }, agent);
   const cookie: string = res.headers['set-cookie'];
   req.set('Cookie', cookie);
   return await req;
@@ -89,27 +84,35 @@ export const appRegisterReq: types.AppRegisterReq = {
   description: 'An app so cool it defies description',
 };
 
-export const registerApp = async () => {
-  const db = connectDB(); //reset DB
-  const devPersonSignup = await pwAuthTestReq({ password, accountID });
-  console.log({ devPersonSignup: devPersonSignup.body });
-  console.log('devRegisterReq ', devRegisterReq);
+export const registerApp = async (
+  agent: supertest.SuperAgentTest,
+  request: () => supertest.SuperTest<supertest.Test>,
+) => {
+  const devPersonSignup = await pwAuthTestReq({ password, accountID }, agent);
+  // console.log({ devPersonSignup: devPersonSignup.body });
+  // console.log('devRegisterReq ', devRegisterReq);
   const devVerify = await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
-  console.log({ devVerify: devVerify.body });
+  // console.log({ devVerify: devVerify.body });
 
   const registerRes = await request().post(ROUTES.APP_REGISTER).send(appRegisterReq);
-  console.log({ registerRes: registerRes.body });
+  // console.log({ registerRes: registerRes.body });
   const appID: string = registerRes.body.data.appID;
   return appID;
 };
-export const appUserLogin = async () => {
-  const appID = await registerApp();
-  const loginRes = await pwAuthTestReq({
-    accountID,
-    password,
-    appID,
-    redirectURL: 'https://somewhere.com',
-  });
+export const appUserLogin = async (
+  agent: supertest.SuperAgentTest,
+  request: () => supertest.SuperTest<supertest.Test>,
+) => {
+  const appID = await registerApp(agent, request);
+  const loginRes = await pwAuthTestReq(
+    {
+      accountID,
+      password,
+      appID,
+      redirectURL: 'https://somewhere.com',
+    },
+    agent,
+  );
   const appLoginToken = loginRes.body.data.appLoginToken;
   const appAuthReq: types.AppAuthReq = {
     appID,
@@ -122,8 +125,12 @@ export const appUserLogin = async () => {
   return cookie;
 };
 
-export const appAuthWithCookie = async (req: supertest.Test) => {
-  const cookie: string = await appUserLogin();
+export const appAuthWithCookie = async (
+  req: supertest.Test,
+  agent: supertest.SuperAgentTest,
+  request: () => supertest.SuperTest<supertest.Test>,
+) => {
+  const cookie: string = await appUserLogin(agent, request);
   req.set('Cookie', cookie);
   return await req;
 };

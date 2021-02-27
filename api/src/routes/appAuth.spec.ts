@@ -1,8 +1,7 @@
-import mongoose from 'mongoose';
+import websockify from 'koa-websocket';
 import {
-  request,
-  connectDB,
-  stopDB,
+  setupApp,
+  closeApp,
   pwAuthTestReq,
   password,
   accountID,
@@ -11,27 +10,44 @@ import {
   ROUTES,
 } from '../utils/testUtil';
 import { types } from '../types';
+import { Database } from '@textile/threaddb';
+import supertest from 'supertest';
+import * as http from 'http';
 
 describe(`POST '/auth/app`, () => {
-  let db: mongoose.Connection;
+  let db: Database;
+  let request: () => supertest.SuperTest<supertest.Test>;
+  let agent: supertest.SuperAgentTest;
+  let app: websockify.App;
+  let server: http.Server;
   beforeAll(async () => {
-    db = await connectDB();
+    const setup = await setupApp();
+    db = setup.db;
+    request = setup.request;
+    agent = setup.agent;
+    app = setup.app;
+    server = setup.server;
   });
+
   afterAll(async () => {
-    await stopDB(db);
+    await closeApp(request, server, app);
   });
+
   let cookie: string;
   let appID: string;
   it('can authenticate an app from login redirect appLoginToken', async () => {
-    appID = await registerApp();
-    console.log('registered app ', appID);
-    const loginRes = await pwAuthTestReq({
-      accountID,
-      password,
-      appID,
-      redirectURL: 'https://somewhere.com',
-    });
-    console.log({ loginRes: loginRes.body.data });
+    appID = await registerApp(agent, request);
+    // console.log('registered app ', appID);
+    const loginRes = await pwAuthTestReq(
+      {
+        accountID,
+        password,
+        appID,
+        redirectURL: 'https://somewhere.com',
+      },
+      agent,
+    );
+    // console.log({ loginRes: loginRes.body.data });
     expect(typeof loginRes.body.data.appLoginToken).toBe('string');
     expect(loginRes.body.data.appLoginToken.length).toBeGreaterThan(50);
     const appLoginToken = loginRes.body.data.appLoginToken;
@@ -50,7 +66,7 @@ describe(`POST '/auth/app`, () => {
   });
   it('Can authenticate app from cookie and return jwts', async () => {
     try {
-      const res = await appAuthWithCookie(request().get(ROUTES.GET_JWT));
+      const res = await appAuthWithCookie(request().get(ROUTES.GET_JWT), agent, request);
       // console.log('jwts', res.body.data);
       expect(res.status).toEqual(200);
       expect(res.body.code).toEqual(200);

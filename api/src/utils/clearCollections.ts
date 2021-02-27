@@ -1,26 +1,21 @@
-// import mongoose from 'mongoose';
-import Person from '../models/person';
-import App from '../models/person';
+import { Database } from '@textile/threaddb';
+import { IPerson } from '../models/person';
+import { IApp } from '../models/app';
 
-export async function clearCollections() {
+export async function clearCollections(db: Database) {
   try {
-    const personsBefore = await Person.find({});
-    console.log({ personsBefore });
-    await Person.remove({});
-    const personsAfter = await Person.find({});
-    console.log({ personsAfter });
-    const appsBefore = await App.find({});
-    console.log({ appsBefore });
-    await App.remove({});
-    const appsAfter = await App.find({});
-    console.log({ appsBefore });
-    // mongoose.connection.collections['person'].drop(async function (err: any) {
-    //   console.log('+++++1person collection dropped++++', err);
-
-    // });
-    // mongoose.connection.collections['app'].drop(function (err: any) {
-    //   console.log('+++++1app collection dropped++++', err);
-    // });
+    const personCollect = db.collection<IPerson>('person');
+    // const personsBefore = await personCollect.find({});
+    // console.log({ personsBefore: personsBefore.toArray() });
+    await personCollect.clear();
+    // const personsAfter = await personCollect.find({});
+    // console.log({ personsAfter: personsAfter.toArray() });
+    const constAppCollect = db.collection<IApp>('app');
+    // const appsBefore = await constAppCollect.find({});
+    // console.log({ appsBefore });
+    await constAppCollect.clear();
+    // const appsAfter = await constAppCollect.find({});
+    // console.log({ appsBefore });
   } catch (error) {
     console.log({ error });
   }

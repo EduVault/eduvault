@@ -1,6 +1,6 @@
 import cors from '@koa/cors';
 import session from 'koa-session';
-import { utils } from './utils';
+import { utils, isTestEnv } from './utils';
 import { config } from '@eduvault/shared';
 export { config };
 import { StrategyOptionsWithRequest } from 'passport-google-oauth20';
@@ -12,16 +12,8 @@ export const APP_SECRET = process.env.APP_SECRET || 'VerySecretPassword';
 if (utils.isProdEnv() && APP_SECRET === 'VerySecretPassword') {
   throw new Error('APP_SECRET missing in production');
 }
-
 // this might be incorrect. need to test where docker is sending requests. chould be process.env.IN_DOCKER ? local : prod
 export const URL_API = utils.isProdEnv() ? config.URL_API_PROD : config.URL_API_LOCAL;
-/** for dev, needs to match service name from docker-compose file. if hosting on heroku MONGO_URI will be an env, if not you need to manually create one*/
-export const MONGO_URI =
-  process.env.MONGODB_URI || utils.isDockerEnv()
-    ? 'mongodb://mongo:27017'
-    : 'mongodb://127.0.0.1:27017';
-
-export const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'eduvault';
 
 export const ROUTES = config.ROUTES;
 
@@ -94,3 +86,5 @@ export const FACEBOOK_CONFIG = {
   display: 'popup',
   passReqToCallback: true,
 } as StrategyOptionWithRequest;
+
+export const SYNC_DEBOUNCE_TIME = isTestEnv() ? 1000 : 5000;

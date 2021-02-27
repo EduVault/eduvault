@@ -5,11 +5,12 @@ import Koa from 'koa';
 import websockify from 'koa-websocket';
 
 import { newClientDB, getAPISig } from '../textile/helpers';
-import Person, { IPerson } from '../models/person';
-import App, { IApp } from '../models/app';
+import { IPerson } from '../models/person';
+import { IApp } from '../models/app';
 import { validateAndDecodeJwt } from '../utils/jwt';
 import { config } from '../config';
 import { DefaultState, Context, Middleware } from 'koa';
+import { Database } from '@textile/threaddb';
 
 interface wsMessageData {
   jwt?: string;
@@ -26,7 +27,10 @@ interface wsMessageData {
   error: string;
 }
 const router = new Router<DefaultState, Context>();
-const personAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContext>) => {
+const personAuthRoute = (
+  app: websockify.App<Koa.DefaultState, Koa.DefaultContext>,
+  db: Database,
+) => {
   router.all('/', (ctx) => {
     const emitter = new Emittery();
     ctx.websocket.on('message', async (msg) => {
@@ -45,8 +49,10 @@ const personAuthRoute = (app: websockify.App<Koa.DefaultState, Koa.DefaultContex
           throw new Error('invalid jwt');
         }
         // add a param isPerson or isApp
-        const person = await Person.findOne({ accountID: jwtDecoded.data.id });
-        const app = await App.findOne({ appID: jwtDecoded.data.id });
+        const person = await db
+          .collection<IPerson>('person')
+          .findOne({ accountID: jwtDecoded.data.id });
+        const app = await db.collection<IApp>('app').findOne({ appID: jwtDecoded.data.id });
         // console.log({ person, app });
         if (!(person || app)) {
           throw new Error('could not find person/app');

@@ -1,23 +1,30 @@
 import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
-import Person, { IPerson } from '../models/person';
-import App, { IApp } from '../models/app';
+import { IPerson } from '../models/person';
+import { IApp } from '../models/app';
 import { DefaultState, Context } from 'koa';
 import { types } from '../types';
 import { ROUTES } from '../config';
 import { createJwt, getJwtExpiry, createAppLoginToken } from '../utils/jwt';
 import { utils } from '../utils';
 import { v4 as uuid } from 'uuid';
+import { Database } from '@textile/threaddb';
 const { hashPassword, validPassword } = utils;
-const password = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
+const password = function (
+  router: Router<DefaultState, Context>,
+  passport: typeof KoaPassport,
+  db: Database,
+) {
   async function signup(ctx: Context, appLoginToken?: string, decryptToken?: string) {
     const data: types.PasswordLoginReq = ctx.request.body;
     if (!data.pwEncryptedPrivateKey || !data.pubKey || !data.threadIDStr) {
       ctx.unauthorized({ error: 'invalid signup' }, 'invalid signup');
       return;
     }
-    const newPerson = new Person();
-    newPerson.accountID = data.accountID;
+    const newPerson: IPerson = {
+      _id: uuid(),
+      accountID: data.accountID,
+    };
     newPerson.password = hashPassword(data.password);
     newPerson.pwEncryptedPrivateKey = data.pwEncryptedPrivateKey;
     newPerson.pubKey = data.pubKey;
@@ -25,7 +32,7 @@ const password = function (router: Router<DefaultState, Context>, passport: type
     newPerson.dev = { isVerified: false, apps: [] };
     // console.log('data', data);
     // console.log('new person', newPerson.toJSON());
-    newPerson.save();
+    await db.collection<IPerson>('person').save(newPerson);
     await ctx.login(newPerson);
     ctx.session.jwt = createJwt(newPerson.accountID);
     ctx.session.save();
@@ -59,8 +66,8 @@ const password = function (router: Router<DefaultState, Context>, passport: type
     };
     const { appLoginToken, decryptToken } = await appLoginTokens();
     // console.log({ appLoginToken, decryptToken });
-    const person = await Person.findOne({ accountID: data.accountID });
-    console.log({ person });
+    const person = await db.collection<IPerson>('person').findOne({ accountID: data.accountID });
+    // console.log({ person });
 
     if (!person) return signup(ctx, appLoginToken, decryptToken);
     else {

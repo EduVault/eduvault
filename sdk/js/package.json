@@ -1,6 +1,6 @@
 {
   "name": "@eduvault/eduvault-js",
-  "version": "1.1.21",
+  "version": "1.1.23",
   "description": "An SDK that allows app creators to quickly create and authenticate a user-owned database",
   "main": "dist/main/index.js",
   "typings": "dist/main/index.d.ts",
@@ -40,6 +40,7 @@
     "google-protobuf": "^3.15.0-rc.1",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.1",
+    "sqlite3": "^5.0.2",
     "ulid": "^2.3.0"
   },
   "devDependencies": {

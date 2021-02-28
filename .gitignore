@@ -120,20 +120,18 @@ dist
 cypress/examples/
 cypress/videos/
 cypress/fixtures/
-EduVault.code-workspace
+*.code-workspace
 .DS_Store
 yarn.lock
 package-lock.json
 
-<<<<<<< HEAD
-api/__sysdb__.sqlite
-.gitignore
-api/D_eduvault-test.sqlite
-api/D_eduvault-api.sqlite
-=======
-api/D_eduvault-test.sqlite
-api/__sysdb__.sqlite
-.gitignore
-api/D_eduvault-api.sqlite
-.gitignore
->>>>>>> d200e2c6ed156a2afefe7f200635ffbfacb02fce
+
+meta.json
+private_key.json
+cert1.pem
+regr.json
+chain1.pem
+fullchain1.pem
+privkey1.pem
+*key-certbot.pem
+*.sqlite

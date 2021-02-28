@@ -1,5 +1,5 @@
-import { APP_SECRET } from './config';
 import { Deck } from './types';
+import {APP_SECRET} from './config'
 import defaultDeck from './assets/defaultDeck.json';
 import EduVault, {
   Database,
@@ -7,8 +7,7 @@ import EduVault, {
   devVerify,
   appRegister,
   Buckets,
-} from '@eduvault/eduvault-js';
-
+} from '@eduvault/eduvault-js/dist/main';
 /** This will not be needed in a real app, as the developer just needs to register their app one time */
 export async function setupApp() {
   const accountID = 'person@email.com';

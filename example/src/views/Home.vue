@@ -60,7 +60,7 @@ import {
 } from '@vue/composition-api';
 
 import { Card, Deck, EditCardPayload } from '../types';
-import EduVault, { Collection } from '@eduvault/eduvault-js';
+import EduVault, { Collection } from '@eduvault/eduvault-js/dist/main';
 
 import CardEditor from '../components/CardEditor.vue';
 import DeckEditor from '../components/DeckEditor.vue';

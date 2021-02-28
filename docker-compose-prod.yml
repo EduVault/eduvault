@@ -5,25 +5,12 @@ services:
     build:
       context: ./app
       target: prod-stage
-      dockerfile: dockerfile_prod
+      dockerfile: Dockerfile_prod
     volumes:
       - dist-share:/app/dist
     stdin_open: true
-    env_file:
-      - ../.env
-    environment:
-      - NODE_ENV=production
-  api:
-    container_name: api
-    build:
-      context: ./api
-      target: prod-stage
-      dockerfile: dockerfile_prod
-    env_file:
-      - ../.env      
-    ports:
-      - '3003:3003'
-
+    env_file: 
+      ./.env
     environment:
       - NODE_ENV=production
   example:
@@ -31,14 +18,37 @@ services:
     build:
       context: ./example
       target: prod-stage
-      dockerfile: dockerfile_prod
+      dockerfile: Dockerfile_prod
     volumes:
       - example-dist-share:/app/dist
-      - './example:/example'
-      - '/example/node_modules'
     stdin_open: true
     env_file:
-      - ../.env    
+      - ./.env    
+    environment:
+      - NODE_ENV=production
+  api:
+    container_name: api
+    build:
+      context: ./api
+      target: prod-stage
+      dockerfile: Dockerfile_prod
+    ports:
+      - '3003:3003'
+    env_file:
+      - ./.env      
+    environment:
+      - NODE_ENV=production
+
+  home-page:
+    container_name: home-page
+    build:
+      context: ./home-page
+      target: prod-stage
+      dockerfile: Dockerfile_prod
+    ports:
+      - '8083:8083'
+    env_file: 
+      ./.env      
     environment:
       - NODE_ENV=production
 
@@ -46,7 +56,7 @@ services:
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
-      - ./deploy/nginx:/etc/nginx/conf.d
+      - ./deploy/nginx/prod:/etc/nginx/conf.d
       - ./deploy/certbot/conf:/etc/letsencrypt
       - ./deploy/certbot/www:/var/www/certbot
       - dist-share:/var/www/app-dist
@@ -58,6 +68,8 @@ services:
       - certbot
       - app
       - api
+      - example
+      - home-page
   certbot:
     image: certbot/certbot
     restart: unless-stopped
@@ -69,4 +81,6 @@ services:
 volumes:
   dist-share:
     driver: local
+  example-dist-share:
+    driver: local    
 

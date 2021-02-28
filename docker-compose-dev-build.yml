@@ -5,12 +5,14 @@ services:
     build:
       context: ./app
       target: prod-stage
-      dockerfile: dockerfile_prod
+      dockerfile: Dockerfile_prod
     volumes:
       - dist-share:/app/dist
       - './app:/app'
       - '/app/node_modules'
     stdin_open: true
+    env_file: 
+      ./.env
     environment:
       - NODE_ENV=production
   example:
@@ -18,27 +20,29 @@ services:
     build:
       context: ./example
       target: prod-stage
-      dockerfile: dockerfile_prod
+      dockerfile: Dockerfile_prod
     volumes:
       - example-dist-share:/app/dist
       - './example:/example'
       - '/example/node_modules'
     stdin_open: true
+    env_file:
+      - ./.env        
     environment:
       - NODE_ENV=production
-
   api:
     container_name: api
     build:
       context: ./api
       target: prod-stage
-      dockerfile: dockerfile_prod
+      dockerfile: Dockerfile_prod
     ports:
       - '3003:3003'
     volumes:
       - './api:/api'
       - '/api/node_modules'
-
+    env_file: 
+      ./.env
     environment:
       - NODE_ENV=production
 
@@ -47,14 +51,17 @@ services:
     build:
       context: ./home-page
       target: prod-stage
-      dockerfile: dockerfile_prod
+      dockerfile: Dockerfile_prod
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'
     ports:
       - '8083:8083'
+    env_file: 
+      ./.env      
     environment:
       - NODE_ENV=production
+
   nginx:
     image: nginx:1.15-alpine
     restart: unless-stopped
@@ -68,6 +75,8 @@ services:
     depends_on:
       - app
       - api
+      - example
+      - home-page
 volumes:
   dist-share:
     driver: local

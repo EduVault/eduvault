@@ -14,20 +14,22 @@ services:
   #   environment:
   #     - CHOKIDAR_USEPOLLING=true
   #     - NODE_ENV=development
-  example:
-    container_name: example
-    build:
-      context: ./example
-      target: dev-stage
-    volumes:
-      - './example:/example'
-      - '/example/node_modules'
-    stdin_open: true
-    ports:
-      - '8082:8082'
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
+  # example:
+  #   container_name: example
+  #   build:
+  #     context: ./example
+  #     target: dev-stage
+  #   volumes:
+  #     - './example:/example'
+  #     - '/example/node_modules'
+  #   stdin_open: true
+  #   ports:
+  #     - '8082:8082'
+  #   env_file:
+  #     - ./.env       
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
 
   # home-page:
   #   container_name: home-page
@@ -44,18 +46,18 @@ services:
   #   environment:
   #     - NODE_ENV=development
 
-  # api:
-  #   container_name: api
-  #   build:
-  #     context: ./api
-  #     target: dev-stage
-  #   ports:
-  #     - '3003:3003'
-  #   volumes:
-  #     - './api:/api'
-  #     - '/api/node_modules'
-  #   environment:
-  #     - NODE_ENV=development
+  api:
+    container_name: api
+    build:
+      context: ./api
+      target: dev-stage
+    ports:
+      - '3003:3003'
+    volumes:
+      - './api:/api'
+      - '/api/node_modules'
+    environment:
+      - NODE_ENV=development
 
 
   nginx:
@@ -68,6 +70,6 @@ services:
       - '443:443'
     depends_on:
       # - app
-      # - api
-      - example
+      - api
+      # - example
       # - home-page

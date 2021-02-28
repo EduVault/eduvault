@@ -120,8 +120,8 @@ git pull
 
 # ssh copy in .env file
 
-# Run script for SSL certificate: init-letsencrypt.sh
+# Run script for SSL certificate: init-letsencrypt.sh (make sure to change url first)
 chmod +x init-letsencrypt.sh
 ./init-letsencrypt.sh
-yarn production
+# yarn production
 ```

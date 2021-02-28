@@ -42,7 +42,7 @@ import {
 import { computed, defineComponent, reactive } from '@vue/composition-api';
 // import store from '../store';
 import axios from 'axios';
-import EduVault from '@eduvault/eduvault-js';
+import EduVault from '@eduvault/eduvault-js/dist/main';
 import { APP_SECRET } from '../config';
 import localForage from 'localforage';
 // import router from '../router';

@@ -7,15 +7,14 @@ ENV NODE_ENV=development
 
 ENV PATH /example/node_modules/.bin:$PATH
 COPY package.json ./
-# COPY yarn.lock ./
-RUN yarn config set registry 'https://registry.npmjs.org/'
+COPY yarn.lock ./
+# RUN yarn config set registry 'https://registry.npmjs.org/'
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 
 RUN yarn install
 COPY . .
-COPY ./.env ./
-
+RUN ls node_modules/@eduvault
 FROM build-stage AS dev-stage
-RUN yarn global add @vue/cli
+# RUN yarn global add @vue/cli
 EXPOSE 8082
 CMD [ "yarn", "dev" ]

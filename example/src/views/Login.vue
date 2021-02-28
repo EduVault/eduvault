@@ -10,11 +10,10 @@
 </template>
 
 <script lang="ts">
-import { setupLoginButton } from '@eduvault/eduvault-js';
+import { setupLoginButton } from '@eduvault/eduvault-js/dist/main';
 import { setupApp } from '../eduvaultHelpers';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
-import { APP_SECRET } from '../config';
 
 export default {
   name: 'Login',

@@ -9,6 +9,8 @@ services:
     volumes:
       - dist-share:/app/dist
     stdin_open: true
+    env_file:
+      - ../.env
     environment:
       - NODE_ENV=production
   api:
@@ -17,6 +19,8 @@ services:
       context: ./api
       target: prod-stage
       dockerfile: dockerfile_prod
+    env_file:
+      - ../.env      
     ports:
       - '3003:3003'
 
@@ -33,6 +37,8 @@ services:
       - './example:/example'
       - '/example/node_modules'
     stdin_open: true
+    env_file:
+      - ../.env    
     environment:
       - NODE_ENV=production
 

@@ -13,7 +13,7 @@ RUN yarn config set registry 'https://registry.npmjs.org/'
 
 RUN yarn install
 COPY . .
-COPY ../.env ../
+COPY ./.env ./
 
 FROM build-stage AS dev-stage
 RUN yarn global add @vue/cli

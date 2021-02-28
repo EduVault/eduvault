@@ -1,4 +1,4 @@
-FROM node:14 AS build-stage
+FROM node:12 AS build-stage
 RUN mkdir -p /usr/src/node_modules
 ENV PATH /api/node_modules/.bin:$PATH
 # RUN apk update

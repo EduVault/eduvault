@@ -1,4 +1,4 @@
-FROM node:12-alpine AS build-stage
+FROM node:12 AS build-stage
 
 WORKDIR /home-page
 ENV PATH /home-page/node_modules/.bin:$PATH

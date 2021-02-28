@@ -1,4 +1,4 @@
-FROM node:14 AS build-stage
+FROM node:12 AS build-stage
 # RUN apk update
 # RUN apk add git
 

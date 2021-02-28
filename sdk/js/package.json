@@ -1,7 +1,7 @@
 {
   "name": "@eduvault/eduvault-js",
-  "version": "1.1.0",
-  "description": "asdf",
+  "version": "1.1.21",
+  "description": "An SDK that allows app creators to quickly create and authenticate a user-owned database",
   "main": "dist/main/index.js",
   "typings": "dist/main/index.d.ts",
   "module": "dist/module/index.js",
@@ -28,6 +28,7 @@
     "node": ">=10"
   },
   "dependencies": {
+    "@eduvault/shared": "^1.1.1",
     "@textile/hub": "^6.0.2",
     "@textile/threaddb": "^0.0.6",
     "@types/lodash": "^4.14.168",

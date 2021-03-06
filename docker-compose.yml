@@ -1,50 +1,50 @@
 version: '3.7'
 services:
-  # app:
-  #   container_name: app
-  #   build:
-  #     context: ./app
-  #     target: dev-stage
-  #   volumes:
-  #     - './app:/app'
-  #     - '/app/node_modules'
-  #   # stdin_open: true
-  #   ports:
-  #     - '8081:8081'
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-  #     - NODE_ENV=development
-  # example:
-  #   container_name: example
-  #   build:
-  #     context: ./example
-  #     target: dev-stage
-  #   volumes:
-  #     - './example:/example'
-  #     - '/example/node_modules'
-  #   stdin_open: true
-  #   ports:
-  #     - '8082:8082'
-  #   env_file:
-  #     - ./.env       
-  #   environment:
-  #     - NODE_ENV=development
-  #     - CHOKIDAR_USEPOLLING=true
+  app:
+    container_name: app
+    build:
+      context: ./app
+      target: dev-stage
+    volumes:
+      - './app:/app'
+      - '/app/node_modules'
+    stdin_open: true
+    ports:
+      - '8081:8081'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+  example:
+    container_name: example
+    build:
+      context: ./example
+      target: dev-stage
+    volumes:
+      - './example:/example'
+      - '/example/node_modules'
+    stdin_open: true
+    ports:
+      - '8082:8082'
+    env_file:
+      - ./.env       
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
 
-  # home-page:
-  #   container_name: home-page
-  #   build:
-  #     context: ./home-page
-  #     target: dev-stage
-  #   volumes:
-  #     - './home-page:/home-page'
-  #     - '/home-page/node_modules'
-  #   ports:
-  #     - '8083'
-  #   expose:
-  #     - 8083
-  #   environment:
-  #     - NODE_ENV=development
+  home-page:
+    container_name: home-page
+    build:
+      context: ./home-page
+      target: dev-stage
+    volumes:
+      - './home-page:/home-page'
+      - '/home-page/node_modules'
+    ports:
+      - '8083'
+    expose:
+      - 8083
+    environment:
+      - NODE_ENV=development
 
   api:
     container_name: api
@@ -64,12 +64,12 @@ services:
     image: nginx:1.15-alpine
     restart: unless-stopped
     volumes:
-      - ./deploy/nginx/dev:/etc/nginx/conf.d
+      - ./deploy/nginx/d-dev:/etc/nginx/conf.d
     ports:
       - '80:80'
       - '443:443'
     depends_on:
-      # - app
+      - app
       - api
-      # - example
-      # - home-page
+      - example
+      - home-page

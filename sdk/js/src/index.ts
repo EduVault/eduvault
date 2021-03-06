@@ -7,18 +7,18 @@ import {
 
 import {
   appRegister,
+  clearCollections,
   devVerify,
   personRegister,
-  clearCollections,
 } from './lib/APICalls';
 import { Credentials, loadCredentials } from './lib/credentials';
 import {
+  debouncedSync,
   startLocalDB,
   startLocalWrapped,
   startRemoteDB,
   startRemoteWrapped,
   sync,
-  debouncedSync,
   syncChanges,
 } from './lib/db';
 import { init } from './lib/init';

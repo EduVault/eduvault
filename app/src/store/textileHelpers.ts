@@ -14,7 +14,7 @@ import { v4 as uuid } from 'uuid';
  * 3. password account: same as 2, but the server is storing only encrypted privateKey, encryped by password. both 2 and 3 need to keep the plaintext public key for recovery
  */
 function loginWithChallenge(
-  API_URL_ROOT: string,
+  URL_API_ROOT: string,
   jwt: string,
   privateKey: PrivateKey,
 ): () => Promise<PersonAuth> {
@@ -24,7 +24,7 @@ function loginWithChallenge(
     return new Promise((resolve, reject) => {
       /** Initialize our websocket connection */
       // console.log('state.jwt', state.jwt);
-      const socket = new WebSocket(API_URL_ROOT);
+      const socket = new WebSocket(URL_API_ROOT);
       /** Wait for our socket to open successfully */
       socket.onopen = async () => {
         if (!jwt || jwt === '') throw 'no jwt';
@@ -75,20 +75,20 @@ function loginWithChallenge(
 }
 
 export async function connectClient(
-  API_URL_ROOT: string,
+  URL_API_ROOT: string,
   jwt: string,
   privateKey: PrivateKey,
   threadID: ThreadID,
 ) {
   async function createClients(
-    API_URL_ROOT: string,
+    URL_API_ROOT: string,
     jwt: string,
     privateKey: PrivateKey,
     threadID: ThreadID,
   ) {
     try {
       let start = new Date().getTime();
-      const loginCallback = loginWithChallenge(API_URL_ROOT, jwt, privateKey);
+      const loginCallback = loginWithChallenge(URL_API_ROOT, jwt, privateKey);
       const threadClient = Client.withUserAuth(await loginCallback());
       console.log('Client.withPersonAuth(await loginCallback())\n', new Date().getTime() - start);
       start = new Date().getTime();
@@ -169,10 +169,10 @@ export async function connectClient(
     return bucketKey;
   }
   store.commit.authMod.SYNCING(true);
-  // console.log('API_URL_ROOT, jwt, privateKey, threadID', API_URL_ROOT, jwt, privateKey, threadID);
+  // console.log('URL_API_ROOT, jwt, privateKey, threadID', URL_API_ROOT, jwt, privateKey, threadID);
   const start = new Date().getTime();
 
-  const client = await createClients(API_URL_ROOT, jwt, privateKey, threadID);
+  const client = await createClients(URL_API_ROOT, jwt, privateKey, threadID);
   if (client && client.threadClient) {
     await findOrCreateDB(client.threadClient, threadID);
     // await createDeckCollection(client.threadClient, threadID);

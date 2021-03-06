@@ -9,7 +9,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
-    "skipLibCheck": true // this will skip all .d.ts files, but had to add because typescript wasn't ignoring node_modules
+    "skipLibCheck": true
   },
 
   "exclude": ["node_modules"]

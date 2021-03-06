@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-export const exampleURL = 'localhost:8082';
+export const exampleURL = 'example.localhost';
 const dummyEmail = 'person@email.com';
 const dummyPassword = 'Password123';
 const exampleLoginButton = 'a[href*="app_id"]';

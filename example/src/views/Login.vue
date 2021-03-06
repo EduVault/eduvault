@@ -22,7 +22,7 @@ export default {
   setup() {
     onMounted(async () => {
       const buttonID = 'eduvault-login-button';
-      const THIS_SITE_URL = 'http://localhost:8082';
+      const THIS_SITE_URL = 'http://app.localhost';
       const redirectURL = `${THIS_SITE_URL}`;
 
       const appID = localStorage.getItem('APP_ID') ?? (await setupApp());

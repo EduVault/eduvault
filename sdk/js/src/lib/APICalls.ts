@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { ROUTES, URL_API } from '../config';
+import { HOST, ROUTES, URL_API } from '../config';
 import { types } from '../types';
 import { utils } from '../utils';
 const hash = utils.hash;
@@ -28,6 +28,8 @@ export const personRegister = async (options: {
       },
       data: postData,
       method: 'POST',
+      baseURL: HOST,
+      proxy: false,
     };
     const res = await axios(axiosOptions);
     const resData: types.PasswordLoginRes = res.data;

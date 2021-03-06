@@ -1,11 +1,7 @@
 version: '3.7'
 services:
   app:
-    container_name: app
-    build:
-      context: ./app
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/jewcub/eduvault_app
     volumes:
       - dist-share:/app/dist
       - './app:/app'
@@ -16,11 +12,7 @@ services:
     environment:
       - NODE_ENV=production
   example:
-    container_name: example
-    build:
-      context: ./example
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/jewcub/eduvault_example
     volumes:
       - example-dist-share:/app/dist
       - './example:/example'
@@ -31,11 +23,7 @@ services:
     environment:
       - NODE_ENV=production
   api:
-    container_name: api
-    build:
-      context: ./api
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/jewcub/eduvault_api
     ports:
       - '3003:3003'
     volumes:
@@ -47,11 +35,7 @@ services:
       - NODE_ENV=production
 
   home-page:
-    container_name: home-page
-    build:
-      context: ./home-page
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/jewcub/eduvault_home-page
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'

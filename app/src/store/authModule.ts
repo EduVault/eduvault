@@ -14,7 +14,8 @@ import {
   formatOutRedirectURL,
   utils,
 } from './utils';
-import { ROUTES, API_URL, API_WS, APP_URL } from '../config';
+import { ROUTES, URL_API, API_WS, URL_APP } from '../config';
+console.log({ URL_API, URL_APP });
 // import { connectClient } from '../store/textileHelpers';
 // import localForage from 'localforage';
 import Vue from 'vue';
@@ -141,7 +142,7 @@ export default {
         // console.log({ loginData });
 
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.PASSWORD_AUTH,
+          url: URL_API + ROUTES.PASSWORD_AUTH,
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
@@ -153,6 +154,7 @@ export default {
 
         const response = await axios(options);
         const responseData: types.PasswordLoginRes = response.data;
+        console.log({ responseHeaders: response.headers });
         console.log('login cookie: ' + JSON.stringify(Vue.$cookies.get('koa.sess')));
         console.log('login/signup data: ' + JSON.stringify(responseData));
         if (responseData.code !== 200) {
@@ -217,7 +219,7 @@ export default {
 
     async logout({ state }: ActionContext<AuthState, RootState>) {
       const options: AxiosRequestConfig = {
-        url: API_URL + ROUTES.LOGOUT,
+        url: URL_API + ROUTES.LOGOUT,
         method: 'GET',
         headers: {
           'X-Forwarded-Proto': 'https',
@@ -239,7 +241,7 @@ export default {
     }: ActionContext<AuthState, RootState>): Promise<boolean | undefined> {
       try {
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.AUTH_CHECK,
+          url: URL_API + ROUTES.AUTH_CHECK,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -513,7 +515,7 @@ export default {
     async getPerson({ state }: ActionContext<AuthState, RootState>): Promise<types.IPerson | null> {
       try {
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.GET_PERSON,
+          url: URL_API + ROUTES.GET_PERSON,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -538,7 +540,7 @@ export default {
     } | null> {
       try {
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.GET_JWT,
+          url: URL_API + ROUTES.GET_JWT,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -572,7 +574,7 @@ export default {
           authLink = ROUTES.GOOGLE_AUTH;
           break;
       }
-      window.location.href = `${APP_URL}${authLink}`;
+      window.location.href = `${URL_APP}${authLink}`;
     },
     // async initializeDB(
     //   { state }: ActionContext<AuthState, RootState>,

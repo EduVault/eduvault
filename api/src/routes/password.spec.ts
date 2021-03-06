@@ -4,8 +4,8 @@ import websockify from 'koa-websocket';
 import supertest from 'supertest';
 import * as http from 'http';
 
-const password = 'Password123';
-const accountID = 'person@email.com';
+const password = 'Password1234';
+const accountID = 'person2@email.com';
 
 describe(`POST '/auth/password'`, () => {
   let db: Database;
@@ -41,6 +41,8 @@ describe(`POST '/auth/password'`, () => {
   it('Accepts valid signup', async () => {
     const res = await pwAuthTestReq({ password, accountID }, agent);
     // console.log('signup result', res.body);
+    console.log('signup result', JSON.stringify(res.headers), res.headers['set-cookie']);
+
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);
     expect(res.body.data);
@@ -56,10 +58,10 @@ describe(`POST '/auth/password'`, () => {
   let cookie: string;
   it('Accepts valid sign in', async () => {
     const res = await pwAuthTestReq({ password, accountID }, agent);
-    // console.log('signup result', res.headers['set-cookie']);
     expect(res.status).toEqual(200);
     expect(res.body.code).toEqual(200);
     expect(res.body.data);
+
     expect(res.headers['set-cookie'][0]).toContain('koa.sess=');
     cookie = res.headers['set-cookie'];
   });

@@ -31,11 +31,11 @@ const password = function (
     newPerson.threadIDStr = data.threadIDStr;
     newPerson.dev = { isVerified: false, apps: [] };
     // console.log('data', data);
-    // console.log('new person', newPerson.toJSON());
+    console.log('new person', newPerson);
     await db.collection<IPerson>('person').save(newPerson);
     await ctx.login(newPerson);
     ctx.session.jwt = createJwt(newPerson.accountID);
-    ctx.session.save();
+    await ctx.session.save();
 
     const returnData: types.PasswordLoginRes['data'] = {
       pwEncryptedPrivateKey: newPerson.pwEncryptedPrivateKey,
@@ -48,10 +48,16 @@ const password = function (
       returnData.decryptToken = decryptToken;
     }
     // console.log({ returnData });
+    ctx.cookies.set('testing', '123');
+
     ctx.oK(returnData);
   }
 
   router.post(ROUTES.PASSWORD_AUTH, async (ctx, next) => {
+    console.log({
+      res: ctx.response.toJSON(),
+      req: ctx.request.toJSON(),
+    });
     const data: types.PasswordLoginReq = ctx.request.body;
     // console.log({ data });
     if (!data.password || !data.accountID) {
@@ -102,6 +108,7 @@ const password = function (
             returnData.decryptToken = decryptToken;
           }
           // console.log({ returnData });
+          ctx.cookies.set('testing', '123');
           ctx.oK(returnData);
         }
       })(ctx, next);

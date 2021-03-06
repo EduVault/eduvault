@@ -18,8 +18,6 @@ COPY package.json ./
 RUN yarn install
 # RUN yarn install --frozen-lockfile
 COPY . .
-# RUN yarn build
-# RUN cd ./node_modules/multiformats && ls
 EXPOSE 3003 
 
 FROM build-stage AS dev-stage

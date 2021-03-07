@@ -65,7 +65,7 @@ export const SESSION_OPTIONS = {
   // signed: true /** (boolean) signed or not (default true) */,
   rolling: true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
   renew: true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
-  secure: true /** (boolean) isProdEnv() secure cookie*/,
+  secure: false /** (boolean) isProdEnv() secure cookie*/,
   sameSite: true /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */,
 } as Partial<session.opts>;
 

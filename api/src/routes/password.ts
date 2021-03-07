@@ -1,14 +1,17 @@
 import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
+import session from 'koa-session';
+import util from 'koa-session/lib/util.js';
 import { IPerson } from '../models/person';
 import { IApp } from '../models/app';
 import { DefaultState, Context } from 'koa';
 import { types } from '../types';
-import { ROUTES } from '../config';
+import { ROUTES, SESSION_OPTIONS } from '../config';
 import { createJwt, getJwtExpiry, createAppLoginToken } from '../utils/jwt';
 import { utils } from '../utils';
 import { v4 as uuid } from 'uuid';
 import { Database } from '@textile/threaddb';
+import Cookies from 'cookies';
 const { hashPassword, validPassword } = utils;
 const password = function (
   router: Router<DefaultState, Context>,
@@ -49,15 +52,26 @@ const password = function (
     }
     // console.log({ returnData });
     ctx.cookies.set('testing', '123');
-
+    const cookies = new Cookies(
+      ctx.request as any,
+      ctx.response as any,
+      {
+        secure: true,
+        httpOnly: true,
+      } as any,
+    );
+    ctx.res.setHeader('test-header', 'testing');
+    cookies.set('koa.sess', 'cookie_payload');
+    console.log({
+      res: ctx.response.toJSON(),
+      req: ctx.request.toJSON(),
+      // cookies: ctx.cookies.get('koa.sess'),
+      headerCookie: ctx.response.headers['set-cookie'],
+    });
     ctx.oK(returnData);
   }
 
   router.post(ROUTES.PASSWORD_AUTH, async (ctx, next) => {
-    console.log({
-      res: ctx.response.toJSON(),
-      req: ctx.request.toJSON(),
-    });
     const data: types.PasswordLoginReq = ctx.request.body;
     // console.log({ data });
     if (!data.password || !data.accountID) {
@@ -108,7 +122,26 @@ const password = function (
             returnData.decryptToken = decryptToken;
           }
           // console.log({ returnData });
-          ctx.cookies.set('testing', '123');
+          // console.log({ returnData });
+          // ctx.cookies.set('testing', '123');
+          const cookies = new Cookies(
+            ctx.req as any,
+            ctx.res as any,
+            {
+              secure: true,
+              httpOnly: true,
+            } as any,
+          );
+          ctx.res.setHeader('test-header', 'testing');
+          ctx.session.save();
+          cookies.set('koa.sess', util.encode(ctx.session.toJSON()));
+
+          console.log({
+            res: ctx.response.toJSON(),
+            req: ctx.request.toJSON(),
+            cookies: ctx.cookies.get('koa.sess'),
+            headerCookie: ctx.response.headers['set-cookie'],
+          });
           ctx.oK(returnData);
         }
       })(ctx, next);

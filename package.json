@@ -4,9 +4,11 @@
   "description": "[Home page](eduvault.org)",
   "private": "true",
   "devDependencies": {
-    "cross-var": "^1.1.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/crypto-js": "^4.0.1",
+    "cypress": "^6.3.0",
     "dotenv": "^8.2.0",
-    "dotenv-cli": "^4.0.0",
+    "node-fetch": "^2.6.1",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.9.2",
     "rimraf": "^3.0.2",
@@ -67,17 +69,12 @@
     "build:sdk-js": "cd ./sdk/js && yarn build",
     "build:shared": "cd ./shared && yarn build",
     "build": "run-p build:*",
-    "d-build:app": "cd app && docker build -t jewcub/eduvault_app:latest -f Dockerfile_prod --target prod-stage . && docker push jewcub/eduvault_app:latest",
-    "d-build:api": "cd api && docker build -t jewcub/eduvault_api:latest -f Dockerfile_prod --target prod-stage . && docker push jewcub/eduvault_api:latest",
-    "d-build:example": "cd example && docker build -t jewcub/eduvault_example:latest -f Dockerfile_prod --target prod-stage . && docker push jewcub/eduvault_example:latest",
-    "d-build:home-page": "cd home-page && docker build -t jewcub/eduvault_home-page:latest -f Dockerfile_prod --target prod-stage . && docker push jewcub/eduvault_home-page:latest",
-    "d-build": "run-s publish:shared remove:shared link-replace:shared publish:sdk-js remove:sdk-js link-replace:sdk-js d-build:*",
-    "dev-build:api": "docker-compose down --remove-orphans && docker-compose -f docker-compose-api.yml up --build  --remove-orphans",
-    "dev-build": "docker-compose down --remove-orphans && docker-compose -f docker-compose-dev-build.yml up",
-    "dev-build:build": "docker-compose down --remove-orphans && docker-compose -f docker-compose-dev-build.yml up --build",
-    "d-dev": "docker-compose down --remove-orphans && docker-compose up",
-    "d-dev:build": "docker-compose down --remove-orphans && docker-compose up --build",
-    "production": "docker-compose down --remove-orphans && docker-compose -f docker-compose-prod.yml up --build -d"
+    "dev-build:api": "docker-compose -f docker-compose-api.yml up --build  --remove-orphans",
+    "dev-build": "docker-compose -f docker-compose-dev-build.yml up ",
+    "d-dev": "docker-compose up",
+    "d-dev:build": "docker-compose up --build",
+    "clean-build": "run-s clean build",
+    "production": "docker-compose -f docker-compose-prod.yml up --build"
   },
   "repository": {
     "type": "git",
@@ -89,5 +86,14 @@
   "bugs": {
     "url": "https://github.com/EduVault/eduvault/issues"
   },
-  "homepage": "https://github.com/EduVault/eduvault#readme"
+  "homepage": "https://github.com/EduVault/eduvault#readme",
+  "dependencies": {
+    "@textile/hub": "^6.0.2",
+    "absolutize-links": "^0.1.0",
+    "bcryptjs": "^2.4.3",
+    "crypto-js": "^4.0.0",
+    "git": "^0.1.5",
+    "global": "^4.4.0",
+    "typescript": "^4.1.3"
+  }
 }

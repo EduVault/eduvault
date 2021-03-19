@@ -4,7 +4,7 @@ export interface ApiRes<T> {
   message: string;
 }
 export interface PasswordLoginReq {
-  accountID?: string;
+  username?: string;
   password?: string;
   threadIDStr?: string;
   pwEncryptedPrivateKey?: string;
@@ -38,14 +38,14 @@ export interface AppAuthRes
 
 export interface AppRegisterReq {
   appID?: string;
-  accountID: string;
+  username: string;
   password: string;
   name: string;
   description?: string;
 }
 
 export interface AppUpdateReq {
-  accountID: string;
+  username: string;
   password: string;
   appID: string;
   name?: string;

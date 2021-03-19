@@ -11,7 +11,7 @@ type AppRegisterReq = types.AppRegisterReq;
 type PasswordLoginReq = types.PasswordLoginReq;
 
 export const personRegister = async (options: {
-  accountID: string | undefined;
+  username: string | undefined;
   password: string | undefined;
   redirectURL?: string | undefined;
   appID?: string | undefined;
@@ -84,7 +84,7 @@ export const clearCollections = async (appSecret: string) => {
   }
 };
 export const appRegister = async (
-  accountID: string,
+  username: string,
   password: string,
   name: string,
   description?: string,
@@ -92,7 +92,7 @@ export const appRegister = async (
 ) => {
   try {
     const postData: AppRegisterReq = {
-      accountID,
+      username,
       password: hash(password),
       name,
       description,

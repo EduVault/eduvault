@@ -1,3 +1,4 @@
+# use docker-compose build <service-name> to just rebuild one service
 version: '3.7'
 services:
   app:
@@ -14,37 +15,41 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=development
-  example:
-    container_name: example
-    build:
-      context: ./example
-      target: dev-stage
-    volumes:
-      - './example:/example'
-      - '/example/node_modules'
-    stdin_open: true
-    ports:
-      - '8082:8082'
-    env_file:
-      - ./.env       
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
+      - IN_DOCKER=true
+      - VIRTUAL_HOST=app.localhost
+      - VIRTUAL_PORT=3003
 
-  home-page:
-    container_name: home-page
-    build:
-      context: ./home-page
-      target: dev-stage
-    volumes:
-      - './home-page:/home-page'
-      - '/home-page/node_modules'
-    ports:
-      - '8083'
-    expose:
-      - 8083
-    environment:
-      - NODE_ENV=development
+  # example:
+  #   container_name: example
+  #   build:
+  #     context: ./example
+  #     target: dev-stage
+  #   volumes:
+  #     - './example:/example'
+  #     - '/example/node_modules'
+  #   stdin_open: true
+  #   ports:
+  #     - '8082:8082'
+  #   env_file:
+  #     - ./.env
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
+
+  # home-page:
+  #   container_name: home-page
+  #   build:
+  #     context: ./home-page
+  #     target: dev-stage
+  #   volumes:
+  #     - './home-page:/home-page'
+  #     - '/home-page/node_modules'
+  #   ports:
+  #     - '8083'
+  #   expose:
+  #     - 8083
+  #   environment:
+  #     - NODE_ENV=development
 
   api:
     container_name: api
@@ -53,23 +58,31 @@ services:
       target: dev-stage
     ports:
       - '3003:3003'
+      - '9229:9229'
     volumes:
       - './api:/api'
       - '/api/node_modules'
     environment:
       - NODE_ENV=development
-
+      - IN_DOCKER=true
+      - VIRTUAL_HOST=api.localhost
+      - VIRTUAL_PORT=3003
 
   nginx:
-    image: nginx:1.15-alpine
+    container_name: nginx-proxy
+    # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
+    image: ninanung/nginx-proxy
+    # restart with: docker exec -it nginx-proxy nginx -s reload
     restart: unless-stopped
     volumes:
-      - ./deploy/nginx/d-dev:/etc/nginx/conf.d
+      # - ./deploy/nginx/d-dev:/etc/nginx/conf.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./deploy/dev-certs:/etc/nginx/certs:ro
     ports:
       - '80:80'
       - '443:443'
     depends_on:
       - app
       - api
-      - example
-      - home-page
+      # - example
+      # - home-page

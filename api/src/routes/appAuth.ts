@@ -39,6 +39,7 @@ const appAuth = function (router: Router<DefaultState, Context>, passport: typeo
       }
     })(ctx, next);
   });
+  
   return router;
 };
 export default appAuth;

@@ -17,9 +17,10 @@ import routerInit from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
 import { config, CORS_CONFIG } from './config';
 import { utils } from './utils';
-import { appSchema } from './models/app';
-import { personSchema } from './models/person';
+// import { appSchema } from './models/app';
+// import { personSchema } from './models/person';
 const app = websockify(new Koa());
+app.proxy = true;
 const { isProdEnv } = utils;
 if (isProdEnv()) app.proxy = true;
 

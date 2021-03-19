@@ -5,13 +5,18 @@
   "private": "true",
   "devDependencies": {
     "cross-var": "^1.1.0",
-    "cypress": "^6.3.0",
     "dotenv": "^8.2.0",
     "dotenv-cli": "^4.0.0",
     "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.2"
+    "playwright": "^1.9.2",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.1.3"
   },
+  "dependencies": {},
   "scripts": {
+    "link-local-nginx-conf": "ln deploy/nginx/local/app.conf /usr/local/Homebrew/etc/nginx/servers/app.conf",
+    "copy-dev-certs": "mkdir /usr/local/Homebrew/etc/dev-certs && cp -r deploy/dev-certs /usr/local/Homebrew/etc/",
+    "make-certs": "cd deploy/dev-certs && mkcert api.localhost && cp api.localhost-key.pem api.localhost.key && cp api.localhost.pem api.localhost.crt && mkcert app.localhost && cp app.localhost-key.pem app.localhost.key && cp app.localhost.pem app.localhost.crt && mkcert example.localhost && cp example.localhost-key.pem example.localhost.key && cp example.localhost.pem example.localhost.crt && mkcert home.localhost && cp home.localhost-key.pem home.localhost.key && cp home.localhost.pem home.localhost.crt",
     "publish:shared": "cd ./shared && yarn publish --access=public",
     "publish:sdk-js": "cd ./sdk/js && yarn publish --access=public",
     "link-all": "yarn build:shared && yarn link:shared && yarn build:sdk-js && yarn link:sdk-js",
@@ -54,7 +59,7 @@
     "dev:example": "cd ./example && yarn dev",
     "dev:sdk-js": "cd ./sdk/js && yarn dev",
     "dev:shared": "cd ./shared && yarn dev",
-    "dev": "run-p dev:*",
+    "dev": "env NODE_ENV=development && run-p dev:*",
     "dev:home-page": "cd ./home-page && yarn dev",
     "build:app": "cd ./app && yarn build",
     "build:api": "cd ./api && yarn build",
@@ -84,11 +89,5 @@
   "bugs": {
     "url": "https://github.com/EduVault/eduvault/issues"
   },
-  "homepage": "https://github.com/EduVault/eduvault#readme",
-  "dependencies": {
-    "absolutize-links": "^0.1.0",
-    "git": "^0.1.5",
-    "global": "^4.4.0",
-    "typescript": "^4.1.3"
-  }
+  "homepage": "https://github.com/EduVault/eduvault#readme"
 }

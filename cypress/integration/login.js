@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-export const exampleURL = 'example.localhost';
+export const exampleURL = 'https://example.localhost';
 const dummyEmail = 'person@email.com';
 const dummyPassword = 'Password123';
 const exampleLoginButton = 'a[href*="app_id"]';
@@ -40,7 +40,7 @@ describe('Password Login', async () => {
   localStorage.clear();
   indexedDB.deleteDatabase('eduvault');
   it('loads components', () => {
-    cy.visit('/');
+    cy.visit(exampleURL);
 
     cy.get('.landing-img').should('exist');
   });

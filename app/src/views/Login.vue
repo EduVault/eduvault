@@ -126,7 +126,7 @@ export default {
       state.failedLogin = false;
       const response = await store.dispatch.authMod.pwLogin({
         password: state.password,
-        accountID: state.email,
+        username: state.email,
       });
       if (!response || response !== 'success') {
         state.makingRequest = false;

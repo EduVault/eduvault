@@ -27,8 +27,10 @@ export const setupLoginButton = ({
     return { error: 'button not found' };
   }
   if (!redirectURL) {
-    if (log) console.log('redirectURL not found');
-    return { error: 'redirectURL not found' };
+    if (log)
+      console.log(
+        'redirectURL not found, using default "window.location.href"'
+      );
   }
   if (!appID) {
     if (log) console.log('appID not found');

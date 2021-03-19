@@ -1,6 +1,15 @@
 {
   "version": "0.2.0",
   "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "API: Docker-Attach",
+      "remoteRoot": "/api",
+      "localRoot": "${workspaceFolder}/api",
+      "port": 9229
+      // "protocol": "inspector"
+    },
     // Configuration used to debug the application (default configuration created by Visual Studio Code )
     {
       "type": "chrome",

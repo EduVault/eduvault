@@ -10,7 +10,7 @@ const facebookStrat = (db: Database) => {
     // console.log('===========profile===========\n', profile);
     const email = profile.emails ? profile.emails[0].value.toLowerCase() || null : null;
     const person = await db.collection<IPerson>('person').findOne({
-      accountID: email || profile.id,
+      username: email || profile.id,
     });
     if (person && person.facebook) return done(null, person);
     else
@@ -19,7 +19,7 @@ const facebookStrat = (db: Database) => {
           ? person
           : {
               _id: uuid(),
-              accountID: email || profile.id,
+              username: email || profile.id,
             },
         'facebook',
         profile,

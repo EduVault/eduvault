@@ -9,7 +9,7 @@ const LocalStrategy = passportLocal.Strategy;
 const passwordStrat = (db: Database) =>
   new LocalStrategy(async (username: string, password: string, done) => {
     try {
-      const person = await db.collection<IPerson>('person').findOne({ accountID: username });
+      const person = await db.collection<IPerson>('person').findOne({ username });
 
       if (!person) {
         done('Person not found', null);

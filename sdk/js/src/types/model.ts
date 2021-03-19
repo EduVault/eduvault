@@ -9,14 +9,14 @@ export const dummyPersonSchema: JSONSchema = {
     _id: {
       type: 'string',
     },
-    accountID: {
+    username: {
       type: 'string',
     },
     birthDay: {
       type: 'number',
     },
   },
-  required: ['_id', 'accountID', 'birthDay'],
+  required: ['_id', 'username', 'birthDay'],
 };
 
 export const dummyPersonSchema2: JSONSchema = {
@@ -27,14 +27,14 @@ export const dummyPersonSchema2: JSONSchema = {
     _id: {
       type: 'string',
     },
-    accountID: {
+    username: {
       type: 'string',
     },
     birthDay: {
       type: 'number',
     },
   },
-  required: ['_id', 'accountID', 'birthDay'],
+  required: ['_id', 'username', 'birthDay'],
 };
 export const dummyCollections: CollectionConfig[] = [
   {

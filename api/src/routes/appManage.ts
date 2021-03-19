@@ -21,7 +21,7 @@ export default function (
     if (data.appSecret !== APP_SECRET)
       ctx.unauthorized(null, 'No secret found. Only administrators may verify devs');
     else {
-      const dev = await db.collection<IPerson>('person').findOne({ accountID: data.devID });
+      const dev = await db.collection<IPerson>('person').findOne({ username: data.devID });
       if (!dev)
         ctx.unauthorized(
           null,
@@ -53,7 +53,7 @@ export default function (
         console.log({ err, foundPerson });
         const devPerson = await db
           .collection<IPerson>('person')
-          .findOne({ accountID: data.accountID });
+          .findOne({ username: data.username });
         // console.log({ devPerson });
         if (err || !devPerson) {
           console.log({ err });
@@ -86,7 +86,7 @@ export default function (
         }
         // console.log({ exists, existsError });
         if (exists) throw existsError;
-        const newApp: IApp = { _id: uuid(), appID: uuid(), devID: data.accountID, name: data.name };
+        const newApp: IApp = { _id: uuid(), appID: uuid(), devID: data.username, name: data.name };
         if (data.description) newApp.description = data.description;
         await db.collection<IApp>('app').insert(newApp);
         // console.log({ devPerson });
@@ -113,7 +113,7 @@ export default function (
         } else {
           const app = await db.collection<IApp>('app').findOne({ appID: data.appID });
           if (!app) return ctx.notFound(err);
-          else if (app.devID !== person.accountID) return ctx.unauthorized();
+          else if (app.devID !== person.username) return ctx.unauthorized();
           else {
             if (data.authorizedDomains) app.authorizedDomains = data.authorizedDomains;
             if (data.description) app.description = data.description;

@@ -9,7 +9,7 @@ const googleStrat = (db: Database) =>
   new GoogleStrategy(GOOGLE_CONFIG, async (ctx, token, refreshToken, profile, done) => {
     const email = profile.emails ? profile.emails[0].value.toLowerCase() || null : null;
     const person = await db.collection<IPerson>('person').findOne({
-      accountID: email || profile.id,
+      username: email || profile.id,
     });
     if (person && person.google) return done(null, person);
     else
@@ -18,7 +18,7 @@ const googleStrat = (db: Database) =>
           ? person
           : {
               _id: uuid(),
-              accountID: email || profile.id,
+              username: email || profile.id,
             },
         'google',
         profile,

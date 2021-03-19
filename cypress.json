@@ -1,1 +1,1 @@
-{ "port": 9222, "chromeWebSecurity": false, "baseUrl": "http://example.localhost" }
+{ "port": 9222, "chromeWebSecurity": true, "baseUrl": "https://app.localhost" }

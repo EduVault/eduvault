@@ -47,7 +47,7 @@ export async function createDotwalletAccount(
 ) {
   // console.log('person', person);
   // const id = profile.person_open_id;
-  // if (!person.accountID) person.accountID = id;
+  // if (!person.username) person.username = id;
   // const privateKey = await PrivateKey.fromRandom();
   // person.socialMediaPrivateKey = encrypt(privateKey.toString(), id);
   // person.pubKey = privateKey.public.toString();

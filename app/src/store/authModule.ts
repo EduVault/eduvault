@@ -114,7 +114,7 @@ export default {
       { state }: ActionContext<AuthState, RootState>,
       payload: {
         password: string;
-        accountID: string;
+        username: string;
       },
     ): Promise<string | undefined> {
       try {
@@ -131,7 +131,7 @@ export default {
         const newThreadID = ThreadID.fromRandom();
 
         const loginData: types.PasswordLoginReq = {
-          accountID: payload.accountID,
+          username: payload.username,
           password: hash(payload.password),
           threadIDStr: newThreadID.toString(),
           pwEncryptedPrivateKey: pwEncryptedPrivateKey,
@@ -407,14 +407,15 @@ export default {
                 person.pubKey,
                 socialMediatype,
               );
-              if (fromExternal) {
-                // window.location.href = toExternalPath(keys, person.threadIDStr);
-                return null;
-              } else {
+              // TO DO: 
+              // if (fromExternal) {
+              //   window.location.href = toExternalPath(keys, person.threadIDStr);
+              //   return null;
+              // } else {
                 storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(person.threadIDStr));
                 router.push('/home');
                 return null;
-              }
+              // }
             } else {
               router.push(toLoginPath);
               return null;
@@ -469,7 +470,7 @@ export default {
               storePersistentAuthData(jwtEncryptedPrivateKey);
               // check to make sure person isn't already there?
               const person = await store.dispatch.authMod.getPerson();
-              if (person && person.accountID) {
+              if (person && person.username) {
                 await store.commit.personMod.PERSON(person);
                 storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(threadIDStr));
                 router.push('/home');
@@ -525,7 +526,7 @@ export default {
         const res = await axios(options);
         // console.log({ res });
         const resData: types.ApiRes<types.IPerson> = res.data;
-        if (!resData || !resData.data.accountID) return null;
+        if (!resData || !resData.data.username) return null;
         else return resData.data;
       } catch (err) {
         console.log(err);

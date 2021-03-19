@@ -29,7 +29,7 @@
 //       console.log('==============person info result==============\n', personInfoRequest.data);
 //       const profile: DotwalletProfile = personInfoRequest.data.data;
 //       const id = profile.person_open_id;
-//       const person = await Person.findOne({ accountID: id });
+//       const person = await Person.findOne({ username: id });
 //       if (person && person.dotwallet) return done(null, person);
 //       else
 //         return createDotwalletAccount(person ? person : new Person(), profile, accessToken, done);

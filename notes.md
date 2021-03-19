@@ -33,7 +33,7 @@
   - [ ] unit tests for app logic(low priority)
   - [ ] dockerize tests (cypress not working on my mac m1 chip)
 - [ ] More tests!
-- [ ] Make accountID -> emails array
+- [ ] Make username -> emails array
 - [ ] Allow linking of accounts, i.e. persons can signup/login with multiple methods all on the same account
 - [ ] vuex/redux plugin
 
@@ -91,7 +91,7 @@ if pwEncryptedPrivateKey keys in localstorage:
 // *** now pw and metamask login and signup are one endpoint, the server should detect whether its a returning person or not
 loginSignup(type){
 // type is pw, social media
-person inputs email(accountID) and password
+person inputs email(username) and password
 password is hashed
 an identity(privateKey) is created
 the privateKey is hashed with the plaintext password pwEncryptedPrivateKey
@@ -248,14 +248,14 @@ string constructed as
 // the keys should match the local store
 'store':{
   personInfo: {
-    accountID: '',
+    username: '',
     personAge: '',
   }
 }
 'registry': {
   personInfo:
   {
-    accountID: 'User:<instance-ID>:accountID',
+    username: 'User:<instance-ID>:username',
     personAge: 'User:<instance-ID>:personAge',
   }
 }
@@ -268,7 +268,7 @@ Or 'matching' method:
   User:[
     {
       ID: '<instance-ID>'
-      accountID: '',
+      username: '',
       personAge: '',
     }
   ]
@@ -281,7 +281,7 @@ also need a reducer:
 'reducer':[
   // include:
   'User', // or in the first case 'personInfo'
-  'User.accountID' // to be more specific
+  'User.username' // to be more specific
 ]
 ```
 

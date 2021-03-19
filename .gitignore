@@ -122,8 +122,6 @@ cypress/videos/
 cypress/fixtures/
 *.code-workspace
 .DS_Store
-yarn.lock
-package-lock.json
 
 
 meta.json

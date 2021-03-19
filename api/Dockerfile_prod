@@ -5,9 +5,10 @@ WORKDIR /api
 COPY package.json ./
 # COPY yarn.lock ./api/
 
-RUN yarn install
+RUN yarn install --production
 COPY . ./
 EXPOSE 3003 
 
 FROM build-stage AS prod-stage
+WORKDIR /api
 CMD ["yarn", "prod"]

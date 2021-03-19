@@ -1,16 +1,16 @@
 FROM node:12 AS build-stage
-# RUN apk update
-# RUN apk add git
+
 WORKDIR /example
 COPY package.json ./
-# COPY yarn.lock ./
+COPY yarn.lock ./
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 # RUN yarn config set registry 'https://registry.npmjs.org/'
 
-RUN npm install
+RUN yarn install --production
 COPY . .
 
-RUN npm install --save @eduvault/eduvault-js
 FROM build-stage AS prod-stage
+WORKDIR /example
+RUN yarn add -D @vue/cli-service
 RUN yarn build
-
+COPY ./dist ./dist

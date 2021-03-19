@@ -4,7 +4,7 @@ import {
   closeApp,
   pwAuthTestReq,
   password,
-  accountID,
+  username,
   registerApp,
   appAuthWithCookie,
   ROUTES,
@@ -37,10 +37,10 @@ describe(`POST '/auth/app`, () => {
   let appID: string;
   it('can authenticate an app from login redirect appLoginToken', async () => {
     appID = await registerApp(agent, request);
-    // console.log('registered app ', appID);
+    console.log('registered app ', appID);
     const loginRes = await pwAuthTestReq(
       {
-        accountID,
+        username,
         password,
         appID,
         redirectURL: 'https://somewhere.com',

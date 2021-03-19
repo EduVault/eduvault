@@ -17,12 +17,12 @@ const google = function (router: Router<DefaultState, Context>, passport: typeof
         if (ctx.session.jwt) {
           const now = new Date().getTime();
           const expiry = await getJwtExpiry(ctx.session.jwt);
-          if (!expiry) ctx.session.jwt = createJwt(person.accountID);
+          if (!expiry) ctx.session.jwt = createJwt(person.username);
           else if (now - expiry.getTime() < 1000 * 60 * 60 * 24) {
             ctx.session.oldJwt = JSON.parse(JSON.stringify(ctx.session.jwt));
-            ctx.session.jwt = createJwt(person.accountID);
+            ctx.session.jwt = createJwt(person.username);
           }
-        } else ctx.session.jwt = createJwt(person.accountID);
+        } else ctx.session.jwt = createJwt(person.username);
         await ctx.session.save();
         ctx.redirect(CLIENT_CALLBACK);
       }

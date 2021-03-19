@@ -20,13 +20,13 @@ console.log(testPubKey === pubKey);
 
 ```ts
 const connectDB = async (
-  API_URL_ROOT: string,
+  URL_API_ROOT: string,
   jwt: string,
   privateKey: PrivateKey,
   DbInfo: DBInfo
 ): Promise<Database> => {
-  // console.log(API_URL_ROOT, jwt, privateKey, threadID.toString());
-  const loginCallback = loginWithChallenge(API_URL_ROOT, jwt, privateKey);
+  // console.log(URL_API_ROOT, jwt, privateKey, threadID.toString());
+  const loginCallback = loginWithChallenge(URL_API_ROOT, jwt, privateKey);
   const db = await Database.withUserAuth(await loginCallback(), 'eduvault.mvp.flashcards');
   await console.log('created db', db);
   //@ts-ignore
@@ -98,7 +98,7 @@ async function saveThreadIDtoServer(state: AuthState, threadIDStr: string) {
       threadIDStr,
     } as any,
   } as AxiosRequestConfig;
-  const result = await axios(state.API_URL_ROOT + '/save-thread-id', options);
+  const result = await axios(state.URL_API_ROOT + '/save-thread-id', options);
   console.log('save threadID', result.data);
   return ThreadID.fromString(result.data.data.threadIDStr);
 }
@@ -106,7 +106,7 @@ async function saveThreadIDtoServer(state: AuthState, threadIDStr: string) {
     async uploadDBInfo({ state }: ActionContext<AuthState, RootState>, DbInfo: DBInfo) {
       try {
         const options = {
-          url: state.API_URL_ROOT + '/upload-db-info',
+          url: state.URL_API_ROOT + '/upload-db-info',
           headers: { 'Access-Control-Allow-Origin': '*' },
           method: 'POST',
           withCredentials: true,

@@ -14,7 +14,8 @@ import {
   formatOutRedirectURL,
   utils,
 } from './utils';
-import { ROUTES, API_URL, API_WS, APP_URL } from '../config';
+import { ROUTES, URL_API, API_WS, URL_APP } from '../config';
+console.log({ URL_API, URL_APP });
 // import { connectClient } from '../store/textileHelpers';
 // import localForage from 'localforage';
 import Vue from 'vue';
@@ -113,7 +114,7 @@ export default {
       { state }: ActionContext<AuthState, RootState>,
       payload: {
         password: string;
-        accountID: string;
+        username: string;
       },
     ): Promise<string | undefined> {
       try {
@@ -130,7 +131,7 @@ export default {
         const newThreadID = ThreadID.fromRandom();
 
         const loginData: types.PasswordLoginReq = {
-          accountID: payload.accountID,
+          username: payload.username,
           password: hash(payload.password),
           threadIDStr: newThreadID.toString(),
           pwEncryptedPrivateKey: pwEncryptedPrivateKey,
@@ -141,7 +142,7 @@ export default {
         // console.log({ loginData });
 
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.PASSWORD_AUTH,
+          url: URL_API + ROUTES.PASSWORD_AUTH,
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
@@ -153,6 +154,7 @@ export default {
 
         const response = await axios(options);
         const responseData: types.PasswordLoginRes = response.data;
+        console.log({ responseHeaders: response.headers });
         console.log('login cookie: ' + JSON.stringify(Vue.$cookies.get('koa.sess')));
         console.log('login/signup data: ' + JSON.stringify(responseData));
         if (responseData.code !== 200) {
@@ -217,7 +219,7 @@ export default {
 
     async logout({ state }: ActionContext<AuthState, RootState>) {
       const options: AxiosRequestConfig = {
-        url: API_URL + ROUTES.LOGOUT,
+        url: URL_API + ROUTES.LOGOUT,
         method: 'GET',
         headers: {
           'X-Forwarded-Proto': 'https',
@@ -239,7 +241,7 @@ export default {
     }: ActionContext<AuthState, RootState>): Promise<boolean | undefined> {
       try {
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.AUTH_CHECK,
+          url: URL_API + ROUTES.AUTH_CHECK,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -405,14 +407,15 @@ export default {
                 person.pubKey,
                 socialMediatype,
               );
-              if (fromExternal) {
-                // window.location.href = toExternalPath(keys, person.threadIDStr);
-                return null;
-              } else {
+              // TO DO: 
+              // if (fromExternal) {
+              //   window.location.href = toExternalPath(keys, person.threadIDStr);
+              //   return null;
+              // } else {
                 storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(person.threadIDStr));
                 router.push('/home');
                 return null;
-              }
+              // }
             } else {
               router.push(toLoginPath);
               return null;
@@ -467,7 +470,7 @@ export default {
               storePersistentAuthData(jwtEncryptedPrivateKey);
               // check to make sure person isn't already there?
               const person = await store.dispatch.authMod.getPerson();
-              if (person && person.accountID) {
+              if (person && person.username) {
                 await store.commit.personMod.PERSON(person);
                 storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(threadIDStr));
                 router.push('/home');
@@ -513,7 +516,7 @@ export default {
     async getPerson({ state }: ActionContext<AuthState, RootState>): Promise<types.IPerson | null> {
       try {
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.GET_PERSON,
+          url: URL_API + ROUTES.GET_PERSON,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -523,7 +526,7 @@ export default {
         const res = await axios(options);
         // console.log({ res });
         const resData: types.ApiRes<types.IPerson> = res.data;
-        if (!resData || !resData.data.accountID) return null;
+        if (!resData || !resData.data.username) return null;
         else return resData.data;
       } catch (err) {
         console.log(err);
@@ -538,7 +541,7 @@ export default {
     } | null> {
       try {
         const options: AxiosRequestConfig = {
-          url: API_URL + ROUTES.GET_JWT,
+          url: URL_API + ROUTES.GET_JWT,
           headers: {
             'X-Forwarded-Proto': 'https',
           },
@@ -572,7 +575,7 @@ export default {
           authLink = ROUTES.GOOGLE_AUTH;
           break;
       }
-      window.location.href = `${APP_URL}${authLink}`;
+      window.location.href = `${URL_APP}${authLink}`;
     },
     // async initializeDB(
     //   { state }: ActionContext<AuthState, RootState>,

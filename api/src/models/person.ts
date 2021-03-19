@@ -68,10 +68,10 @@ const devSchema: JSONSchema = {
   },
 };
 
-/** @param accountID will be an email for local scheme, for google and facebook will be email if available or id if not */
+/** @param username will be an email for local scheme, for google and facebook will be email if available or id if not */
 export interface IPerson {
   _id: string;
-  accountID: string;
+  username: string;
   password?: string;
   pwEncryptedPrivateKey?: string;
   socialMediaPrivateKey?: string;
@@ -90,7 +90,7 @@ export const personSchema: JSONSchema = {
   type: 'object',
   properties: {
     _id: { type: 'string' },
-    accountID: { type: 'string' },
+    username: { type: 'string' },
     password: { type: 'string' },
     pwEncryptedPrivateKey: { type: 'string' },
     socialMediaPrivateKey: { type: 'string' },

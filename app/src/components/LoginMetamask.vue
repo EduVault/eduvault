@@ -30,7 +30,7 @@ export default {
             const password = signed.slice(10, 30);
             store.dispatch.authMod.pwLogin({
               password,
-              accountID: account,
+              username: account,
               redirectURL: router.currentRoute.query.redirect_url,
               code: router.currentRoute.query.code,
             });

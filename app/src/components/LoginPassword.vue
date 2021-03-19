@@ -6,7 +6,7 @@
       v-model="state.email"
       :state="emailValidation"
       type="email"
-      autocomplete="accountID"
+      autocomplete="username"
       placeholder="Email"
       @formchange="
         $emit('updateEmail', state.email);

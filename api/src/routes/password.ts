@@ -1,7 +1,7 @@
 import Router from 'koa-router';
 import * as KoaPassport from 'koa-passport';
 import { IPerson } from '../models/person';
-import { IApp } from '../models/app';
+// import { IApp } from '../models/app';
 import { DefaultState, Context } from 'koa';
 import { types } from '../types';
 import { ROUTES } from '../config';
@@ -23,7 +23,7 @@ const password = function (
     }
     const newPerson: IPerson = {
       _id: uuid(),
-      accountID: data.accountID,
+      username: data.username,
     };
     newPerson.password = hashPassword(data.password);
     newPerson.pwEncryptedPrivateKey = data.pwEncryptedPrivateKey;
@@ -31,11 +31,11 @@ const password = function (
     newPerson.threadIDStr = data.threadIDStr;
     newPerson.dev = { isVerified: false, apps: [] };
     // console.log('data', data);
-    // console.log('new person', newPerson.toJSON());
+    console.log('new person', newPerson);
     await db.collection<IPerson>('person').save(newPerson);
     await ctx.login(newPerson);
-    ctx.session.jwt = createJwt(newPerson.accountID);
-    ctx.session.save();
+    ctx.session.jwt = createJwt(newPerson.username);
+    await ctx.session.save();
 
     const returnData: types.PasswordLoginRes['data'] = {
       pwEncryptedPrivateKey: newPerson.pwEncryptedPrivateKey,
@@ -47,14 +47,32 @@ const password = function (
       returnData.appLoginToken = appLoginToken;
       returnData.decryptToken = decryptToken;
     }
+
     // console.log({ returnData });
+    // ctx.cookies.set('testing', '123');
+    // const cookies = new Cookies(
+    //   ctx.request as any,
+    //   ctx.response as any,
+    //   {
+    //     secure: true,
+    //     httpOnly: true,
+    //   } as any,
+    // );
+    // ctx.res.setHeader('test-header', 'testing');
+    // cookies.set('koa.sess', 'cookie_payload');
+    console.log({
+      res: ctx.response.toJSON(),
+      req: ctx.request.toJSON(),
+      // cookies: ctx.cookies.get('koa.sess'),
+      // headerCookie: ctx.response.headers['set-cookie'],
+    });
     ctx.oK(returnData);
   }
 
   router.post(ROUTES.PASSWORD_AUTH, async (ctx, next) => {
     const data: types.PasswordLoginReq = ctx.request.body;
     // console.log({ data });
-    if (!data.password || !data.accountID) {
+    if (!data.password || !data.username) {
       ctx.unauthorized({ error: 'invalid signup' }, 'invalid signup');
       return;
     }
@@ -64,9 +82,10 @@ const password = function (
         return { decryptToken, appLoginToken: await createAppLoginToken(data.appID, decryptToken) };
       } else return { decryptToken: null, appLoginToken: null };
     };
+
     const { appLoginToken, decryptToken } = await appLoginTokens();
     // console.log({ appLoginToken, decryptToken });
-    const person = await db.collection<IPerson>('person').findOne({ accountID: data.accountID });
+    const person = await db.collection<IPerson>('person').findOne({ username: data.username });
     // console.log({ person });
 
     if (!person) return signup(ctx, appLoginToken, decryptToken);
@@ -84,12 +103,12 @@ const password = function (
           if (ctx.session.jwt) {
             const now = new Date().getTime();
             const expiry = await getJwtExpiry(ctx.session.jwt);
-            if (!expiry) ctx.session.jwt = createJwt(person.accountID);
+            if (!expiry) ctx.session.jwt = createJwt(person.username);
             else if (now - expiry.getTime() < 1000 * 60 * 60 * 24) {
               ctx.session.oldJwt = JSON.parse(JSON.stringify(ctx.session.jwt));
-              ctx.session.jwt = createJwt(person.accountID);
+              ctx.session.jwt = createJwt(person.username);
             }
-          } else ctx.session.jwt = createJwt(person.accountID);
+          } else ctx.session.jwt = createJwt(person.username);
           ctx.session.save();
           const returnData: types.PasswordLoginRes['data'] = {
             pwEncryptedPrivateKey: person.pwEncryptedPrivateKey,
@@ -102,7 +121,26 @@ const password = function (
             returnData.decryptToken = decryptToken;
           }
           // console.log({ returnData });
+          // ctx.cookies.set('testing', '123');
+          // const cookies = new Cookies(
+          //   ctx.req as any,
+          //   ctx.res as any,
+          //   {
+          //     secure: true,
+          //     httpOnly: true,
+          //   } as any,
+          // );
+          // ctx.res.setHeader('test-header', 'testing');
+          // ctx.session.save();
+          // cookies.set('koa.sess', util.encode(ctx.session.toJSON()));
+
           ctx.oK(returnData);
+          console.log({
+            res: ctx.response.toJSON(),
+            req: ctx.request.toJSON(),
+            // cookies: ctx.cookies.get('koa.sess'),
+            // headerCookie: ctx.response.headers['set-cookie'],
+          });
         }
       })(ctx, next);
     }

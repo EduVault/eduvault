@@ -1,4 +1,4 @@
-export const exampleURL = 'localhost:8082';
+export const exampleURL = 'example.localhost';
 import { loginSignup } from './login';
 import { clearCollections } from '../../sdk/js';
 const APP_SECRET = Cypress.env('APP_SECRET');

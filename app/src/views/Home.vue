@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Welcome to Eduvault Home</h1>
+    <h1>Eduvault Home</h1>
+    <h2>🛠🛠🛠🛠Under Construction🛠🛠🛠🛠</h2>
   </div>
 </template>
 <script lang="ts">

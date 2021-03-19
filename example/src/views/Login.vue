@@ -22,8 +22,6 @@ export default {
   setup() {
     onMounted(async () => {
       const buttonID = 'eduvault-login-button';
-      const THIS_SITE_URL = 'http://localhost:8082';
-      const redirectURL = `${THIS_SITE_URL}`;
 
       const appID = localStorage.getItem('APP_ID') ?? (await setupApp());
 
@@ -36,7 +34,7 @@ export default {
       const onSuccess = (loginURL: string) => {
         console.log('button set up. redirect url: ' + loginURL);
       };
-      if (appID) setupLoginButton({ buttonID, appID, redirectURL, onSuccess });
+      if (appID) setupLoginButton({ buttonID, appID, onSuccess });
     });
     const state = reactive({
       //

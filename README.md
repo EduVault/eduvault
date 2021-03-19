@@ -70,28 +70,61 @@ Eduvault makes it trivially easy for developers to add such a database into an a
 
 Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to your own secrets, and updating the config.ts file in 'shared' should be enough to fork and run the project with your own domain name and Textile/Google/Facebook/DotWallet credentials.
 
-## To dev
+## Dev:local
+
+for local dev you must have nginx running using the configuration in `deploy/nginx/local/app.conf`. You can copy/symlink that to your local nginx folder, in my case `/usr/local/Homebrew/etc/nginx/servers`.
+
+then add the following to `/etc/hosts`:
+
+```bash
+127.0.0.1	app.localhost
+127.0.0.1	api.localhost
+127.0.0.1	example.localhost
+```
 
 ```bash
 # will install everything, build the shared library and sdk, and set up symlinks
 yarn inst
 ```
 
-then
+then start nginx with brew(mac) or systemctl (linux)
+
+```bash
+# your nginx servers folder and nginx start command may vary
+ln deploy/nginx/local/app.conf /usr/local/Homebrew/etc/nginx/servers
+brew services start nginx
+```
+
+finally
 
 ```bash
 yarn dev
 ```
 
+## Dev:docker
+
+Detects changes to ./app ./example ./api and ./home-page and hot-reloads
+Will not detect changes to ./shared and ./sdk/js. If you make changes to those, you will need to rebuild them and restart the docker image
+
+```
+yarn d-dev
+```
+
 ### Test
 
 ```bash
-# cypress end to end
-yarn test-watch:e2e
+# End to end integration test. with Cypress. Requires 'yarn dev' to be running.
+yarn test:e2e
+yarn test-watch:e2e # with watching/ hot-reloading
+
 # api unit
-yarn test-watch:api
-# sdk test: somewhat integrated (reduires API to be running -- `yarn dev:api`)
-yarn test-watch:sdk-js
+yarn test:api
+yarn test-watch:api # with watching/ hot-reloading
+
+# sdk test: somewhat integrated (requires API to be running -- `yarn dev:api`)
+yarn test:sdk-js
+yarn test-watch:sdk-js # with watching/ hot-reloading
+
 ```
 
 ### Dev deploy
@@ -103,6 +136,15 @@ yarn dev-build
 ```
 
 ### To deploy
+
+for a staging build, change the .env SERVER_HOST to the staging server host name (e.g. staging-site.com)
+You can use the `dev-build` build for staging on your local machine or on the server.
+
+```bash
+yarn dev-build
+```
+
+for production deploy:
 
 ```bash
 # connect to your server
@@ -118,10 +160,13 @@ git reset --hard origin/main
 # otherwise just
 git pull
 
-# ssh copy in .env file
+# ssh copy in .env file or manually edit
+## might also need to config /etc/hosts as per the local example?
 
+# First build:
 # Run script for SSL certificate: init-letsencrypt.sh (make sure to change url first)
 chmod +x init-letsencrypt.sh
 ./init-letsencrypt.sh
-# yarn production
+# subsequent builds:
+yarn production
 ```

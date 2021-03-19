@@ -7,8 +7,9 @@ export { ROUTES } from '../config';
 import { APP_SECRET } from '../config';
 import KoaWebsocket from 'koa-websocket';
 export const password = 'Password123';
-export const accountID = 'person@email.com';
+export const username = 'person@email.com';
 
+const { hash } = utils;
 const formatPasswordSignIn = utils.formatPasswordSignIn;
 
 export const setupApp = async () => {
@@ -50,7 +51,7 @@ export const closeApp = async (
 
 export const pwAuthTestReq = async (
   options: {
-    accountID?: string;
+    username?: string;
     password?: string;
     redirectURL?: string;
     appID?: string;
@@ -67,7 +68,7 @@ export const pwAuthTestReq = async (
 };
 
 export const pwAuthWithCookie = async (req: supertest.Test, agent: supertest.SuperAgentTest) => {
-  const res = await pwAuthTestReq({ password, accountID }, agent);
+  const res = await pwAuthTestReq({ password, username }, agent);
   const cookie: string = res.headers['set-cookie'];
   req.set('Cookie', cookie);
   return await req;
@@ -75,11 +76,11 @@ export const pwAuthWithCookie = async (req: supertest.Test, agent: supertest.Sup
 
 export const devRegisterReq: types.DevVerifyReq = {
   appSecret: APP_SECRET,
-  devID: accountID,
+  devID: username,
 };
 export const appRegisterReq: types.AppRegisterReq = {
-  accountID,
-  password,
+  username,
+  password: hash(password),
   name: 'Awesome New App',
   description: 'An app so cool it defies description',
 };
@@ -88,17 +89,18 @@ export const registerApp = async (
   agent: supertest.SuperAgentTest,
   request: () => supertest.SuperTest<supertest.Test>,
 ) => {
-  const devPersonSignup = await pwAuthTestReq({ password, accountID }, agent);
+  const devPersonSignup = await pwAuthTestReq({ password, username }, agent);
   // console.log({ devPersonSignup: devPersonSignup.body });
   // console.log('devRegisterReq ', devRegisterReq);
   const devVerify = await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
   // console.log({ devVerify: devVerify.body });
-
+  console.log({ appRegisterReq });
   const registerRes = await request().post(ROUTES.APP_REGISTER).send(appRegisterReq);
-  // console.log({ registerRes: registerRes.body });
+  console.log({ registerRes: registerRes.body });
   const appID: string = registerRes.body.data.appID;
   return appID;
 };
+
 export const appUserLogin = async (
   agent: supertest.SuperAgentTest,
   request: () => supertest.SuperTest<supertest.Test>,
@@ -106,7 +108,7 @@ export const appUserLogin = async (
   const appID = await registerApp(agent, request);
   const loginRes = await pwAuthTestReq(
     {
-      accountID,
+      username,
       password,
       appID,
       redirectURL: 'https://somewhere.com',

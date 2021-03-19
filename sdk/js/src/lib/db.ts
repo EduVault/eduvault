@@ -5,7 +5,7 @@ import { Collection, Database, ThreadID } from '@textile/threaddb';
 import { CollectionConfig } from '@textile/threaddb/dist/cjs/local/collection';
 import { debounce, isEqual, difference } from 'lodash';
 
-import { WS_API } from '../config';
+import { API_WS } from '../config';
 import { EduVault } from '../index';
 
 export interface StartLocalDBOptions {
@@ -199,7 +199,7 @@ export function loginWithChallenge(
     return new Promise((resolve, reject) => {
       /** Initialize our websocket connection */
       // console.log('jwt', jwt);
-      const socket = new WebSocket(WS_API);
+      const socket = new WebSocket(API_WS);
       /** Wait for our socket to open successfully */
       socket.onopen = async () => {
         if (!jwt || jwt === '') throw { error: 'no jwt' };

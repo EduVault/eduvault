@@ -22,7 +22,7 @@ interface wsMessageData {
     | 'challenge-request'
     | 'challenge-response'
     | 'error';
-  accountID: IPerson['accountID'];
+  username: IPerson['username'];
   signature: string;
   error: string;
 }
@@ -51,7 +51,7 @@ const personAuthRoute = (
         // add a param isPerson or isApp
         const person = await db
           .collection<IPerson>('person')
-          .findOne({ accountID: jwtDecoded.data.id });
+          .findOne({ username: jwtDecoded.data.id });
         const app = await db.collection<IApp>('app').findOne({ appID: jwtDecoded.data.id });
         // console.log({ person, app });
         if (!(person || app)) {

@@ -6,10 +6,10 @@
   "scripts": {
     "clean": "rimraf dist yarn.lock node_modules",
     "clean:dist": "rimraf dist",
-    "dev:watch": "TS_NODE_PROJECT='./tsconfig.build.json' ts-node-dev --inspect --poll --respawn ./src src/index.ts",
+    "dev:watch": "TS_NODE_PROJECT='./tsconfig.build.json' ts-node-dev --inspect=0.0.0.0:9229 --poll --respawn ./src src/index.ts",
     "dev": "run-s dev:watch",
-    "prod":"run-s build start",
-    "start": "ls && node dist/",
+    "prod": "run-s build start",
+    "start": " node dist/",
     "watch": "tsc -p tsconfig.build.json -w ",
     "build:server": "tsc -p tsconfig.build.json ",
     "build": "run-s clean:dist build:server",
@@ -19,7 +19,7 @@
   "author": "Jacob Cohen-Rosenthal",
   "license": "MIT",
   "dependencies": {
-    "@eduvault/shared": "^1.1.1",
+    "@eduvault/shared": "^1.1.25",
     "@koa/cors": "^3.1.0",
     "@textile/crypto": "^4.1.1",
     "@textile/hub": "^6.0.2",

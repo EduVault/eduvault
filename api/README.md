@@ -4,7 +4,7 @@ This backend is a simple first version of what EduVault server will offer, which
 
 ## Auth strategy
 
-Currently the person can log in with a accountID or password or social media account with oAuth. They will recieve a cookie with a session
+Currently the person can log in with a username or password or social media account with oAuth. They will recieve a cookie with a session
 
 ### Issue that needs resolving
 

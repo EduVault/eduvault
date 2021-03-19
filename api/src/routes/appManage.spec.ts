@@ -3,7 +3,7 @@ import {
   setupApp,
   pwAuthTestReq,
   password,
-  accountID,
+  username,
   appRegisterReq,
   devRegisterReq,
   ROUTES,
@@ -34,7 +34,7 @@ describe(`POST '/dev/verify'`, () => {
   });
 
   it('Can register dev with APP_SECRET', async () => {
-    const req = await pwAuthTestReq({ password, accountID }, agent);
+    const req = await pwAuthTestReq({ password, username }, agent);
     // console.log({ devPerson });
     const dev = req.body.data;
     // console.log({ dev });
@@ -43,7 +43,7 @@ describe(`POST '/dev/verify'`, () => {
     expect(verifyRes.body.data.dev.isVerified).toBe(true);
   });
   // it('can handle multiple subsequent requests', async () => {
-  //   const req = await pwAuthTestReq({ password, accountID }, agent);
+  //   const req = await pwAuthTestReq({ password, username }, agent);
   //   for (let i = 3; i > 0; i--) {
   //     setTimeout(async function () {
   //       const verifyRes = await request().post(ROUTES.DEV_VERIFY).send(devRegisterReq);
@@ -59,7 +59,7 @@ describe(`POST '/dev/verify'`, () => {
   it('can register an app', async () => {
     const registerRes = await request().post(ROUTES.APP_REGISTER).send(appRegisterReq);
     // console.log({ registerRes: registerRes.body.data });
-    expect(registerRes.body.data.devID).toBe(accountID);
+    expect(registerRes.body.data.devID).toBe(username);
     appID = registerRes.body.data.appID;
   });
 });

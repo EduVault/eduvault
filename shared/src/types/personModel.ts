@@ -1,6 +1,6 @@
-/** @param accountID will be an email for local scheme, for google and facebook will be email if available or id if not */
+/** @param username will be an email for local scheme, for google and facebook will be email if available or id if not */
 export interface IPerson {
-  accountID: string;
+  username: string;
   password?: string;
   pwEncryptedPrivateKey?: string;
   /** Encrypted with facebook.id | dotwallet.id | google.id */

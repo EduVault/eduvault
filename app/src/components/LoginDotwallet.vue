@@ -13,7 +13,7 @@
 
 <script>
 import { DotwalletLogin } from 'dotwallet-vue'; //@ts-ignore
-import { DOTWALLET_AUTH, API_URL_ROOT, DOTWALLET_APP_ID } from '@/config';
+import { DOTWALLET_AUTH, URL_API_ROOT, DOTWALLET_APP_ID } from '@/config';
 // import ip from 'ip';
 import store from '../store';
 export default {
@@ -23,7 +23,7 @@ export default {
       dotwalletAppId: DOTWALLET_APP_ID,
       dotwalletRedirectUrl:
         process.env.NODE_ENV === 'production'
-          ? 'https://' + API_URL_ROOT + DOTWALLET_AUTH
+          ? 'https://' + URL_API_ROOT + DOTWALLET_AUTH
           : 'http://' + '172.19.0.3' + ':3003' + DOTWALLET_AUTH, //this doesn't work. need to manually change back to localhost after redirect fails
     };
   },

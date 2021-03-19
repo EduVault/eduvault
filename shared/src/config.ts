@@ -2,23 +2,18 @@
 export const PORT_API = 3003;
 export const PORT_APP = 8081;
 export const PORT_EXAMPLE = 8082;
-
 export const PORT_HOME_PAGE = 8083;
 export const PORT_CYPRESS = 9222;
-export const URL_ROOT_LOCAL = 'http://localhost';
-export const URL_ROOT_PROD = 'https://eduvault.org';
-export const WS_ROOT_LOCAL = 'ws://localhost';
-export const WS_ROOT_PROD = 'wss://eduvault.org';
+export const LOCAL_HOST = 'localhost';
+export const PROD_HOST = 'eduvault.org';
+export const PREFIX_APP = 'app.';
+export const PREFIX_EXAMPLE = 'example.';
+export const PREFIX_API = 'api.';
 
 // must be set in each app
 // export const APP_SECRET = process.env.APP_SECRET
 
 export const ROUTES = {
-  HOME_PAGE: '/',
-  APP: '/app',
-  API: '/api',
-  EXAMPLE: '/example',
-
   LOGOUT: '/logout',
   AUTH_CHECK: '/auth-check',
   VERIFY_JWT: '/verify-jwt',
@@ -41,23 +36,19 @@ export const ROUTES = {
   TEXTILE_RENEW: '/renew-textile',
 };
 
-export const URL_API_LOCAL = URL_ROOT_LOCAL + ':' + PORT_API;
-export const URL_APP_LOCAL = URL_ROOT_LOCAL + ':' + PORT_APP; // 'http://localhost:8081';
-export const URL_EXAMPLE_LOCAL = URL_ROOT_LOCAL + ':' + PORT_EXAMPLE;
-export const URL_HOME_PAGE_LOCAL = URL_ROOT_LOCAL + ':' + PORT_HOME_PAGE;
+const HTTP = 'http://';
+const HTTPS = 'https://';
 
-export const URL_API_PROD = URL_ROOT_PROD + ROUTES.API; // 'https://eduvault.org/api
-export const URL_APP_PROD = URL_ROOT_PROD + ROUTES.APP;
-export const URL_EXAMPLE_PROD = URL_ROOT_PROD + ROUTES.EXAMPLE;
-export const URL_HOME_PAGE_PROD = URL_ROOT_PROD + ROUTES.HOME_PAGE;
-
-export const PROD_DOMAINS = [URL_ROOT_PROD];
-export const DEV_DOMAINS = [
-  URL_APP_LOCAL,
-  URL_EXAMPLE_LOCAL,
-  URL_HOME_PAGE_LOCAL,
-  'http://localhost:' + PORT_CYPRESS,
-];
+/**
+ * @returns http(s):// + prefix + host
+ * @summary returns http if given localhost, https otherwise
+ * @param  {string} prefix should have trailing . e.g. "app." or "api."
+ * @param {string} host should include domain. e.g. "eduvault.org"
+ * @example https://app.eduvault.org
+ */
+export const formatURL = (prefix: string, host: string) => {
+  return `${host === 'localhost' ? HTTP : HTTPS}${prefix + host}`;
+};
 
 export const GOOGLE_CLIENT_ID =
   '487529271786-09ipprn3fe65lmv5rhgbv10rsp1lnra1.apps.googleusercontent.com';

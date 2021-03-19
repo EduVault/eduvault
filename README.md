@@ -72,20 +72,30 @@ Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to
 
 ## Dev:local
 
-Quick way to get running...
+for local dev you must have nginx running using the configuration in `deploy/nginx/local/app.conf`. You can copy/symlink that to your local nginx folder, in my case `/usr/local/Homebrew/etc/nginx/servers`.
+
+then add the following to `/etc/hosts`:
+
 ```bash
-npm install --also=dev
-
-# will install everything, build the shared library and sdk, and set up symlinks
-yarn inst
-
-yarn build:shared && yarn link:shared && yarn build:sdk-js && yarn link:sdk-js
-
+127.0.0.1	app.localhost
+127.0.0.1	api.localhost
+127.0.0.1	example.localhost
 ```
 
-Run just the api in docker and the rest locally
-you will need to [install mongo-db](https://docs.mongodb.com/manual/administration/install-community/) for the local dev
+```bash
+# will install everything, build the shared library and sdk, and set up symlinks
+yarn inst
+```
 
+then start nginx with brew(mac) or systemctl (linux)
+
+```bash
+# your nginx servers folder and nginx start command may vary
+ln deploy/nginx/local/app.conf /usr/local/Homebrew/etc/nginx/servers
+brew services start nginx
+```
+
+finally
 
 ```bash
 yarn dev

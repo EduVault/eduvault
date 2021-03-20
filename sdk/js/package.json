@@ -1,6 +1,6 @@
 {
   "name": "@eduvault/eduvault-js",
-  "version": "1.2.0",
+  "version": "1.2.11",
   "description": "An SDK that allows app creators to quickly create and authenticate a user-owned database",
   "main": "dist/main/index.js",
   "typings": "dist/main/index.d.ts",
@@ -28,7 +28,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@eduvault/shared": "^1.1.25",
+    "@eduvault/shared": "^1.1.27",
     "@textile/hub": "^6.0.2",
     "@textile/threaddb": "^0.0.6",
     "@types/lodash": "^4.14.168",

@@ -1,6 +1,6 @@
 {
   "name": "@eduvault/shared",
-  "version": "1.1.25",
+  "version": "1.1.27",
   "description": "shared models, utils, config for @eduvault",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

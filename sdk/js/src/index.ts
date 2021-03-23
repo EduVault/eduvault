@@ -6,9 +6,11 @@ import {
 } from '@textile/threaddb/dist/cjs/local/collection';
 
 import {
+  appLogin,
   appRegister,
   clearCollections,
   devVerify,
+  getJWT,
   personRegister,
 } from './lib/APICalls';
 import { Credentials, loadCredentials } from './lib/credentials';
@@ -20,6 +22,7 @@ import {
   startRemoteWrapped,
   sync,
   syncChanges,
+  loginWithChallenge,
 } from './lib/db';
 import { init } from './lib/init';
 import { setupLoginButton } from './lib/loginButton';
@@ -29,28 +32,34 @@ import { checkConnectivityClearBacklog, isServerOnline } from './utils';
 class EduVault {
   log? = false;
   isBrowserOnline = () => navigator.onLine;
-  isServerOnline = isServerOnline;
+  isServerOnline = isServerOnline(this);
   isOnline = () => this.isServerOnline() && this.isServerOnline();
 
   privateKeyValid = () => {
     return this.privateKey?.canSign();
   };
 
-  personRegister = personRegister;
-  devVerify = devVerify;
-  clearCollections = clearCollections;
-  appRegister = appRegister;
+  personRegister = personRegister(this);
+  devVerify = devVerify(this);
+  clearCollections = clearCollections(this);
+  appRegister = appRegister(this);
+  appLogin = appLogin(this);
+  getJWT = getJWT(this);
+
   appID?: string;
 
-  setupLoginButton = setupLoginButton;
+  setupLoginButton = setupLoginButton(this);
   buttonID?: string;
   redirectURL?: string;
-
+  HOST = 'localhost';
+  URL_API = 'https://api.localhost';
+  URL_APP = 'https://app.localhost';
+  WS_API = 'wss://api.localhost';
   db?: Database;
   loadingStatus = 'not started';
   isLocalReady = false;
   isRemoteReady = false;
-  loadCredentials = loadCredentials;
+  loadCredentials = loadCredentials(this);
   onLoadCredentialsStart?: () => any;
   onLoadCredentialsReady?: (credentials: Credentials) => any;
   onLoadCredentialsError?: (error: string) => any;
@@ -59,11 +68,15 @@ class EduVault {
   jwt?: string;
   remoteToken?: string;
 
+  loginWithChallenge = loginWithChallenge(this);
+
   startLocalDB = startLocalWrapped(this);
   onLocalStart?: () => any;
   onLocalReady?: (db: Database) => any;
 
+  startRemoteRaw = startRemoteDB(this);
   startRemoteDB = startRemoteWrapped(this);
+
   onRemoteStart?: () => any;
   onRemoteReady?: (db: Database) => any;
 

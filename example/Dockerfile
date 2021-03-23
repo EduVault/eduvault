@@ -13,7 +13,7 @@ COPY yarn.lock ./
 
 RUN yarn install
 COPY . .
-RUN ls node_modules/@eduvault
+# RUN ls node_modules/@eduvault
 FROM build-stage AS dev-stage
 # RUN yarn global add @vue/cli
 EXPOSE 8082

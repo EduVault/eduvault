@@ -5,7 +5,6 @@ import { Collection, Database, ThreadID } from '@textile/threaddb';
 import { CollectionConfig } from '@textile/threaddb/dist/cjs/local/collection';
 import { debounce, isEqual, difference } from 'lodash';
 
-import { API_WS } from '../config';
 import { EduVault } from '../index';
 
 export interface StartLocalDBOptions {
@@ -44,7 +43,8 @@ export interface StartRemoteDBOptions {
   onStart?: () => any;
   onReady?: (db: Database) => any;
 }
-export const startRemoteDB = async ({
+
+export const startRemoteDB = (self: EduVault) => async ({
   db,
   threadID,
   jwt,
@@ -55,7 +55,7 @@ export const startRemoteDB = async ({
   try {
     if (onStart) onStart();
     console.log({ db, threadID, privateKey });
-    const getUserAuth = loginWithChallenge(jwt, privateKey);
+    const getUserAuth = self.loginWithChallenge(jwt, privateKey);
     const userAuth = await getUserAuth();
     // console.log({ userAuth });
 
@@ -189,17 +189,17 @@ export const syncChanges = (self: EduVault) => {
   };
 };
 
-export function loginWithChallenge(
+export const loginWithChallenge = (self: EduVault) => (
   jwt: string,
   privateKey: PrivateKey
-): () => Promise<PersonAuth> {
+): (() => Promise<PersonAuth>) => {
   // we pass identity into the function returning function to make it
   // available later in the callback
   return () => {
     return new Promise((resolve, reject) => {
       /** Initialize our websocket connection */
       // console.log('jwt', jwt);
-      const socket = new WebSocket(API_WS);
+      const socket = new WebSocket(self.WS_API);
       /** Wait for our socket to open successfully */
       socket.onopen = async () => {
         if (!jwt || jwt === '') throw { error: 'no jwt' };
@@ -248,11 +248,11 @@ export function loginWithChallenge(
       };
     });
   };
-}
+};
 
 export const startRemoteWrapped = (self: EduVault) => {
   return async (options: StartRemoteDBOptions) => {
-    const remoteStart = await startRemoteDB(options);
+    const remoteStart = await self.startRemoteRaw(options);
     if ('error' in remoteStart) return { error: remoteStart.error };
     else {
       self.remoteToken = remoteStart.token;

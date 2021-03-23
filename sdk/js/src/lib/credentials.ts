@@ -1,9 +1,8 @@
 import { PrivateKey, ThreadID } from '@textile/threaddb';
 
 import { rehydratePrivateKey, testPrivateKey } from '../utils';
-import { isServerOnline, utils } from '../utils';
-
-import { appLogin, getJWT } from './APICalls';
+import { utils } from '../utils';
+import { EduVault } from '../';
 // import { ulid } from 'ulid';
 
 const { decrypt, encrypt } = utils;
@@ -38,7 +37,7 @@ export interface LoadCredentialsOptions {
  *  in both cases:
  *    use jwt to get userAuth  (for now must be online. look into whether userAuth can be in localStorage too)
  *    userAuth to start DB */
-export async function loadCredentials({
+export const loadCredentials = (self: EduVault) => async ({
   redirectURL,
   appID,
   log = false,
@@ -46,10 +45,13 @@ export async function loadCredentials({
   onStart,
   onReady,
   onError,
-}: LoadCredentialsOptions) {
+}: LoadCredentialsOptions) => {
   try {
     if (onStart) onStart();
-    const online = await isServerOnline();
+    let online = await self.isServerOnline();
+    if (!online) {
+      setTimeout(async () => (online = await self.isServerOnline()), 300);
+    }
     const queries = new URL(window.location.href).searchParams;
 
     /** Returning login */
@@ -101,7 +103,7 @@ export async function loadCredentials({
 
     let jwts = null;
     if (online && returningLogin) {
-      jwts = await getJWT();
+      jwts = await self.getJWT();
       if (log) console.log({ jwts });
       if (jwtEncryptedPrivateKey && jwts && jwts.jwt && threadID && pubKey) {
         console.log({ jwtEncryptedPrivateKey, jwts });
@@ -150,7 +152,7 @@ export async function loadCredentials({
         threadIDStr &&
         pwEncryptedPrivateKey
       ) {
-        const appLoginRes = await appLogin(appLoginToken, appID);
+        const appLoginRes = await self.appLogin(appLoginToken, appID);
         if (appLoginRes) {
           const { jwt, decryptToken } = appLoginRes;
           const keyStr = decrypt(encryptedPrivateKey, decryptToken);
@@ -197,4 +199,4 @@ export async function loadCredentials({
     if (onError) onError(JSON.stringify(error));
     return { error };
   }
-}
+};

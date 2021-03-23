@@ -49,6 +49,7 @@ export default Vue.extend({
       if (!appID) return console.log('no APP_ID');
       return new EduVault({
         appID,
+        eduvaultHost: process.env.VUE_APP_PROD_HOST,
         log: true,
         onLoadCredentialsStart: () => (this.loadingStatus = 'Loading Credentials'),
         onLoadCredentialsReady: (creds) => {

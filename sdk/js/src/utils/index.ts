@@ -3,15 +3,10 @@ import { PrivateKey } from '@textile/threaddb';
 import { EduVault } from '../index';
 import axios from 'axios';
 
-import {
-  URL_API,
-  //  EDUVAULT_APP_URL
-} from '../config';
-
-export const isServerOnline = async () => {
+export const isServerOnline = (self: EduVault) => async () => {
   try {
     // console.log('URL_API', URL_API);
-    const ping = await axios.get(URL_API + '/ping');
+    const ping = await axios.get(self.URL_API + '/ping');
     // console.log({ ping });
     return ping.status >= 200 && ping.status < 300;
   } catch (err) {

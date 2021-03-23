@@ -5,7 +5,6 @@ export const PORT_EXAMPLE = 8082;
 export const PORT_HOME_PAGE = 8083;
 export const PORT_CYPRESS = 9222;
 export const LOCAL_HOST = 'localhost';
-export const PROD_HOST = 'eduvault.org';
 export const PREFIX_APP = 'app.';
 export const PREFIX_EXAMPLE = 'example.';
 export const PREFIX_API = 'api.';
@@ -34,20 +33,6 @@ export const ROUTES = {
   DEV_VERIFY: '/dev/verify',
 
   TEXTILE_RENEW: '/renew-textile',
-};
-
-const HTTP = 'http://';
-const HTTPS = 'https://';
-
-/**
- * @returns http(s):// + prefix + host
- * @summary returns http if given localhost, https otherwise
- * @param  {string} prefix should have trailing . e.g. "app." or "api."
- * @param {string} host should include domain. e.g. "eduvault.org"
- * @example https://app.eduvault.org
- */
-export const formatURL = (prefix: string, host: string) => {
-  return `${host === 'localhost' ? HTTP : HTTPS}${prefix + host}`;
 };
 
 export const GOOGLE_CLIENT_ID =

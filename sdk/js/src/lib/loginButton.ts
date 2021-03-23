@@ -1,5 +1,4 @@
-import { URL_APP } from '../config';
-
+import { EduVault } from '../';
 export interface LoginButtonOptions {
   buttonID: string;
   redirectURL?: string;
@@ -11,7 +10,7 @@ export interface LoginButtonOptions {
 /** Adds a link to Eduvault login page to an <a> element
  * @param buttonID must be an <a> element
  */
-export const setupLoginButton = ({
+export const setupLoginButton = (self: EduVault) => ({
   buttonID,
   redirectURL,
   appID,
@@ -38,7 +37,7 @@ export const setupLoginButton = ({
   }
   try {
     if (!redirectURL) redirectURL = window.location.href;
-    const loginURL = `${URL_APP}?app_id=${appID}&redirect_url=${redirectURL}`;
+    const loginURL = `${self.URL_APP}?app_id=${appID}&redirect_url=${redirectURL}`;
     button.setAttribute('href', loginURL);
     if (onSuccess) onSuccess(loginURL);
     return { loginURL };

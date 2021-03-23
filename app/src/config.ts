@@ -1,9 +1,10 @@
 export { config } from '@eduvault/shared';
 import { config, utils } from '@eduvault/shared';
+// for local build
 import dotenv from 'dotenv';
 dotenv.config({ path: '../../.env' });
+
 export const {
-  formatURL,
   PREFIX_API,
   PREFIX_APP,
   PREFIX_EXAMPLE,
@@ -13,8 +14,10 @@ export const {
   PORT_APP,
   PORT_EXAMPLE,
 } = config;
-const PROD_HOST = process.env.SERVER_HOST || config.PROD_HOST;
+const PROD_HOST = process.env.VUE_APP_PROD_HOST;
 
+console.dir(process.env);
+console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
@@ -25,4 +28,4 @@ export const URL_EXAMPLE = `${HTTP}${PREFIX_EXAMPLE}${HOST}`;
 export const API_WS = 'wss://' + HOST;
 export const ROUTES = config.ROUTES;
 export const STORAGE_KEY = 'sourcelink';
-// export const [URL_EXAMPLE] = prefixes.map((prefix) => formatURL(prefix, HOST));
+// console.log({ URL_API, URL_APP, API_WS });

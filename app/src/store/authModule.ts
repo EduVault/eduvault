@@ -117,6 +117,7 @@ export default {
         username: string;
       },
     ): Promise<string | undefined> {
+      console.log({ url: URL_API + ROUTES.PASSWORD_AUTH });
       try {
         const queries = router.currentRoute.query;
         const [redirectURL, appID] = [
@@ -407,14 +408,14 @@ export default {
                 person.pubKey,
                 socialMediatype,
               );
-              // TO DO: 
+              // TO DO:
               // if (fromExternal) {
               //   window.location.href = toExternalPath(keys, person.threadIDStr);
               //   return null;
               // } else {
-                storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(person.threadIDStr));
-                router.push('/home');
-                return null;
+              storeNonPersistentAuthData(keys, jwts.jwt, ThreadID.fromString(person.threadIDStr));
+              router.push('/home');
+              return null;
               // }
             } else {
               router.push(toLoginPath);

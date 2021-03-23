@@ -1,58 +1,77 @@
 version: '3.7'
 services:
   app:
-    image: docker.io/jewcub/eduvault_app
-    volumes:
-      - dist-share:/app/dist
-      - './app:/app'
-      - '/app/node_modules'
-    stdin_open: true
-    env_file: 
-      ./.env
+    container_name: app
+    # image: docker.io/jewcub/eduvault_app
+    build:
+      context: ./app
+      target: prod-stage
+      dockerfile: Dockerfile_prod
+      args:
+        - PROD_HOST=${PROD_HOST}
+    env_file: ./.env
+    ports:
+      - 8081
     environment:
-      - NODE_ENV=production
+      - VIRTUAL_HOST=app.localhost
+      - VIRTUAL_PORT=8081
+
   example:
-    image: docker.io/jewcub/eduvault_example
-    volumes:
-      - example-dist-share:/app/dist
-      - './example:/example'
-      - '/example/node_modules'
-    stdin_open: true
+    container_name: example
+    # image: docker.io/jewcub/eduvault_example
+    build:
+      context: ./example
+      target: prod-stage
+      dockerfile: Dockerfile_prod
+      args:
+        - PROD_HOST=${PROD_HOST}
     env_file:
-      - ./.env        
+      - ./.env
+    ports:
+      - 8082
     environment:
-      - NODE_ENV=production
+      - VIRTUAL_HOST=example.localhost
+      - VIRTUAL_PORT=8082
+
   api:
-    image: docker.io/jewcub/eduvault_api
+    container_name: api
+    # image: docker.io/jewcub/eduvault_api
+    build:
+      context: ./api
+      target: prod-stage
+      dockerfile: Dockerfile_prod
     ports:
       - '3003:3003'
-    volumes:
-      - './api:/api'
-      - '/api/node_modules'
-    env_file: 
-      ./.env
+    env_file: ./.env
     environment:
-      - NODE_ENV=production
+      - VIRTUAL_HOST=api.localhost
+      - VIRTUAL_PORT=3003
 
-  home-page:
-    image: docker.io/jewcub/eduvault_home-page
-    volumes:
-      - './home-page:/home-page'
-      - '/home-page/node_modules'
-    ports:
-      - '8083:8083'
-    env_file: 
-      ./.env      
-    environment:
-      - NODE_ENV=production
+  # home-page:
+  #   container_name: home-page
+  #   # image: docker.io/jewcub/eduvault_home-page
+  #   build:
+  #     context: ./home-page
+  #     target: prod-stage
+  #     dockerfile: Dockerfile_prod
+  #   ports:
+  #     - '8083:8083'
+  #   env_file: ./.env
+  #   environment:
+  #     - NODE_ENV=development
+  #     - VIRTUAL_HOST=home.localhost
+  #     - VIRTUAL_PORT=8083
 
   nginx:
-    image: nginx:1.15-alpine
+    container_name: nginx-proxy
+    # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
+    image: ninanung/nginx-proxy # on mac m1
+    # image: jwilder/nginx-proxy
+    # restart with: docker exec -it nginx-proxy nginx -s reload
     restart: unless-stopped
     volumes:
-      - ./deploy/nginx/dev-build:/etc/nginx/conf.d
-      - dist-share:/var/www/app-dist
-      - example-dist-share:/var/www/example-dist
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./deploy/dev-certs:/etc/nginx/certs:ro
     ports:
       - '80:80'
       - '443:443'
@@ -60,9 +79,4 @@ services:
       - app
       - api
       - example
-      - home-page
-volumes:
-  dist-share:
-    driver: local
-  example-dist-share:
-    driver: local
+      # - home-page

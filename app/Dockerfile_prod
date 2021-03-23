@@ -6,10 +6,16 @@ COPY yarn.lock ./
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 # RUN yarn config set registry 'https://registry.npmjs.org/'
 
-RUN yarn install --production
+RUN yarn install --frozen-lockfile
 COPY . .
-FROM build-stage AS prod-stage
+FROM build-stage AS prod-build
 WORKDIR /app
-RUN yarn add -D @vue/cli-service
+ARG PROD_HOST='localhost'
+ENV VUE_APP_PROD_HOST=$PROD_HOST
+ENV NODE_ENV=production
 RUN yarn build
-COPY ./dist ./dist
+
+FROM nginx as prod-stage
+RUN mkdir /app
+COPY --from=prod-build /app/dist /app
+COPY nginx.conf /etc/nginx/nginx.conf

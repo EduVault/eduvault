@@ -15,14 +15,13 @@ import { newLocalDB } from './textile/helpers';
 import passportInit from './auth/passportInit';
 import routerInit from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
-import { config, CORS_CONFIG } from './config';
-import { utils } from './utils';
+import { config, CORS_CONFIG, URL_API, URL_APP } from './config';
+// import { utils } from './utils';
 // import { appSchema } from './models/app';
 // import { personSchema } from './models/person';
 const app = websockify(new Koa());
 app.proxy = true;
-const { isProdEnv } = utils;
-if (isProdEnv()) app.proxy = true;
+// const { isProdEnv } = utils;
 
 /** Middlewares */
 app.use(async function handleGeneralError(ctx, next) {
@@ -34,7 +33,7 @@ app.use(async function handleGeneralError(ctx, next) {
   }
 });
 app.use(cors(CORS_CONFIG));
-if (isProdEnv()) app.use(sslify({ resolver: xForwardedProtoResolver }));
+app.use(sslify({ resolver: xForwardedProtoResolver }));
 app.use(cookie());
 app.use(logger());
 app.use(bodyParser());
@@ -71,7 +70,11 @@ if (process.env.TEST !== 'true') {
     /** Websockets */
     personAuthRoute(app, db);
 
-    console.log(`Koa server listening at ${ip.address()}:${config.PORT_API}`);
+    console.log(
+      `Koa server listening at ${ip.address()}:${
+        config.PORT_API
+      } external url ${URL_API} app url ${URL_APP}`,
+    );
   });
 }
 

@@ -5,8 +5,11 @@ import { Credentials } from '../lib/credentials';
 export * from './model';
 export { types };
 
+/** suppressInit will only load the eduvaultHost into the API calls, toggle log (if provided) */
 export interface initOptions {
-  appID: string;
+  appID?: string;
+  eduvaultHost?: string;
+  suppressInit?: boolean;
   buttonID?: string;
   redirectURL?: string;
   log?: boolean;

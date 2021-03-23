@@ -19,10 +19,9 @@ COPY package.json ./
 RUN yarn install
 # RUN yarn install --frozen-lockfile
 COPY . .
-EXPOSE 3003 
 
 FROM build-stage AS dev-stage
-ENV PORT 3003
+ENV NODE_ENV=development
 
 # RUN yarn add global node-dev
 CMD ["yarn", "dev"]

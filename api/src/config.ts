@@ -5,10 +5,11 @@ import { config } from '@eduvault/shared';
 export { config };
 import { StrategyOptionsWithRequest } from 'passport-google-oauth20';
 import { StrategyOptionWithRequest } from 'passport-facebook';
+// only for local build
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
+// console.log({ env: process.env });
 export const {
-  formatURL,
   PREFIX_API,
   PREFIX_APP,
   PREFIX_EXAMPLE,
@@ -20,16 +21,27 @@ export const {
 } = config;
 export const { isProdEnv, isDockerEnv } = utils;
 
-const PROD_HOST = process.env.SERVER_HOST || config.PROD_HOST;
+const PROD_HOST = process.env.PROD_HOST;
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
-const HTTP = 'https://';
+const HTTP = 'http://';
+const HTTPS = 'https://';
 /** https://api.eduvault or https://api.localhost */
-export const URL_API = `${HTTP}${PREFIX_API}${HOST}`;
-export const URL_APP = `${HTTP}${PREFIX_APP}${HOST}`;
-export const URL_EXAMPLE = `${HTTP}${PREFIX_EXAMPLE}${HOST}`;
-// export const [URL_API, URL_APP, URL_EXAMPLE] = prefixes.map((prefix) => formatURL(prefix, HOST));
-export const validDomains = [URL_API, URL_APP, URL_EXAMPLE];
+export const URL_API = `${HTTPS}${PREFIX_API}${HOST}`;
+export const URL_APP = `${HTTPS}${PREFIX_APP}${HOST}`;
+export const URL_EXAMPLE = `${HTTPS}${PREFIX_EXAMPLE}${HOST}`;
+export const URL_API_HTTP = `${HTTP}${PREFIX_API}${HOST}`;
+export const URL_APP_HTTP = `${HTTP}${PREFIX_APP}${HOST}`;
+export const URL_EXAMPLE_HTTP = `${HTTP}${PREFIX_EXAMPLE}${HOST}`;
+// console.log({ URL_API, URL_APP });
+export const validDomains = [
+  URL_API,
+  URL_APP,
+  URL_EXAMPLE,
+  URL_API_HTTP,
+  URL_APP_HTTP,
+  URL_EXAMPLE_HTTP,
+];
 export const URL_CYPRESS = 'http://' + LOCAL_HOST + PORT_CYPRESS;
 if (isTestEnv()) validDomains.push(URL_CYPRESS);
 

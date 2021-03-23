@@ -70,9 +70,21 @@ Eduvault makes it trivially easy for developers to add such a database into an a
 
 Changing the .env files (see: example-env files in ./ ./example and ./sdk/js) to your own secrets, and updating the config.ts file in 'shared' should be enough to fork and run the project with your own domain name and Textile/Google/Facebook/DotWallet credentials.
 
-## Dev:local
+## Dev: local
 
-for local dev you must have nginx running using the configuration in `deploy/nginx/local/app.conf`. You can copy/symlink that to your local nginx folder, in my case `/usr/local/Homebrew/etc/nginx/servers`.
+### Get local SSL certs and cert authority
+
+install [mkcert](https://github.com/FiloSottile/mkcert/)
+then use the script `yarn make-certs` to generate certs for local development with ssl
+
+### set up local nginx
+
+Yyou must have nginx running on your machine, using the configuration in `deploy/nginx/local/app.conf`. You will probably need to edit the paths in there. Find location to your local nginx version `servers` folder. Then copy/symlink to that folder, in my case it was `/usr/local/Homebrew/etc/nginx/servers`.
+
+```bash
+# your nginx servers folder and nginx start command may vary
+ln deploy/nginx/local/app.conf /usr/local/Homebrew/etc/nginx/servers
+```
 
 then add the following to `/etc/hosts`:
 
@@ -90,8 +102,6 @@ yarn inst
 then start nginx with brew(mac) or systemctl (linux)
 
 ```bash
-# your nginx servers folder and nginx start command may vary
-ln deploy/nginx/local/app.conf /usr/local/Homebrew/etc/nginx/servers
 brew services start nginx
 ```
 
@@ -101,10 +111,16 @@ finally
 yarn dev
 ```
 
-## Dev:docker
+## Dev: with Docker
 
-Detects changes to ./app ./example ./api and ./home-page and hot-reloads
-Will not detect changes to ./shared and ./sdk/js. If you make changes to those, you will need to rebuild them and restart the docker image
+Only detects changes and hot-reloads these folders: ./app/src ./example/src ./api/src and ./home-page/src
+
+Will not detect changes to ./shared and ./sdk/js. If you make changes to those, you will need to rebuild them and restart the docker image. You will also need to replace the links e.g. `yarn remove:shared` then `yarn reinstall:shared`
+
+### Get local SSL certs and cert authority
+
+install [mkcert](https://github.com/FiloSottile/mkcert/)
+then use the script `yarn make-certs` to generate certs for local development with ssl
 
 ```
 yarn d-dev
@@ -113,6 +129,7 @@ yarn d-dev
 ### Test
 
 ```bash
+# --broken since move to https--
 # End to end integration test. with Cypress. Requires 'yarn dev' to be running.
 yarn test:e2e
 yarn test-watch:e2e # with watching/ hot-reloading
@@ -121,6 +138,7 @@ yarn test-watch:e2e # with watching/ hot-reloading
 yarn test:api
 yarn test-watch:api # with watching/ hot-reloading
 
+# --broken since move to https--
 # sdk test: somewhat integrated (requires API to be running -- `yarn dev:api`)
 yarn test:sdk-js
 yarn test-watch:sdk-js # with watching/ hot-reloading
@@ -129,7 +147,7 @@ yarn test-watch:sdk-js # with watching/ hot-reloading
 
 ### Dev deploy
 
-Recreate the production deploy on your local machine (without SSL) with:
+Recreate the production deploy on your local machine with:
 
 ```bash
 yarn dev-build
@@ -137,12 +155,8 @@ yarn dev-build
 
 ### To deploy
 
-for a staging build, change the .env SERVER_HOST to the staging server host name (e.g. staging-site.com)
+for a staging build, change the .env PROD_HOST to the staging server host name (e.g. staging-site.com)
 You can use the `dev-build` build for staging on your local machine or on the server.
-
-```bash
-yarn dev-build
-```
 
 for production deploy:
 

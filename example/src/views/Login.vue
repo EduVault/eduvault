@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { setupLoginButton } from '@eduvault/eduvault-js/dist/main';
+import EduVault from '@eduvault/eduvault-js/dist/main';
 import { setupApp } from '../eduvaultHelpers';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
@@ -34,7 +34,13 @@ export default {
       const onSuccess = (loginURL: string) => {
         console.log('button set up. redirect url: ' + loginURL);
       };
-      if (appID) setupLoginButton({ buttonID, appID, onSuccess });
+      if (appID) {
+        const eduvault = new EduVault({
+          suppressInit: true,
+          eduvaultHost: process.env.VUE_APP_PROD_HOST || 'localhost',
+        });
+        eduvault.setupLoginButton({ buttonID, appID, onSuccess });
+      }
     });
     const state = reactive({
       //

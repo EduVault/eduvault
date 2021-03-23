@@ -3,12 +3,14 @@ ENV PATH /api/node_modules/.bin:$PATH
 
 WORKDIR /api
 COPY package.json ./
-# COPY yarn.lock ./api/
+COPY yarn.lock ./api/
 
-RUN yarn install --production
-COPY . ./
+RUN yarn install --production  --frozen-lockfile
+COPY . .
 EXPOSE 3003 
 
 FROM build-stage AS prod-stage
+ENV NODE_ENV=production
+
 WORKDIR /api
 CMD ["yarn", "prod"]

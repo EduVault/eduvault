@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The login page, and user home page for a user-owned database focused on educational technology",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -32,16 +33,10 @@
     "js-cookie": "^2.2.1",
     "localforage": "^1.9.0",
     "lodash": "^4.17.19",
-    "quill-plugin-image-upload": "0.0.6",
     "register-service-worker": "^1.7.1",
-    "rollup": "^2.35.1",
     "uuid": "^8.2.0",
     "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
     "vue-cookies": "^1.7.3",
-    "vue-dompurify-html": "^2.2.1",
-    "vue-property-decorator": "^9.1.2",
-    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3",
     "vuex-persist": "^3.1.3"
@@ -60,7 +55,7 @@
     "@vue/cli-plugin-pwa": "~4.5.9",
     "@vue/cli-plugin-router": "~4.5.9",
     "@vue/cli-plugin-typescript": "~4.5.9",
-    "@vue/cli-plugin-unit-jest": "~4.5.9",
+      "@vue/cli-plugin-unit-jest": "~4.5.9",
     "@vue/cli-plugin-vuex": "~4.5.9",
     "@vue/cli-service": "~4.5.9",
     "@vue/eslint-config-prettier": "^6.0.0",
@@ -93,6 +88,6 @@
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest"
     },
     "testURL": "http://localhost/",
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$" 
   }
 }

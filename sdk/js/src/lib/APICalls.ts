@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { HOST, ROUTES, URL_API } from '../config';
+import { ROUTES } from '../config';
 import { types } from '../types';
 import { utils } from '../utils';
+import { EduVault } from '../index';
 const hash = utils.hash;
 type AppAuthReq = types.AppAuthReq;
 type AppAuthRes = types.AppAuthRes;
@@ -10,7 +11,7 @@ type DevVerifyReq = types.DevVerifyReq;
 type AppRegisterReq = types.AppRegisterReq;
 type PasswordLoginReq = types.PasswordLoginReq;
 
-export const personRegister = async (options: {
+export const personRegister = (self: EduVault) => async (options: {
   username: string | undefined;
   password: string | undefined;
   redirectURL?: string | undefined;
@@ -21,14 +22,14 @@ export const personRegister = async (options: {
     if (pwSigninData.error) throw pwSigninData.error;
     const postData: PasswordLoginReq = pwSigninData;
     const axiosOptions: AxiosRequestConfig = {
-      url: URL_API + ROUTES.PASSWORD_AUTH,
+      url: self.URL_API + ROUTES.PASSWORD_AUTH,
       headers: {
         'Content-Type': 'application/json',
         'X-Forwarded-Proto': 'https',
       },
       data: postData,
       method: 'POST',
-      baseURL: HOST,
+      baseURL: self.HOST,
       proxy: false,
     };
     const res = await axios(axiosOptions);
@@ -41,11 +42,14 @@ export const personRegister = async (options: {
   }
 };
 
-export const devVerify = async (appSecret: string, devID: string) => {
+export const devVerify = (self: EduVault) => async (
+  appSecret: string,
+  devID: string
+) => {
   try {
     const postData: DevVerifyReq = { appSecret, devID };
     const options: AxiosRequestConfig = {
-      url: URL_API + ROUTES.DEV_VERIFY,
+      url: self.URL_API + ROUTES.DEV_VERIFY,
       headers: {
         'Content-Type': 'application/json',
         'X-Forwarded-Proto': 'https',
@@ -62,11 +66,13 @@ export const devVerify = async (appSecret: string, devID: string) => {
     return null;
   }
 };
-export const clearCollections = async (appSecret: string) => {
+export const clearCollections = (self: EduVault) => async (
+  appSecret: string
+) => {
   try {
     const postData = { appSecret };
     const options: AxiosRequestConfig = {
-      url: URL_API + '/drop-collections',
+      url: self.URL_API + '/drop-collections',
       headers: {
         'Content-Type': 'application/json',
         'X-Forwarded-Proto': 'https',
@@ -83,7 +89,7 @@ export const clearCollections = async (appSecret: string) => {
     return null;
   }
 };
-export const appRegister = async (
+export const appRegister = (self: EduVault) => async (
   username: string,
   password: string,
   name: string,
@@ -99,7 +105,7 @@ export const appRegister = async (
       appID,
     };
     const options: AxiosRequestConfig = {
-      url: URL_API + ROUTES.APP_REGISTER,
+      url: self.URL_API + ROUTES.APP_REGISTER,
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
@@ -120,11 +126,14 @@ export const appRegister = async (
   }
 };
 
-export const appLogin = async (appLoginToken: string, appID: string) => {
+export const appLogin = (self: EduVault) => async (
+  appLoginToken: string,
+  appID: string
+) => {
   try {
     const data: AppAuthReq = { appLoginToken, appID };
     const options: AxiosRequestConfig = {
-      url: URL_API + '/auth/app',
+      url: self.URL_API + '/auth/app',
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
@@ -144,10 +153,10 @@ export const appLogin = async (appLoginToken: string, appID: string) => {
   }
 };
 
-export const getJWT = async () => {
+export const getJWT = (self: EduVault) => async () => {
   try {
     const options: AxiosRequestConfig = {
-      url: URL_API + ROUTES.GET_JWT,
+      url: self.URL_API + ROUTES.GET_JWT,
       withCredentials: true,
       headers: {
         'X-Forwarded-Proto': 'https',

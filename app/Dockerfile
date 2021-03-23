@@ -14,7 +14,7 @@ RUN yarn install
 COPY . .
 
 FROM build-stage AS dev-stage
-
+ENV NODE_ENV=development
 # npm kept failing here, so using yarn
 # RUN yarn global add @vue/cli
 EXPOSE 8081

@@ -64,6 +64,7 @@ import LoginMetamask from '../components/LoginMetamask.vue';
 import router from '../router';
 import store from '../store';
 interface State {
+  homePageLink: string;
   redirectURL?: string;
   appID?: string;
   email: string;
@@ -94,7 +95,7 @@ export default {
   },
   setup() {
     const state: State = reactive({
-      homePageLink: "https://home." + process.env.VUE_APP_PROD_HOST
+      homePageLink: 'https://home.' + process.env.VUE_APP_PROD_HOST,
       email: '',
       password: '',
       emailValidation: false,

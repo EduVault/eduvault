@@ -79,7 +79,7 @@ then use the script `yarn make-certs` to generate certs for local development wi
 
 ### set up local nginx
 
-Yyou must have nginx running on your machine, using the configuration in `deploy/nginx/local/app.conf`. You will probably need to edit the paths in there. Find location to your local nginx version `servers` folder. Then copy/symlink to that folder, in my case it was `/usr/local/Homebrew/etc/nginx/servers`.
+You must have nginx running on your machine, using the configuration in `deploy/nginx/local/app.conf`. You will probably need to edit the paths in there. Find location to your local nginx version `servers` folder. Then copy/symlink to that folder, in my case it was `/usr/local/Homebrew/etc/nginx/servers`.
 
 ```bash
 # your nginx servers folder and nginx start command may vary
@@ -115,12 +115,9 @@ yarn dev
 
 Only detects changes and hot-reloads these folders: ./app/src ./example/src ./api/src and ./home-page/src
 
-Will not detect changes to ./shared and ./sdk/js. If you make changes to those, you will need to rebuild them and restart the docker image. You will also need to replace the links e.g. `yarn remove:shared` then `yarn reinstall:shared`
+Will not detect changes to ./shared and ./sdk/js. If you make changes to those, you will need to rebuild them and restart the docker image. You will also need to replace the links e.g. `yarn remove:shared` then `yarn reinstall:shared`.
 
-### Get local SSL certs and cert authority
-
-install [mkcert](https://github.com/FiloSottile/mkcert/)
-then use the script `yarn make-certs` to generate certs for local development with ssl
+You will also need the mkcert certs mentioned above.
 
 ```
 yarn d-dev
@@ -155,9 +152,11 @@ Recreate the production deploy on your local machine with:
 yarn dev-build
 ```
 
+You will also need the mkcert certs mentioned above.
+
 ### To deploy
 
-for a staging build, change the .env PROD_HOST to the staging server host name (e.g. staging-site.com)
+Change the .env PROD_HOST to the staging/production server host name (e.g. staging-site.com)
 You can use the `dev-build` build for staging on your local machine or on the server.
 
 for production deploy:

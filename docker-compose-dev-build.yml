@@ -47,26 +47,26 @@ services:
       - VIRTUAL_HOST=api.localhost
       - VIRTUAL_PORT=3003
 
-  # home-page:
-  #   container_name: home-page
-  #   # image: docker.io/jewcub/eduvault_home-page
-  #   build:
-  #     context: ./home-page
-  #     target: prod-stage
-  #     dockerfile: Dockerfile_prod
-  #   ports:
-  #     - '8083:8083'
-  #   env_file: ./.env
-  #   environment:
-  #     - NODE_ENV=development
-  #     - VIRTUAL_HOST=home.localhost
-  #     - VIRTUAL_PORT=8083
+  home-page:
+    container_name: home-page
+    # image: docker.io/jewcub/eduvault_home-page
+    build:
+      context: ./home-page
+      target: prod-stage
+      dockerfile: Dockerfile_prod
+    ports:
+      - '8083:8083'
+    env_file: ./.env
+    environment:
+      - NODE_ENV=development
+      - VIRTUAL_HOST=home.localhost
+      - VIRTUAL_PORT=8083
 
   nginx:
     container_name: nginx-proxy
     # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
-    image: ninanung/nginx-proxy # on mac m1
-    # image: jwilder/nginx-proxy
+    # image: ninanung/nginx-proxy # on mac m1
+    image: jwilder/nginx-proxy
     # restart with: docker exec -it nginx-proxy nginx -s reload
     restart: unless-stopped
     volumes:
@@ -79,4 +79,4 @@ services:
       - app
       - api
       - example
-      # - home-page
+      - home-page

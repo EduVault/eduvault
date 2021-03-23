@@ -126,6 +126,8 @@ then use the script `yarn make-certs` to generate certs for local development wi
 yarn d-dev
 ```
 
+note: for mac m1 docker dev, you will need to change the nginx image in docker-compose.yml files. See the inline comments.
+
 ### Test
 
 ```bash

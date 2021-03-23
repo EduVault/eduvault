@@ -4,7 +4,7 @@
       <img class="mt-2" src="@/assets/eduvault-logo-word-bw.png" alt="" width="100px" />
       <p class="mb-0 mx-2">
         Own your data. Sync between learning apps.
-        <a class="secondary learn-more" href="https://eduvault.org">Learn more</a>
+        <a class="secondary learn-more" :href="state.homePageLink">Learn more</a>
       </p>
       <img class="security-option" src="@/assets/most-secure.png" width="150px" />
       <!-- <login-dotwallet></login-dotwallet> -->
@@ -94,6 +94,7 @@ export default {
   },
   setup() {
     const state: State = reactive({
+      homePageLink: "https://home." + process.env.VUE_APP_PROD_HOST
       email: '',
       password: '',
       emailValidation: false,

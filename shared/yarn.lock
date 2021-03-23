@@ -113,9 +113,9 @@
     "@textile/grpc-transport" "^0.4.0"
 
 "@textile/grpc-powergate-client@^2.3.0":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@textile/grpc-powergate-client/-/grpc-powergate-client-2.3.2.tgz#7a8d08670d9230ea8485cb21b65668159c9d676a"
-  integrity sha512-DbZlNnltpEXxe5waSG3GzL5tRQbHCC3lq7XV0jJh/IdbXIG+w5a/axV9Vt6U4FA+H8QZw8nXIaM0IQ6Ad1eb2A==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@textile/grpc-powergate-client/-/grpc-powergate-client-2.3.3.tgz#ea30dc33c13b87aa475113005545c5e5d34008bf"
+  integrity sha512-bAZJQRt0wU1Z7h5FMQ4Q7MWGI4FI1UQqPOMIFwPy2btRWGz63jdASBhqGHwZntDHp9hsJ/ZQ1qo/wwEyjquxQQ==
   dependencies:
     "@improbable-eng/grpc-web" "^0.14.0"
     "@types/google-protobuf" "^3.7.4"

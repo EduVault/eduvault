@@ -14,7 +14,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@eduvault/shared": "^1.1.25",
+    "@eduvault/shared": "^1.1.28",
     "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/vue-fontawesome": "^2.0.2",
@@ -55,7 +55,7 @@
     "@vue/cli-plugin-pwa": "~4.5.9",
     "@vue/cli-plugin-router": "~4.5.9",
     "@vue/cli-plugin-typescript": "~4.5.9",
-      "@vue/cli-plugin-unit-jest": "~4.5.9",
+    "@vue/cli-plugin-unit-jest": "~4.5.9",
     "@vue/cli-plugin-vuex": "~4.5.9",
     "@vue/cli-service": "~4.5.9",
     "@vue/eslint-config-prettier": "^6.0.0",
@@ -88,6 +88,6 @@
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest"
     },
     "testURL": "http://localhost/",
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$" 
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
   }
 }

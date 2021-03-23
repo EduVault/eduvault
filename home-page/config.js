@@ -1,9 +1,4 @@
-export const EDUVAULT_APP_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://eduvault.org/app/'
-    : 'http://localhost:8081'
+export const EDUVAULT_APP_URL = 'https://app.' + process.env.VUE_APP_PROD_HOST
 
-export const EXAMPLE_APP_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://eduvault.org/example/'
-    : 'http://localhost:8082'
+
+export const EXAMPLE_APP_URL = 'https://example.' + process.env.VUE_APP_PROD_HOST

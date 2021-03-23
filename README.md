@@ -121,6 +121,8 @@ You will also need the mkcert certs mentioned above.
 
 ```
 yarn d-dev
+# rebuild with
+yarn d-dev:build
 ```
 
 note: for mac m1 docker dev, you will need to change the nginx image in docker-compose.yml files. See the inline comments.
@@ -150,16 +152,22 @@ Recreate the production deploy on your local machine with:
 
 ```bash
 yarn dev-build
+## rebuild images wiht
+yarn dev-build:build
 ```
 
 You will also need the mkcert certs mentioned above.
 
-### To deploy
+### Porduction deploy
 
 Change the .env PROD_HOST to the staging/production server host name (e.g. staging-site.com)
+
 You can use the `dev-build` build for staging on your local machine or on the server.
 
-for production deploy:
+
+
+
+deploy:
 
 ```bash
 # connect to your server

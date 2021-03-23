@@ -2,85 +2,58 @@ version: '3.7'
 services:
   app:
     container_name: app
-    build:
-      context: ./app
-      target: prod-stage
-      dockerfile: Dockerfile_prod
-    volumes:
-      - dist-share:/app/dist
-    stdin_open: true
-    env_file: 
-      ./.env
+    image: docker.io/jewcub/eduvault_app:latest
+    env_file: ./.env
+    ports:
+      - 8081
     environment:
-      - NODE_ENV=production
+      - VIRTUAL_HOST=app.${PROD_HOST}
+      - VIRTUAL_PORT=8081
+
   example:
     container_name: example
-    build:
-      context: ./example
-      target: prod-stage
-      dockerfile: Dockerfile_prod
-    volumes:
-      - example-dist-share:/app/dist
-    stdin_open: true
+    image: docker.io/jewcub/eduvault_example:latest
     env_file:
-      - ./.env    
+      - ./.env
+    ports:
+      - 8082
     environment:
-      - NODE_ENV=production
+      - VIRTUAL_HOST=example.${PROD_HOST}
+      - VIRTUAL_PORT=8082
+
   api:
     container_name: api
-    build:
-      context: ./api
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/jewcub/eduvault_api:latest
     ports:
-      - '3003:3003'
-    env_file:
-      - ./.env      
+      - 3003
+    env_file: ./.env
     environment:
-      - NODE_ENV=production
+      - VIRTUAL_HOST=api.${PROD_HOST}
+      - VIRTUAL_PORT=3003
 
   home-page:
     container_name: home-page
-    build:
-      context: ./home-page
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/jewcub/eduvault_home-page:latest
     ports:
-      - '8083:8083'
-    env_file: 
-      ./.env      
+      - 8083
+    env_file: ./.env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - VIRTUAL_HOST=home.${PROD_HOST}
+      - VIRTUAL_PORT=8083
 
   nginx:
-    image: nginx:1.15-alpine
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy
     restart: unless-stopped
     volumes:
-      - ./deploy/nginx/prod:/etc/nginx/conf.d
-      - ./deploy/certbot/conf:/etc/letsencrypt
-      - ./deploy/certbot/www:/var/www/certbot
-      - dist-share:/var/www/app-dist
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./deploy/prod-certs:/etc/nginx/certs:ro
     ports:
       - '80:80'
       - '443:443'
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
     depends_on:
-      - certbot
       - app
       - api
       - example
       - home-page
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./deploy/certbot/conf:/etc/letsencrypt
-      - ./deploy/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
-volumes:
-  dist-share:
-    driver: local
-  example-dist-share:
-    driver: local    
-

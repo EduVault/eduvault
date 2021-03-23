@@ -134,4 +134,3 @@ privkey1.pem
 *key-certbot.pem
 *.sqlite
 home-page/assets/.DS_Store
-udo systemctl stop nginx

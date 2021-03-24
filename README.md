@@ -161,11 +161,9 @@ You will also need the mkcert certs mentioned above.
 ### Porduction deploy
 
 Change the .env PROD_HOST to the staging/production server host name (e.g. staging-site.com)
+change the host name in the make-dev-certs or make-prd-certs script and run it and copy the certs
 
 You can use the `dev-build` build for staging on your local machine or on the server.
-
-
-
 
 deploy:
 
@@ -184,12 +182,8 @@ git reset --hard origin/main
 git pull
 
 # ssh copy in .env file or manually edit
-## might also need to config /etc/hosts as per the local example?
-
-# First build:
-# Run script for SSL certificate: init-letsencrypt.sh (make sure to change url first)
-chmod +x init-letsencrypt.sh
-./init-letsencrypt.sh
-# subsequent builds:
-yarn production
+yarn d-build # build docker images. Can skip if already built.
+screen # to continue running
+yarn production # runs in detached mode. remove the -d for logs
+# ctrl a d  to quit screen
 ```

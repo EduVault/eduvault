@@ -16,12 +16,14 @@ import passportInit from './auth/passportInit';
 import routerInit from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
 import { config, CORS_CONFIG, URL_API, URL_APP } from './config';
-// import { utils } from './utils';
+import { isTestEnv, utils } from './utils';
+import { clearCollections } from './utils/clearCollections';
+import { populateDB } from './utils/populateDB';
 // import { appSchema } from './models/app';
 // import { personSchema } from './models/person';
 const app = websockify(new Koa());
 app.proxy = true;
-// const { isProdEnv } = utils;
+const { isProdEnv } = utils;
 
 /** Middlewares */
 app.use(async function handleGeneralError(ctx, next) {
@@ -33,7 +35,7 @@ app.use(async function handleGeneralError(ctx, next) {
   }
 });
 app.use(cors(CORS_CONFIG));
-app.use(sslify({ resolver: xForwardedProtoResolver }));
+if (!isTestEnv()) app.use(sslify({ resolver: xForwardedProtoResolver }));
 app.use(cookie());
 app.use(logger());
 app.use(bodyParser());
@@ -61,6 +63,11 @@ if (process.env.TEST !== 'true') {
     if ('error' in db) {
       console.log('error loading db');
       return;
+    }
+    // populate with dummy app info
+    if (!isProdEnv()) {
+      await clearCollections(db);
+      await populateDB(db);
     }
 
     /** Passport */

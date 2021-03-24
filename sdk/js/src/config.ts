@@ -14,8 +14,6 @@ export const {
 } = config;
 export const { isProdEnv, isDockerEnv } = utils;
 
-export const APP_SECRET = process.env.APP_SECRET || 'VerySecretPassword';
-// console.log({ APP_SECRET });
 export const ROUTES = config.ROUTES;
 
 const HTTP = 'https://';

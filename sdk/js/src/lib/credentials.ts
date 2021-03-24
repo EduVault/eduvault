@@ -48,10 +48,10 @@ export const loadCredentials = (self: EduVault) => async ({
 }: LoadCredentialsOptions) => {
   try {
     if (onStart) onStart();
-    let online = await self.isServerOnline();
-    if (!online) {
-      setTimeout(async () => (online = await self.isServerOnline()), 300);
-    }
+    const online = await self.isServerOnline();
+    // if (!online) {
+    //   setTimeout(async () => (online = await self.isServerOnline()), 300);
+    // }
     const queries = new URL(window.location.href).searchParams;
 
     /** Returning login */

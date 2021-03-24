@@ -17,10 +17,8 @@
       <!-- <b-link v-else class="nav__link" to="/login">Login</b-link> -->
       <b-navbar-nav>
         <!-- <b-link class="mt-3" to="/txlist">View my saved cards transactions</b-link> -->
-        <b-nav-text v-if="devEnv" @click="wipeDatabase" class="mt-3 pointer"
-          >wipe database</b-nav-text
-        >
-        <b-nav-text v-if="devEnv" @click="wipeLocal" class="mt-3 pointer">wipe local</b-nav-text>
+
+        <b-nav-text v-if="devEnv" @click="wipeLocal" class="mt-3 pointer">wipe local DB</b-nav-text>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -43,7 +41,6 @@ import { computed, defineComponent, reactive } from '@vue/composition-api';
 // import store from '../store';
 import axios from 'axios';
 import EduVault from '@eduvault/eduvault-js/dist/main';
-import { APP_SECRET } from '../config';
 import localForage from 'localforage';
 // import router from '../router';
 export default defineComponent({
@@ -65,10 +62,7 @@ export default defineComponent({
   },
   setup({ eduvault }) {
     const devEnv = computed(() => process.env.NODE_ENV === 'development');
-    const wipeDatabase = async () => {
-      console.log('wiping db', eduvault);
-      if (eduvault) await eduvault.clearCollections(APP_SECRET);
-    };
+
     const wipeLocal = () => {
       console.log('wiping local');
       localStorage.clear();
@@ -94,7 +88,7 @@ export default defineComponent({
       // store.commit.dbMod.LOGGEDIN(false);
     };
 
-    return { wipeDatabase, wipeLocal, devEnv, logout, openBucket, viewDeck, loggedIn };
+    return { wipeLocal, devEnv, logout, openBucket, viewDeck, loggedIn };
   },
 });
 </script>

@@ -94,9 +94,10 @@ const password = function (
         // strange bug where passport is returning false for the user, but accepting authentication. console logs aren't working within the strategy either
         console.log({ error, foundPerson });
         // so do another check here:
-        const valid = validPassword(data.password, person.password);
+        // const valid = validPassword(data.password, person.password);
         // console.log('password check: ', { valid });
-        if (error || !valid) {
+        //   if (error || !valid) {
+        if (error) {
           ctx.unauthorized(error, error);
         } else {
           await ctx.login(person);

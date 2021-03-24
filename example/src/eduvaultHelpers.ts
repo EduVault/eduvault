@@ -4,7 +4,10 @@ import defaultDeck from './assets/defaultDeck.json';
 import EduVault from '@eduvault/eduvault-js/dist/main';
 /** This will not be needed in a real app, as the developer just needs to register their app one time */
 export async function setupApp() {
-  const eduvault = new EduVault({ suppressInit: true });
+  const eduvault = new EduVault({
+    suppressInit: true,
+    eduvaultHost: process.env.VUE_APP_PROD_HOST,
+  });
   const username = 'person@email.com';
   const password = 'Password123';
   // console.log({ APP_SECRET });

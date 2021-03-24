@@ -910,10 +910,10 @@
     buffer "^5.4.3"
     seedrandom "^3.0.5"
 
-"@eduvault/eduvault-js@^1.2.15":
-  version "1.2.15"
-  resolved "https://registry.yarnpkg.com/@eduvault/eduvault-js/-/eduvault-js-1.2.15.tgz#4d9bdfda0b3ec9ba12850b15b2bb4064e8bb219c"
-  integrity sha512-vYaFelylKEEIKsok6tIhC00j3Dn7dEeJ6IlDTYN8yCZUMwYy0Qs9ceBtyFgRQBbv7BLLyDyZDu44zP5Xcra+Qw==
+"@eduvault/eduvault-js@^1.2.16":
+  version "1.2.16"
+  resolved "https://registry.yarnpkg.com/@eduvault/eduvault-js/-/eduvault-js-1.2.16.tgz#6141134057e3ec12699023f66c3d41cf91b6a6fd"
+  integrity sha512-4lkaGyDfRYrzVyqewNTp5yZubglhLWPEQy2EYrFynOSxS4BFqao8+KMb3B+iQ7FiWnxipXBBuL9ZfAgv57XQow==
   dependencies:
     "@eduvault/shared" "^1.1.28"
     "@textile/hub" "^6.0.2"

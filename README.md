@@ -16,7 +16,7 @@ Eduvault makes it trivially easy for developers to add such a database into an a
 
 - Because Textile ThreadDB only accepts key pair (PKI) challenges, we need progressive auth choices for easy onboarding:
 
-**least control**(oAuth2.0) -> **more control**(password) -> **most control** (crypto wallets/PKI.)
+**least control**(oAuth2.0 e.g. Google/Facebook) -> **more control**(password) -> **most control** (crypto wallets/PKI.)
 
 ### Discoverability, trust, and curation
 

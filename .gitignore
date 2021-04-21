@@ -136,3 +136,6 @@ privkey1.pem
 home-page/assets/.DS_Store
 deploy/dev-certs/
 deploy/prod-certs/
+access.log alias
+.gitignore
+error.log alias

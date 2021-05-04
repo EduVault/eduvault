@@ -5,7 +5,7 @@ WORKDIR /api
 COPY package.json ./
 COPY yarn.lock ./api/
 
-RUN yarn install --production  --frozen-lockfile
+RUN yarn install   
 COPY . .
 EXPOSE 3003 
 

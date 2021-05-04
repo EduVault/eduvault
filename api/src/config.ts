@@ -8,21 +8,14 @@ import { StrategyOptionWithRequest } from 'passport-facebook';
 // only for local build
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
-// console.log({ env: process.env });
-export const {
-  PREFIX_API,
-  PREFIX_APP,
-  PREFIX_EXAMPLE,
-  LOCAL_HOST,
-  PORT_CYPRESS,
-  PORT_EXAMPLE,
-  PORT_APP,
-  PORT_API,
-} = config;
+console.log({ env: process.env });
+export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
+const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
-
+export const PORT_API = parseInt(process.env.PORT_API) || 3003;
 const PROD_HOST = process.env.PROD_HOST;
-export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
+export const HOST = isProdEnv() ? 'eduvault-staging.click' : LOCAL_HOST;
+
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';
 const HTTPS = 'https://';

@@ -6,14 +6,17 @@ COPY yarn.lock ./
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 # RUN yarn config set registry 'https://registry.npmjs.org/'
 
-RUN yarn install --frozen-lockfile
+RUN yarn install 
 COPY . .
+
 FROM build-stage AS prod-build
 WORKDIR /app
-ARG PROD_HOST='localhost'
-ENV VUE_APP_PROD_HOST=$PROD_HOST
+# ARG PROD_HOST='localhost'
+ENV VUE_APP_PROD_HOST='eduvault-staging.click'
 ENV NODE_ENV=production
-RUN yarn build
+# We don't need to build if dist is already been copied with . .
+# was running into errors building for other architectures from mac m-1, so just build dist locally
+# RUN yarn build
 
 FROM nginx as prod-stage
 RUN mkdir /app

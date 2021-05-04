@@ -24,6 +24,8 @@ import { setupApp } from './eduvaultHelpers';
 import { loadDecks } from './eduvaultHelpers';
 import { Deck } from './types';
 import defaultDeck from './assets/defaultDeck.json';
+import { HOST } from './config';
+console.log({ env: process.env });
 
 export default Vue.extend({
   components: { Home, Login, Splash, TheNavbar },
@@ -49,7 +51,7 @@ export default Vue.extend({
       if (!appID) return console.log('no APP_ID');
       return new EduVault({
         appID,
-        eduvaultHost: process.env.VUE_APP_PROD_HOST,
+        eduvaultHost: HOST,
         log: true,
         onLoadCredentialsStart: () => (this.loadingStatus = 'Loading Credentials'),
         onLoadCredentialsReady: (creds) => {

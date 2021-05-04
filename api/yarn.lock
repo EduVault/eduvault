@@ -344,10 +344,10 @@
     buffer "^5.4.3"
     seedrandom "^3.0.5"
 
-"@eduvault/shared@^1.1.28":
-  version "1.1.28"
-  resolved "https://registry.yarnpkg.com/@eduvault/shared/-/shared-1.1.28.tgz#fb232f66631c106d280346d9aea0fdcf029bdc60"
-  integrity sha512-YDbzZDsPzlX0ydTQmUqTi7kXGNMWYCHHhoIOgzJ7DrV4rremJjoe8vjTQMVREpc7j8vYr1i6Epdd+4F/UEe6Dw==
+"@eduvault/shared@^1.1.30":
+  version "1.1.30"
+  resolved "https://registry.yarnpkg.com/@eduvault/shared/-/shared-1.1.30.tgz#8a316eabdb7e6d21838188cdd3c74c36cb82da9a"
+  integrity sha512-YjDJwTQYowdDgT62uQRQ1LY/4JniNXWojjgWky/tOxCDoT3ATPXt++eSOeL15vofpC8c6poj9q9QDLn1vpZ7zA==
   dependencies:
     "@textile/hub" "^6.0.2"
     "@types/bcryptjs" "^2.4.2"
@@ -3259,10 +3259,15 @@ globby@^11.0.1:
     merge2 "^1.3.0"
     slash "^3.0.0"
 
-google-protobuf@^3.13.0, google-protobuf@^3.15.0-rc.1, google-protobuf@^3.15.6, google-protobuf@^3.2.0:
+google-protobuf@^3.13.0, google-protobuf@^3.15.6, google-protobuf@^3.2.0:
   version "3.15.6"
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.15.6.tgz#2048055828530993a51df4d4ca2c08322fc1ec7c"
   integrity sha512-p65NyhIZFHFUxbIPOm6cygg2rCjK+2uDCxruOG3RaWKM9R4rBGX0STmlJoSOhoyAG8Fha7U8FP4pQomAV1JXsA==
+
+google-protobuf@^3.15.0-rc.1:
+  version "3.15.8"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.15.8.tgz#5f3948905e4951c867d6bc143f385a80e2a39efe"
+  integrity sha512-2jtfdqTaSxk0cuBJBtTTWsot4WtR9RVr2rXg7x7OoqiuOKopPrwXpM1G4dXIkLcUNRh3RKzz76C8IOkksZSeOw==
 
 graceful-fs@^4.1.2, graceful-fs@^4.2.4:
   version "4.2.6"

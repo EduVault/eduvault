@@ -1,3 +1,4 @@
+# digital ocean deploy requires certs to be generated and stored in the right folder before using
 version: '3.7'
 services:
   app:
@@ -25,11 +26,11 @@ services:
     container_name: api
     image: docker.io/jewcub/eduvault_api:latest
     ports:
-      - 3003
+      - ${PORT_API}
     env_file: ./.env
     environment:
       - VIRTUAL_HOST=api.${PROD_HOST}
-      - VIRTUAL_PORT=3003
+      - VIRTUAL_PORT=${PORT_API}
 
   home-page:
     container_name: home-page

@@ -1,9 +1,3 @@
-// PORTS will also set in .env. Make sure they match!
-export const PORT_API = 3003;
-export const PORT_APP = 8081;
-export const PORT_EXAMPLE = 8082;
-export const PORT_HOME_PAGE = 8083;
-export const PORT_CYPRESS = 9222;
 export const LOCAL_HOST = 'localhost';
 export const PREFIX_APP = 'app.';
 export const PREFIX_EXAMPLE = 'example.';

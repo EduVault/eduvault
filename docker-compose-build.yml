@@ -2,7 +2,7 @@ version: '3.7'
 services:
   app:
     container_name: app
-    # image: docker.io/jewcub/eduvault_app:latest
+    image: jewcub/eduvault_app:latest
     build:
       context: ./app
       target: prod-stage
@@ -11,14 +11,15 @@ services:
         - PROD_HOST=${PROD_HOST}
     env_file: ./.env
     ports:
-      - 8081
+      - ${PORT_APP}
     environment:
+      - NODE_ENV=production
       - VIRTUAL_HOST=app.${PROD_HOST}
-      - VIRTUAL_PORT=8081
+      - VIRTUAL_PORT=${PORT_APP}
 
   example:
     container_name: example
-    # image: docker.io/jewcub/eduvault_example:latest
+    image: jewcub/eduvault_example:latest
     build:
       context: ./example
       target: prod-stage
@@ -28,50 +29,52 @@ services:
     env_file:
       - ./.env
     ports:
-      - 8082
+      - ${PORT_EXAMPLE}
     environment:
+      - NODE_ENV=production
       - VIRTUAL_HOST=example.${PROD_HOST}
-      - VIRTUAL_PORT=8082
+      - VIRTUAL_PORT=${PORT_EXAMPLE}
 
   api:
     container_name: api
-    # image: docker.io/jewcub/eduvault_api:latest
+    image: jewcub/eduvault_api:latest
     build:
       context: ./api
       target: prod-stage
       dockerfile: Dockerfile_prod
     ports:
-      - 3003
+      - ${PORT_API}
     env_file: ./.env
     environment:
+      - NODE_ENV=production
       - VIRTUAL_HOST=api.${PROD_HOST}
-      - VIRTUAL_PORT=3003
+      - VIRTUAL_PORT=${PORT_API}
 
   home-page:
     container_name: home-page
-    # image: docker.io/jewcub/eduvault_home-page:latest
+    image: jewcub/eduvault_home-page:latest
     build:
       context: ./home-page
       target: prod-stage
       dockerfile: Dockerfile_prod
     ports:
-      - 8083
+      - ${PORT_HOME_PAGE}
     env_file: ./.env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - VIRTUAL_HOST=home.${PROD_HOST}
-      - VIRTUAL_PORT=8083
+      - VIRTUAL_PORT=${PORT_HOME_PAGE}
 
   nginx:
     container_name: nginx-proxy
     # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
-    # image: ninanung/nginx-proxy # on mac m1
-    image: jwilder/nginx-proxy
+    image: ninanung/nginx-proxy # on mac m1
+    # image: jwilder/nginx-proxy
     # restart with: docker exec -it nginx-proxy nginx -s reload
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./deploy/dev-certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - '80:80'
       - '443:443'
@@ -80,3 +83,6 @@ services:
       - api
       - example
       - home-page
+    # environment:
+    # Only for amazon staging
+    # - SSL_POLICY=AWS-TLS-1-2-2017-01

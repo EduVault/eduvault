@@ -139,3 +139,11 @@ deploy/prod-certs/
 access.log alias
 .gitignore
 error.log alias
+eduvault-ec2.pem
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.ebextensions/*
+# !.elasticbeanstalk/*.cfg.yml
+# !.elasticbeanstalk/*.global.yml
+home-page/assets/.DS_Store

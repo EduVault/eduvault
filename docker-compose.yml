@@ -1,90 +1,72 @@
-# use docker-compose build <service-name> to just rebuild one service
+# This is the amazon elastic beanstalk deploy version. The key difference with digital ocean deploy is that in nginx-proxy we don't use ssl and port 443. ssl is handled by the load balancer.
 version: '3.7'
 services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # this will re poll for image changes every 60s, could extend in final production
+    command: --interval 60
+
   app:
     container_name: app
-    build:
-      context: ./app
-      target: dev-stage
-    volumes:
-      - './app:/app'
-      - '/app/node_modules'
-    stdin_open: true
+    image: docker.io/jewcub/eduvault_app:latest
+    env_file:
+      - ./.env
     ports:
-      - '8081:8081'
+      - ${PORT_APP}
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-      - IN_DOCKER=true
-      - VIRTUAL_HOST=app.localhost
-      - VIRTUAL_PORT=8081
+      - NODE_ENV=production
+      - VIRTUAL_HOST=app.${PROD_HOST}
+      - VIRTUAL_PORT=${PORT_APP}
 
   example:
     container_name: example
-    build:
-      context: ./example
-      target: dev-stage
-    volumes:
-      - './example:/example'
-      - '/example/node_modules'
-    stdin_open: true
-    ports:
-      - '8082:8082'
+    image: docker.io/jewcub/eduvault_example:latest
     env_file:
       - ./.env
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-      - IN_DOCKER=true
-      - VIRTUAL_HOST=example.localhost
-      - VIRTUAL_PORT=8082
-
-  home-page:
-    container_name: home-page
-    build:
-      context: ./home-page
-      target: dev-stage
-    volumes:
-      - './home-page:/home-page'
-      - '/home-page/node_modules'
     ports:
-      - '8083'
+      - ${PORT_EXAMPLE}
+    expose:
+      - ${PORT_EXAMPLE}
     environment:
-      - NODE_ENV=development
-      - VIRTUAL_HOST=home.localhost
-      - VIRTUAL_PORT=8083
+      - NODE_ENV=production
+      - VIRTUAL_HOST=example.${PROD_HOST}
+      - VIRTUAL_PORT=${PORT_EXAMPLE}
 
   api:
     container_name: api
-    build:
-      context: ./api
-      target: dev-stage
+    image: docker.io/jewcub/eduvault_api:latest
     ports:
-      - '3003:3003'
-      - '9229:9229'
-    volumes:
-      - './api:/api'
-      - '/api/node_modules'
+      - ${PORT_API}
+    expose:
+      - ${PORT_API}
+    env_file: ./.env
     environment:
-      - NODE_ENV=development
-      - IN_DOCKER=true
-      - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=3003
+      - NODE_ENV=production
+      - VIRTUAL_HOST=api.${PROD_HOST}
+      - VIRTUAL_PORT=${PORT_API}
+
+  home-page:
+    container_name: home-page
+    image: docker.io/jewcub/eduvault_home-page:latest
+    ports:
+      - ${PORT_HOME_PAGE}
+    env_file: ./.env
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=home.${PROD_HOST}
+      - VIRTUAL_PORT=${PORT_HOME_PAGE}
 
   nginx:
-    container_name: nginx-proxy
-    # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
+    container_name: nginx
     # image: ninanung/nginx-proxy # on mac m1
     image: jwilder/nginx-proxy
-    # restart with: docker exec -it nginx-proxy nginx -s reload
     restart: unless-stopped
     volumes:
-      # - ./deploy/nginx/d-dev:/etc/nginx/conf.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./deploy/dev-certs:/etc/nginx/certs:ro
     ports:
       - '80:80'
-      - '443:443'
     depends_on:
       - app
       - api

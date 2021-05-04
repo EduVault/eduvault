@@ -14,6 +14,7 @@ import EduVault from '@eduvault/eduvault-js/dist/main';
 import { setupApp } from '../eduvaultHelpers';
 import { reactive, onMounted } from '@vue/composition-api';
 import { BImg } from 'bootstrap-vue';
+import { HOST } from '@/config';
 
 export default {
   name: 'Login',
@@ -35,9 +36,9 @@ export default {
         console.log('button set up. redirect url: ' + loginURL);
       };
       if (appID) {
-        const eduvault = new EduVault({
+        const eduvault = await new EduVault({
           suppressInit: true,
-          eduvaultHost: process.env.VUE_APP_PROD_HOST || 'localhost',
+          eduvaultHost: HOST,
         });
         eduvault.setupLoginButton({ buttonID, appID, onSuccess });
       }

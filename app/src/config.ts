@@ -4,22 +4,14 @@ import { config, utils } from '@eduvault/shared';
 import dotenv from 'dotenv';
 dotenv.config({ path: '../../.env' });
 
-export const {
-  PREFIX_API,
-  PREFIX_APP,
-  PREFIX_EXAMPLE,
-  LOCAL_HOST,
-  PORT_CYPRESS,
-  PORT_API,
-  PORT_APP,
-  PORT_EXAMPLE,
-} = config;
-const PROD_HOST = process.env.VUE_APP_PROD_HOST;
+export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
+// const PROD_HOST = process.env.VUE_APP_PROD_HOST
 
-console.dir(process.env);
 console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;
-export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
+export const HOST = 'eduvault-staging.click';
+// \: LOCAL_HOST;
+
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'https://';
 export const URL_API = `${HTTP}${PREFIX_API}${HOST}`;

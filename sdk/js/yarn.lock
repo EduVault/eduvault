@@ -478,10 +478,10 @@
   resolved "https://registry.yarnpkg.com/@cspell/dict-typescript/-/dict-typescript-1.0.16.tgz#18d20a91c4caf52540c795921a50b0e4ce3bc50c"
   integrity sha512-DEKi6vD605ebDhCC4Hrtz29k59TcijPVsmVKheTpMrL1MD/S96Ftb19gW0pEIVK9vwYZIljmGwgz4qYyuM5Liw==
 
-"@eduvault/shared@^1.1.28":
-  version "1.1.28"
-  resolved "https://registry.yarnpkg.com/@eduvault/shared/-/shared-1.1.28.tgz#fb232f66631c106d280346d9aea0fdcf029bdc60"
-  integrity sha512-YDbzZDsPzlX0ydTQmUqTi7kXGNMWYCHHhoIOgzJ7DrV4rremJjoe8vjTQMVREpc7j8vYr1i6Epdd+4F/UEe6Dw==
+"@eduvault/shared@^1.1.30":
+  version "1.1.30"
+  resolved "https://registry.yarnpkg.com/@eduvault/shared/-/shared-1.1.30.tgz#8a316eabdb7e6d21838188cdd3c74c36cb82da9a"
+  integrity sha512-YjDJwTQYowdDgT62uQRQ1LY/4JniNXWojjgWky/tOxCDoT3ATPXt++eSOeL15vofpC8c6poj9q9QDLn1vpZ7zA==
   dependencies:
     "@textile/hub" "^6.0.2"
     "@types/bcryptjs" "^2.4.2"

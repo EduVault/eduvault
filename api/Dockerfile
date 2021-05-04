@@ -17,7 +17,7 @@ COPY package.json ./
 # RUN yarn config set registry 'https://registry.npm.taobao.org'
 
 RUN yarn install
-# RUN yarn install --frozen-lockfile
+# RUN yarn install 
 COPY . .
 
 FROM build-stage AS dev-stage

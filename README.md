@@ -151,39 +151,51 @@ yarn test-watch:sdk-js # with watching/ hot-reloading
 Recreate the production deploy on your local machine with:
 
 ```bash
-yarn dev-build
-## rebuild images wiht
-yarn dev-build:build
+yarn build-run
+## rebuild images with
+yarn build-run:build
 ```
 
 You will also need the mkcert certs mentioned above.
 
-### Porduction deploy
+### Production deploy
+
+### Digital Ocean/other linux server
 
 Change the .env PROD_HOST to the staging/production server host name (e.g. staging-site.com)
-change the host name in the make-dev-certs or make-prd-certs script and run it and copy the certs
 
-You can use the `dev-build` build for staging on your local machine or on the server.
+Change the host name in the make-dev-certs or make-prd-certs script and run it and copy the certs
+
+You can use the `dev-build` build for staging on your local machine or on the server, in which case you'll want to change the PROD_HOST in .env to 'localhost'
 
 deploy:
 
 ```bash
 # connect to your server
-sudo su
 service docker start
-# copy code into server with git
+# copy code into server with git. This gets all of the source code, but really we only need the docker-compose-digital-ocean.yml file and the .env files.
 rm -fr .git # Reset old if need be
 git init
 git remote add origin https://github.com/EduVault/eduvault.git
-
 # to clear and start fresh. Beware, this can erase configurations like the ssl certs.
 git reset --hard origin/main
 # otherwise just
 git pull
 
-# ssh copy in .env file or manually edit
-yarn d-build # build docker images. Can skip if already built.
+# make sure you already have the .env file ready. ssh copy in file or manually edit
+
 screen # to continue running
-yarn production # runs in detached mode. remove the -d for logs
+docker-compose -f docker-compose-digital-ocean.yml up -d # runs in detached mode. remove the -d for logs
 # ctrl a d  to quit screen
+```
+
+Subsequent deploys can be done simply by pushing docker images to dockerhub. The watchtower image will see the updated docker image and refresh the app.
+
+#### Amazon Elastic Beanstalk deploys
+
+Get the elastic beanstalk cli tool.
+Make sure you have the .env file ready.
+
+```
+
 ```

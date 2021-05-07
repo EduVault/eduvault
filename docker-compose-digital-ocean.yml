@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     container_name: app
-    image: docker.io/jewcub/eduvault_app:latest
+    image: docker.io/eduvault/eduvault_app:latest
     env_file: ./.env
     ports:
       - 8081
@@ -13,7 +13,7 @@ services:
 
   example:
     container_name: example
-    image: docker.io/jewcub/eduvault_example:latest
+    image: docker.io/eduvault/eduvault_example:latest
     env_file:
       - ./.env
     ports:
@@ -24,7 +24,7 @@ services:
 
   api:
     container_name: api
-    image: docker.io/jewcub/eduvault_api:latest
+    image: docker.io/eduvault/eduvault_api:latest
     ports:
       - ${PORT_API}
     env_file: ./.env
@@ -34,7 +34,7 @@ services:
 
   home-page:
     container_name: home-page
-    image: docker.io/jewcub/eduvault_home-page:latest
+    image: docker.io/eduvault/eduvault_home-page:latest
     ports:
       - 8083
     env_file: ./.env
@@ -58,3 +58,9 @@ services:
       - api
       - example
       - home-page
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # this will re poll for image changes every 60s, could extend in final production
+    command: --interval 60

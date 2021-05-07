@@ -5,7 +5,7 @@
   "main": "dist/main/index.js",
   "typings": "dist/main/index.d.ts",
   "module": "dist/module/index.js",
-  "repository": "https://github.com/Jewcub/eduvault-test",
+  "repository": "https://github.com/eduvault/eduvault",
   "license": "MIT",
   "keywords": [],
   "scripts": {

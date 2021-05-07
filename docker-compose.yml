@@ -10,7 +10,7 @@ services:
 
   app:
     container_name: app
-    image: docker.io/jewcub/eduvault_app:latest
+    image: docker.io/eduvault/eduvault_app:latest
     env_file:
       - ./.env
     ports:
@@ -22,7 +22,7 @@ services:
 
   example:
     container_name: example
-    image: docker.io/jewcub/eduvault_example:latest
+    image: docker.io/eduvault/eduvault_example:latest
     env_file:
       - ./.env
     ports:
@@ -36,7 +36,7 @@ services:
 
   api:
     container_name: api
-    image: docker.io/jewcub/eduvault_api:latest
+    image: docker.io/eduvault/eduvault_api:latest
     ports:
       - ${PORT_API}
     expose:
@@ -49,7 +49,7 @@ services:
 
   home-page:
     container_name: home-page
-    image: docker.io/jewcub/eduvault_home-page:latest
+    image: docker.io/eduvault/eduvault_home-page:latest
     ports:
       - ${PORT_HOME_PAGE}
     env_file: ./.env

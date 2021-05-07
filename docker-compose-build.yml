@@ -2,7 +2,7 @@ version: '3.7'
 services:
   app:
     container_name: app
-    image: jewcub/eduvault_app:latest
+    image: eduvault/eduvault_app:latest
     build:
       context: ./app
       target: prod-stage
@@ -19,7 +19,7 @@ services:
 
   example:
     container_name: example
-    image: jewcub/eduvault_example:latest
+    image: eduvault/eduvault_example:latest
     build:
       context: ./example
       target: prod-stage
@@ -37,7 +37,7 @@ services:
 
   api:
     container_name: api
-    image: jewcub/eduvault_api:latest
+    image: eduvault/eduvault_api:latest
     build:
       context: ./api
       target: prod-stage
@@ -52,7 +52,7 @@ services:
 
   home-page:
     container_name: home-page
-    image: jewcub/eduvault_home-page:latest
+    image: eduvault/eduvault_home-page:latest
     build:
       context: ./home-page
       target: prod-stage

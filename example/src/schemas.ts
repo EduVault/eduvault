@@ -2,7 +2,7 @@ import { Database, JSONSchema } from '@eduvault/eduvault-js';
 
 export const cardSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  id: 'https://github.com/Jewcub/textile-flashcards',
+  id: 'https://github.com/eduvault/textile-flashcards',
   title: 'Card',
   type: 'object',
   properties: {
@@ -14,7 +14,7 @@ export const cardSchema = {
 
 export const deckSchema: JSONSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  id: 'https://github.com/Jewcub/textile-flashcards',
+  id: 'https://github.com/eduvault/textile-flashcards',
   title: 'Deck',
   type: 'object',
   definitions: {
@@ -45,7 +45,7 @@ export const deckSchema: JSONSchema = {
 // doesn't work yet
 export const fullSchema: JSONSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  id: 'https://github.com/Jewcub/textile-flashcards',
+  id: 'https://github.com/eduvault/textile-flashcards',
   definitions: {
     card: {
       title: 'Card',
@@ -57,7 +57,7 @@ export const fullSchema: JSONSchema = {
       },
     },
     deck: {
-      id: 'https://github.com/Jewcub/textile-flashcards/deck',
+      id: 'https://github.com/eduvault/textile-flashcards/deck',
       title: 'Deck',
       type: 'object',
       properties: {

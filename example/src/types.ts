@@ -52,7 +52,7 @@ export interface Deck {
 }
 export const deckSchemaOld = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  id: 'https://github.com/Jewcub/textile-app',
+  id: 'https://github.com/eduvault/textile-app',
   title: 'Deck',
   type: 'object',
   required: ['_id'],

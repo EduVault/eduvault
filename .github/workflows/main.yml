@@ -18,6 +18,7 @@ jobs:
           tags: latest
           registry: docker.io
           dockerfile: api/Dockerfile_prod
+          directory: api
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -28,6 +29,7 @@ jobs:
           tags: latest
           registry: docker.io
           dockerfile: app/Dockerfile_prod
+          directory: app
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           buildArgs: PROD_HOST=eduvault-staging.click
@@ -39,6 +41,7 @@ jobs:
           tags: latest
           registry: docker.io
           dockerfile: example/Dockerfile_prod
+          directory: example
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}    
           buildArgs: PROD_HOST=eduvault-staging.click
@@ -50,5 +53,6 @@ jobs:
           tags: latest
           registry: docker.io
           dockerfile: home-page/Dockerfile_prod
+          directory: home-page
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}          

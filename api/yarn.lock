@@ -767,7 +767,7 @@
     "@textile/users-grpc" "2.6.5"
     loglevel "^1.7.0"
 
-"@textile/hub@^6.0.2":
+"@textile/hub@^6.0.2", "@textile/hub@^6.1.2":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@textile/hub/-/hub-6.1.2.tgz#d200c5bb7e5d285e613f8c8a509291a5ebd21447"
   integrity sha512-BnmF1539+/939BmmHt+X7TzSrDgD3vkP5tBHZKksjppJn6q+6BJOPYdmWapt6S9YOTQAoCcYkkcr+xUdN8z3mA==

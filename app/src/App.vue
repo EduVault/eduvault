@@ -9,6 +9,7 @@
 <script>
 import AlertUpdatePWA from './components/AlertUpdatePWA.vue';
 // import TheNavbar from './components/TheNavbar.vue';
+console.log({ env: process.env });
 export default {
   components: {
     AlertUpdatePWA,

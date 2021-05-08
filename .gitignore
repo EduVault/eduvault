@@ -133,7 +133,7 @@ fullchain1.pem
 privkey1.pem
 *key-certbot.pem
 *.sqlite
-home-page/assets/.DS_Store
+*/**/.DS_Store
 deploy/dev-certs/
 deploy/prod-certs/
 access.log alias
@@ -142,8 +142,8 @@ error.log alias
 eduvault-ec2.pem
 
 # Elastic Beanstalk Files
-.elasticbeanstalk/*
-.ebextensions/*
+# .elasticbeanstalk/*
+# .ebextensions/*
 # !.elasticbeanstalk/*.cfg.yml
 # !.elasticbeanstalk/*.global.yml
-home-page/assets/.DS_Store
+

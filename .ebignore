@@ -1,9 +1,19 @@
+#ignore everything
 *
+# include .env file, but not the sdk's one
 !.env
 sdk/js/src/.env
 
+
 !docker-compose.yml
 !.elasticbeanstalk/config.yml
+
+# this is the load balncer plus https redirection
 # !.ebextensions/alb-http-to-https-redirection-full.config
-# !.ebextensions/alb-http-to-https-redirection.config
-# !.ebextensions/securelistener-alb.config
+
+# this separates them into two
+!.ebextensions/alb-http-to-https-redirection.config
+!.ebextensions/securelistener-alb.config
+
+# websockets
+# !.ebextensions/enable-websockets.config

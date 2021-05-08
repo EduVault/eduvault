@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@main
 
       - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image
+        name: Build & push Docker image - api
         with:
           image: eduvault/eduvault_api
           tags: latest
@@ -19,3 +19,35 @@ jobs:
           dockerfile: api/Dockerfile_prod
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - app
+        with:
+          image: eduvault/eduvault_app
+          tags: latest
+          registry: docker.io
+          dockerfile: app/Dockerfile_prod
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildArgs: PROD_HOST=${{ secrets.STAGING_HOST }}
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - example
+        with:
+          image: eduvault/eduvault_example
+          tags: latest
+          registry: docker.io
+          dockerfile: example/Dockerfile_prod
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}    
+          buildArgs: PROD_HOST=${{ secrets.STAGING_HOST }}
+          
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - home-page
+        with:
+          image: eduvault/eduvault_home-page
+          tags: latest
+          registry: docker.io
+          dockerfile: home-page/Dockerfile_prod
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}          

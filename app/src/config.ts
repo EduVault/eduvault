@@ -5,11 +5,11 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '../../.env' });
 
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
-// const PROD_HOST = process.env.VUE_APP_PROD_HOST
+const PROD_HOST = process.env.VUE_APP_PROD_HOST;
 
 console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;
-export const HOST = 'eduvault-staging.click';
+export const HOST = PROD_HOST || 'eduvault-staging.click';
 // \: LOCAL_HOST;
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];

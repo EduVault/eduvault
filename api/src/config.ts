@@ -14,7 +14,7 @@ const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
 export const PORT_API = parseInt(process.env.PORT_API) || 3003;
 const PROD_HOST = process.env.PROD_HOST;
-export const HOST = isProdEnv() ? 'eduvault-staging.click' : LOCAL_HOST;
+export const HOST = isProdEnv() ? PROD_HOST || 'eduvault-staging.click' : LOCAL_HOST;
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';

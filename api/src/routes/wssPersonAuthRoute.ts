@@ -12,6 +12,20 @@ import { config } from '../config';
 import { DefaultState, Context, Middleware } from 'koa';
 import { Database } from '@textile/threaddb';
 
+// const generateChallenge = async (pubKey: string) => {
+//   if (!pubKey) {
+//     throw new Error('missing public key');
+//   }
+//   const db = await newClientDB();
+//   let response: Uint8Array;
+//   db.getToken()
+//   const token = await db.getTokenChallenge(pubKey, (challenge) => {
+//     response = challenge;
+//   });
+
+//   return JSON.stringify(Buffer.from(response).toJSON());
+// };
+
 interface wsMessageData {
   jwt?: string;
   type:

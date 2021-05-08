@@ -30,7 +30,7 @@ jobs:
           dockerfile: app/Dockerfile_prod
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          buildArgs: PROD_HOST=${{ secrets.STAGING_HOST }}
+          buildArgs: PROD_HOST=eduvault-staging.click
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - example
@@ -41,7 +41,7 @@ jobs:
           dockerfile: example/Dockerfile_prod
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}    
-          buildArgs: PROD_HOST=${{ secrets.STAGING_HOST }}
+          buildArgs: PROD_HOST=eduvault-staging.click
           
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - home-page

@@ -7,8 +7,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Latest Repo
-        uses: actions/checkout@main
+      - uses: actions/checkout@v2
+        with:
+          ref: staging
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

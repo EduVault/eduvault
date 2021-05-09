@@ -49,11 +49,11 @@ export const ROUTES = config.ROUTES;
 export const CORS_CONFIG: cors.Options = {
   credentials: true,
   origin: (ctx) => {
-    console.log(
-      '===================================ctx.request.header.origin===================================\n',
+    // console.log(
+    //   '===================================ctx.request.header.origin===================================\n',
 
-      { nodeENV: process.env.NODE_ENV, validDomains, headersOrigin: ctx.request.header.origin },
-    );
+    //   { nodeENV: process.env.NODE_ENV, validDomains, headersOrigin: ctx.request.header.origin },
+    // );
     if (validDomains.indexOf(ctx.request.header.origin) !== -1) {
       // console.log('\n is valid domain');
       return ctx.request.header.origin;

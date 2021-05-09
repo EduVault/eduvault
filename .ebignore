@@ -9,11 +9,11 @@ sdk/js/src/.env
 !.elasticbeanstalk/config.yml
 
 # this is the load balncer plus https redirection
-# !.ebextensions/alb-http-to-https-redirection-full.config
+!.ebextensions/alb-http-to-https-redirection-full.config
 
 # this separates them into two
 # !.ebextensions/securelistener-alb.config
-!.ebextensions/alb-http-to-https-redirection.config
+# !.ebextensions/alb-http-to-https-redirection.config
 
 # websockets
 !.ebextensions/enable-websockets.config

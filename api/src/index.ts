@@ -21,7 +21,7 @@ import { clearCollections } from './utils/clearCollections';
 import { populateDB } from './utils/populateDB';
 // import { appSchema } from './models/app';
 // import { personSchema } from './models/person';
-const app = websockify(new Koa(), {});
+const app = websockify(new Koa());
 app.proxy = true;
 // app.keys = [APP_SECRET];
 const { isProdEnv } = utils;
@@ -39,7 +39,7 @@ app.use(cors(CORS_CONFIG));
 console.log({ PORT_API });
 console.log({ env: process.env });
 
-app.use(sslify({ resolver, port: PORT_API }));
+app.use(sslify({ resolver }));
 // if (!isTestEnv()) app.use(sslify({ resolver: xForwardedProtoResolver }));
 app.use(cookie());
 app.use(logger());

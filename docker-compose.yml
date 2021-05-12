@@ -13,7 +13,7 @@ services:
     image: docker.io/eduvault/eduvault_app:latest
     env_file:
       - ./.env
-    ports:
+    expose:
       - ${PORT_APP}
     environment:
       - NODE_ENV=production
@@ -25,8 +25,6 @@ services:
     image: docker.io/eduvault/eduvault_example:latest
     env_file:
       - ./.env
-    ports:
-      - ${PORT_EXAMPLE}
     expose:
       - ${PORT_EXAMPLE}
     environment:
@@ -37,8 +35,6 @@ services:
   api:
     container_name: api
     image: docker.io/eduvault/eduvault_api:latest
-    ports:
-      - ${PORT_API}
     expose:
       - ${PORT_API}
     env_file: ./.env
@@ -50,7 +46,7 @@ services:
   home-page:
     container_name: home-page
     image: docker.io/eduvault/eduvault_home-page:latest
-    ports:
+    expose:
       - ${PORT_HOME_PAGE}
     env_file: ./.env
     environment:

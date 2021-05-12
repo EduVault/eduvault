@@ -40,7 +40,7 @@ console.log({ PORT_API });
 console.log({ env: process.env });
 
 app.use(sslify({ resolver }));
-// if (!isTestEnv()) app.use(sslify({ resolver: xForwardedProtoResolver }));
+// if (!isTestEnv()) app.use(sslify({ resolver }));
 app.use(cookie());
 app.use(logger());
 app.use(bodyParser());

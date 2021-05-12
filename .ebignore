@@ -1,4 +1,4 @@
-#ignore everything
+# ignore everything
 *
 # include .env file, but not the sdk's one
 !.env

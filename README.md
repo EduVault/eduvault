@@ -199,3 +199,28 @@ Make sure you have the .env file ready.
 ```
 
 ```
+
+### staging
+
+make sure your .env file is complete
+get elastic beanstalk cli
+
+```bash
+# before create or deploy, you need to check out your .ebignore
+
+
+eb create
+# create a new eb environment. it will pull the images from docker hub
+
+# if you are making changes to the images
+yarn push-build # builds from your machine and pushes to docker hub
+yarn push-build:api # just rebuild the api
+
+
+# If you are making changes to the docker-compose file, eb config
+# either deploy new app:
+eb create
+
+# update:
+eb deploy <name of environment>
+```

@@ -19,7 +19,7 @@ const WSS = 'wss://';
 export const URL_API = `${HTTPS}${PREFIX_API}${HOST}`;
 export const URL_APP = `${HTTP}${PREFIX_APP}${HOST}`;
 export const URL_EXAMPLE = `${HTTP}${PREFIX_EXAMPLE}${HOST}`;
-export const API_WS = `${WSS}${HOST}`;
+export const API_WS = `${WSS}${PREFIX_API}${HOST}`;
 export const ROUTES = config.ROUTES;
 export const STORAGE_KEY = 'sourcelink';
 // console.log({ URL_API, URL_APP, API_WS });

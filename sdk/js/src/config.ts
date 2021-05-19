@@ -12,4 +12,4 @@ const HTTPS = 'https://';
 const WSS = 'wss://';
 export const formatURLApp = (host: string) => `${HTTP}${PREFIX_APP}${host}`;
 export const formatURLApi = (host: string) => `${HTTPS}${PREFIX_API}${host}`;
-export const formatWSApi = (host: string) => `${WSS}${host}`;
+export const formatWSApi = (host: string) => `${WSS}${PREFIX_API}${host}`;

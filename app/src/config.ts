@@ -13,7 +13,7 @@ export const HOST = 'eduvault-staging.click';
 // \: LOCAL_HOST;
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
-const HTTP = 'https://';
+const HTTP = 'http://';
 export const URL_API = `${HTTP}${PREFIX_API}${HOST}`;
 export const URL_APP = `${HTTP}${PREFIX_APP}${HOST}`;
 export const URL_EXAMPLE = `${HTTP}${PREFIX_EXAMPLE}${HOST}`;

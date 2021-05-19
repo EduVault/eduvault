@@ -1,3 +1,4 @@
+import { isProdEnv } from '@eduvault/shared/dist/utils';
 import { Buckets, PrivateKey } from '@textile/hub';
 import { Database, JSONSchema, ThreadID } from '@textile/threaddb';
 import {
@@ -30,9 +31,8 @@ import { setupLoginButton } from './lib/loginButton';
 import { initOptions } from './types';
 import { checkConnectivityClearBacklog, isServerOnline } from './utils';
 
-
 class EduVault {
-  log?= false;
+  log? = false;
   isBrowserOnline = () => navigator.onLine;
   isServerOnline = isServerOnline(this);
   isOnline = () => this.isServerOnline() && this.isServerOnline();
@@ -53,7 +53,7 @@ class EduVault {
   setupLoginButton = setupLoginButton(this);
   buttonID?: string;
   redirectURL?: string;
-  HOST = 'eduvault.org';
+  HOST = isProdEnv() ? 'localhost' : 'eduvault-staging.click';
   URL_APP = formatURLApp(this.HOST);
   URL_API = formatURLApi(this.HOST);
   WS_API = formatWSApi(this.HOST);

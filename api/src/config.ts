@@ -12,7 +12,7 @@ console.log({ env: process.env });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
-export const PORT_API = parseInt(process.env.PORT_API) || 3003;
+export const PORT_API = parseInt(process.env.PORT_API) || 30333;
 const PROD_HOST = process.env.PROD_HOST;
 console.log({ PROD_HOST });
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
@@ -72,8 +72,10 @@ export const SESSION_OPTIONS = {
   // overwrite: true /** (boolean) can overwrite or not (default true) */,
   httpOnly: !isTestEnv() /** (boolean) httpOnly or not (default true) */,
   // signed: true /** (boolean) signed or not (default true) */,
-  rolling: true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
-  renew: true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
+  rolling:
+    true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
+  renew:
+    true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
   secure: !isTestEnv() /** (boolean) isProdEnv() secure cookie*/,
   sameSite: isTestEnv() ? false : 'none',
   /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */

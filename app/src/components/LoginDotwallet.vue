@@ -24,7 +24,7 @@ export default {
       dotwalletRedirectUrl:
         process.env.NODE_ENV === 'production'
           ? 'https://' + URL_API_ROOT + DOTWALLET_AUTH
-          : 'http://' + '172.19.0.3' + ':3003' + DOTWALLET_AUTH, //this doesn't work. need to manually change back to localhost after redirect fails
+          : 'http://' + '172.19.0.3' + ':30333' + DOTWALLET_AUTH, //this doesn't work. need to manually change back to localhost after redirect fails
     };
   },
   methods: {

@@ -36,4 +36,4 @@ make install
 make dev
 ```
 
-> server will be available on `localhost:<The port number you used in .env file>` eg. `localhost:3003`
+> server will be available on `localhost:<The port number you used in .env file>` eg. `localhost:30333`

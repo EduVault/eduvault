@@ -10,7 +10,9 @@ services:
       - './app:/app'
       - '/app/node_modules'
     stdin_open: true
-    ports:
+    env_file: 
+      - ./.env
+    expose:
       - ${PORT_APP}
     environment:
       - CHOKIDAR_USEPOLLING=true
@@ -28,7 +30,9 @@ services:
       - './example:/example'
       - '/example/node_modules'
     stdin_open: true
-    ports:
+    env_file: 
+      - ./.env    
+    expose:
       - ${PORT_EXAMPLE}
     env_file:
       - ./.env
@@ -48,7 +52,9 @@ services:
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'
-    ports:
+    env_file: 
+      - ./.env      
+    expose:
       - ${PORT_HOME_PAGE}
     environment:
       - NODE_ENV=development
@@ -60,8 +66,11 @@ services:
     build:
       context: ./api
       target: dev-stage
-    ports:
+    env_file: 
+      - ./.env      
+    expose:
       - ${PORT_API}
+    ports:
       - '9229:9229'
     volumes:
       - './api:/api'

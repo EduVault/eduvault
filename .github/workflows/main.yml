@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Build and test
         run: |
-          yarn build-run-ci:build
+          yarn build-run-ci
           yarn test:e2e
         env:
           TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}

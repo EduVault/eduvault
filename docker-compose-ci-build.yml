@@ -45,8 +45,6 @@ services:
       - NODE_ENV=production
       - VIRTUAL_HOST=api.localhost
       - VIRTUAL_PORT=30333
-      - TEXTILE_ORG_API_SECRET=${TEXTILE_ORG_API_SECRET}
-      - TEXTILE_USER_API_SECRET=${TEXTILE_USER_API_SECRET}
 
   home-page:
     container_name: home-page

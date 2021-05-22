@@ -1,4 +1,4 @@
-name:  Staging push Docker images
+name: Staging push Docker images
 on:
   push:
     branches:
@@ -6,10 +6,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.13.x]
     steps:
       - uses: actions/checkout@v2
         with:
           ref: staging
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Build and test
+        run: |
+          yarn build-run:build
+          yarn test:e2e
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api
@@ -43,9 +55,9 @@ jobs:
           dockerfile: example/Dockerfile_prod
           directory: example
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}    
+          password: ${{ secrets.DOCKER_PASSWORD }}
           buildArgs: PROD_HOST=eduvault-staging.click
-          
+
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - home-page
         with:
@@ -55,4 +67,4 @@ jobs:
           dockerfile: home-page/Dockerfile_prod
           directory: home-page
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}          
+          password: ${{ secrets.DOCKER_PASSWORD }}

@@ -8,17 +8,18 @@
         alt="EDUVAULT logo"
       />
     </div>
-    <div class="my-auto flex-col">
-      <h1 class="text-center">EDUVAULT</h1>
-      <h2 class="text-center">YOUR DATA</h2>
-      <h2 class="text-center">YOUR EDUCATION</h2>
-      <h2 class="text-center">ANYWHERE</h2>
-      <p
+    <div class="my-auto flex-col text-center">
+      <h1 data-testid="eduvault-title">EDUVAULT</h1>
+      <h2>YOUR DATA</h2>
+      <h2>YOUR EDUCATION</h2>
+      <h2>ANYWHERE</h2>
+      <button
+        data-testid="button-try-now"
         class="bg-orange text-center text-white py-1 px-2 mt-2 w-32 rounded mx-auto cursor-pointer"
         @click="scrollToElement('try-now')"
       >
         TRY NOW
-      </p>
+      </button>
     </div>
   </div>
 </template>

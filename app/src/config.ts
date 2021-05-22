@@ -2,7 +2,7 @@ export { config } from '@eduvault/shared';
 import { config, utils } from '@eduvault/shared';
 // for local build
 import dotenv from 'dotenv';
-dotenv.config({ path: '../../.env' });
+if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../../.env' });
 
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 const PROD_HOST = process.env.VUE_APP_PROD_HOST;

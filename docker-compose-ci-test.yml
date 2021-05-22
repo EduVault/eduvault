@@ -45,6 +45,7 @@ services:
       - NODE_ENV=production
       - VIRTUAL_HOST=api.localhost
       - VIRTUAL_PORT=30333
+      - APP_SECRET='testing-secret'
 
   home-page:
     container_name: home-page

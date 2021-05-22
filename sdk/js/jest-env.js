@@ -1,7 +1,7 @@
 const Environment = require('jest-environment-node');
 const fetch = require('isomorphic-fetch');
 const dotenv = require('dotenv');
-dotenv.config({ path: './src/.env' });
+if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: './src/.env' });
 /**
  * A custom environment to set the TextEncoder that is required by Textile js.
  * add --env=./jest-env.js to jest call in package.json script

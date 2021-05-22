@@ -7,7 +7,7 @@ import { StrategyOptionsWithRequest } from 'passport-google-oauth20';
 import { StrategyOptionWithRequest } from 'passport-facebook';
 // only for local build
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
+if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../.env' });
 console.log({ env: process.env });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 const PORT_CYPRESS = 9229;

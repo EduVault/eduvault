@@ -12,7 +12,7 @@ console.log({ env: process.env });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
-export const PORT_API = parseInt(process.env.PORT_API) || 30333;
+export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
 console.log({ PROD_HOST });
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;

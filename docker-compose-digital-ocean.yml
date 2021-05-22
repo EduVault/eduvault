@@ -5,7 +5,7 @@ services:
     container_name: app
     image: docker.io/eduvault/eduvault_app:latest
     env_file: ./.env
-    ports:
+    expose:
       - 8081
     environment:
       - VIRTUAL_HOST=app.${PROD_HOST}
@@ -16,7 +16,7 @@ services:
     image: docker.io/eduvault/eduvault_example:latest
     env_file:
       - ./.env
-    ports:
+    expose:
       - 8082
     environment:
       - VIRTUAL_HOST=example.${PROD_HOST}
@@ -25,21 +25,22 @@ services:
   api:
     container_name: api
     image: docker.io/eduvault/eduvault_api:latest
-    ports:
-      - ${PORT_API}
+    expose:
+      - 30333
     env_file: ./.env
     environment:
       - VIRTUAL_HOST=api.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_API}
+      - VIRTUAL_PORT=30333
 
   home-page:
     container_name: home-page
     image: docker.io/eduvault/eduvault_home-page:latest
-    ports:
+    expose:
       - 8083
     env_file: ./.env
     environment:
       - NODE_ENV=development
+      - VUE_APP_PROD_HOST=${PROD_HOST}
       - VIRTUAL_HOST=home.${PROD_HOST}
       - VIRTUAL_PORT=8083
 

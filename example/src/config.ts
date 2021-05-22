@@ -1,3 +1,3 @@
 export const STORAGE_KEY = 'sourcelink';
-// export const HOST = 'eduvault-staging.click';
-export const HOST = process.env.NODE_ENV === 'production' ? 'eduvault-staging.click' : 'localhost';
+const PROD_HOST = process.env.VUE_APP_PROD_HOST;
+export const HOST = process.env.NODE_ENV === 'production' ? PROD_HOST : 'localhost';

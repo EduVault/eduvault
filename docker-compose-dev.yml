@@ -13,13 +13,13 @@ services:
     env_file: 
       - ./.env
     expose:
-      - ${PORT_APP}
+      - 8081
     environment:
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=development
       - IN_DOCKER=true
       - VIRTUAL_HOST=app.localhost
-      - VIRTUAL_PORT=${PORT_APP}
+      - VIRTUAL_PORT=8081
 
   example:
     container_name: example
@@ -33,7 +33,7 @@ services:
     env_file: 
       - ./.env    
     expose:
-      - ${PORT_EXAMPLE}
+      - 8082
     env_file:
       - ./.env
     environment:
@@ -41,7 +41,7 @@ services:
       - NODE_ENV=development
       - IN_DOCKER=true
       - VIRTUAL_HOST=example.localhost
-      - VIRTUAL_PORT=${PORT_EXAMPLE}
+      - VIRTUAL_PORT=8082
       - VUE_APP_PROD_HOST=%{PROD_HOST}
 
   home-page:
@@ -55,11 +55,11 @@ services:
     env_file: 
       - ./.env      
     expose:
-      - ${PORT_HOME_PAGE}
+      - 8083
     environment:
       - NODE_ENV=development
       - VIRTUAL_HOST=home.localhost
-      - VIRTUAL_PORT=${PORT_HOME_PAGE}
+      - VIRTUAL_PORT=8083
 
   api:
     container_name: api
@@ -69,7 +69,7 @@ services:
     env_file: 
       - ./.env      
     expose:
-      - ${PORT_API}
+      - 30333
     ports:
       - '9229:9229'
     volumes:
@@ -79,7 +79,7 @@ services:
       - NODE_ENV=development
       - IN_DOCKER=true
       - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=${PORT_API}
+      - VIRTUAL_PORT=30333
 
   nginx:
     container_name: nginx-proxy

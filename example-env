@@ -1,7 +1,3 @@
-PORT_API=3004
-PORT_APP=8081
-PORT_EXAMPLE=8082
-PORT_HOME_PAGE=8083
 PROD_HOST="eduvault.org"
 APP_SECRET="just a random key. Generate with ulid/uuid etc."
 TEXTILE_USER_API_SECRET="get from https://docs.textile.io/hub/apis/"

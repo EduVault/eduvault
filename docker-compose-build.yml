@@ -10,12 +10,12 @@ services:
       args:
         - PROD_HOST=${PROD_HOST}
     env_file: ./.env
-    ports:
-      - ${PORT_APP}
+    expose:
+      - 8081
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=app.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_APP}
+      - VIRTUAL_PORT=8081
 
   example:
     container_name: example
@@ -28,12 +28,12 @@ services:
         - PROD_HOST=${PROD_HOST}
     env_file:
       - ./.env
-    ports:
-      - ${PORT_EXAMPLE}
+    expose:
+      - 8082
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=example.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_EXAMPLE}
+      - VIRTUAL_PORT=8082
 
   api:
     container_name: api
@@ -42,13 +42,13 @@ services:
       context: ./api
       target: prod-stage
       dockerfile: Dockerfile_prod
-    ports:
-      - ${PORT_API}
+    expose:
+      - 30333
     env_file: ./.env
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=api.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_API}
+      - VIRTUAL_PORT=30333
 
   home-page:
     container_name: home-page
@@ -57,13 +57,14 @@ services:
       context: ./home-page
       target: prod-stage
       dockerfile: Dockerfile_prod
-    ports:
-      - ${PORT_HOME_PAGE}
+    expose:
+      - 8083
     env_file: ./.env
     environment:
       - NODE_ENV=production
+      - VUE_APP_PROD_HOST=${PROD_HOST}
       - VIRTUAL_HOST=home.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_HOME_PAGE}
+      - VIRTUAL_PORT=8083
 
   nginx:
     container_name: nginx-proxy

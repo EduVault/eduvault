@@ -9,8 +9,7 @@ const PROD_HOST = process.env.VUE_APP_PROD_HOST;
 
 console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;
-export const HOST = 'eduvault-staging.click';
-// \: LOCAL_HOST;
+export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';

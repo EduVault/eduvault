@@ -14,11 +14,11 @@ services:
     env_file:
       - ./.env
     expose:
-      - ${PORT_APP}
+      - 8081
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=app.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_APP}
+      - VIRTUAL_PORT=8081
 
   example:
     container_name: example
@@ -26,33 +26,34 @@ services:
     env_file:
       - ./.env
     expose:
-      - ${PORT_EXAMPLE}
+      - 8082
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=example.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_EXAMPLE}
+      - VIRTUAL_PORT=8082
 
   api:
     container_name: api
     image: docker.io/eduvault/eduvault_api:latest
     expose:
-      - ${PORT_API}
+      - 30333
     env_file: ./.env
     environment:
       - NODE_ENV=production
+      - VUE_APP_PROD_HOST=${PROD_HOST}
       - VIRTUAL_HOST=api.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_API}
+      - VIRTUAL_PORT=30333
 
   home-page:
     container_name: home-page
     image: docker.io/eduvault/eduvault_home-page:latest
     expose:
-      - ${PORT_HOME_PAGE}
+      - 8083
     env_file: ./.env
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=home.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_HOME_PAGE}
+      - VIRTUAL_PORT=8083
 
   nginx:
     container_name: nginx

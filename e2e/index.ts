@@ -3,7 +3,7 @@ import { NightwatchBrowser } from 'nightwatch';
 export const HappyPath = (browser: NightwatchBrowser) => {
   browser
     .url('https://home.localhost')
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 500000)
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 1000000)
     .assert.containsText('h1', 'EDUVAULT')
     .click('button[data-testid="button-try-now"]');
   browser.expect.element('a[data-testid="link-example"]').is.visible;

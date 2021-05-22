@@ -20,8 +20,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Build and test
         run: |
-          yarn build-run:build
+          yarn build-run-ci:build
           yarn test:e2e
+        env:
+          TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
+          TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
+          PROD_HOST: localhost
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

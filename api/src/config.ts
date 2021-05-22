@@ -8,13 +8,11 @@ import { StrategyOptionWithRequest } from 'passport-facebook';
 // only for local build
 import dotenv from 'dotenv';
 if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../.env' });
-console.log({ env: process.env });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
 export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
-console.log({ PROD_HOST });
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
@@ -110,3 +108,13 @@ export const FACEBOOK_CONFIG = {
 } as StrategyOptionWithRequest;
 
 export const SYNC_DEBOUNCE_TIME = isTestEnv() ? 1000 : 5000;
+
+console.log({
+  NODE_ENV: process.env.NODE_ENV,
+  APP_SECRET,
+  PROD_HOST,
+  HOST,
+  PORT_API,
+  GITHUB_ACTIONS: process.env.GITHUB_ACTIONS,
+  SESSION_OPTIONS,
+});

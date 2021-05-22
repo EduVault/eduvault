@@ -36,8 +36,6 @@ app.use(async function handleGeneralError(ctx, next) {
   }
 });
 app.use(cors(CORS_CONFIG));
-console.log({ PORT_API });
-// console.log({ env: process.env });
 
 app.use(sslify({ resolver }));
 // if (!isTestEnv()) app.use(sslify({ resolver }));

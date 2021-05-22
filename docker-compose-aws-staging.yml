@@ -10,7 +10,7 @@ services:
 
   app:
     container_name: app
-    image: docker.io/eduvault/eduvault_app:production
+    image: docker.io/eduvault/eduvault_app:staging
     env_file:
       - ./.env
     expose:
@@ -22,7 +22,7 @@ services:
 
   example:
     container_name: example
-    image: docker.io/eduvault/eduvault_example:production
+    image: docker.io/eduvault/eduvault_example:staging
     env_file:
       - ./.env
     expose:
@@ -34,7 +34,7 @@ services:
 
   api:
     container_name: api
-    image: docker.io/eduvault/eduvault_api:production
+    image: docker.io/eduvault/eduvault_api:staging
     expose:
       - 30333
     env_file: ./.env
@@ -46,7 +46,7 @@ services:
 
   home-page:
     container_name: home-page
-    image: docker.io/eduvault/eduvault_home-page:production
+    image: docker.io/eduvault/eduvault_home-page:staging
     expose:
       - 8083
     env_file: ./.env

@@ -70,11 +70,11 @@ if (process.env.TEST !== 'true') {
       console.log('error loading db');
       return;
     }
-    await populateDB(db);
-    // populate with dummy app info
     if (!isProdEnv()) {
       await clearCollections(db);
     }
+    await populateDB(db);
+    // populate with dummy app info
 
     /** Passport */
     const passport = passportInit(app, db);

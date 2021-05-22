@@ -1,0 +1,17 @@
+{
+  "include": ["e2e"],
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "types": [
+      "node",
+      "nightwatch"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "outDir": "test-build",
+    "target": "es5"
+  }
+}

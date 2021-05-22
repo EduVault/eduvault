@@ -140,6 +140,8 @@ access.log alias
 .gitignore
 error.log alias
 eduvault-ec2.pem
+test-build
+tests_output
 
 # Elastic Beanstalk Files
 # .elasticbeanstalk/*

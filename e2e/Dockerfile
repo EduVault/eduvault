@@ -20,6 +20,7 @@ RUN apt-get install -yqq apt-transport-https
 # ----------------
 # Allow us to download and unpack things
 # ----------------
+RUN apt-get install -y apt-transport-https
 RUN apt-get install -yqq curl
 RUN apt-get install -yqq wget
 RUN apt-get install -yqq unzip

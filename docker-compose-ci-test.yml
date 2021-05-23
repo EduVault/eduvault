@@ -59,7 +59,7 @@ services:
     environment:
       - NODE_ENV=production
       - VUE_APP_PROD_HOST=localhost
-      - VIRTUAL_HOST=home.localhost
+      - VIRTUAL_HOST=home.localhost,localhost
       - VIRTUAL_PORT=8083
 
   nginx:

@@ -52,7 +52,7 @@ services:
     env_file: ./.env
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=home.${PROD_HOST}
+      - VIRTUAL_HOST=home.${PROD_HOST},${PROD_HOST}
       - VIRTUAL_PORT=8083
 
   nginx:

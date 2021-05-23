@@ -41,7 +41,7 @@ services:
     environment:
       - NODE_ENV=development
       - VUE_APP_PROD_HOST=${PROD_HOST}
-      - VIRTUAL_HOST=home.${PROD_HOST}
+      - VIRTUAL_HOST=home.${PROD_HOST},${PROD_HOST}
       - VIRTUAL_PORT=8083
 
   nginx:

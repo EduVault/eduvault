@@ -134,7 +134,7 @@ privkey1.pem
 *key-certbot.pem
 *.sqlite
 */**/.DS_Store
-deploy/dev-certs/
+# deploy/dev-certs/
 deploy/prod-certs/
 access.log alias
 .gitignore

@@ -2,6 +2,9 @@ import { NightwatchBrowser } from 'nightwatch';
 
 export const HappyPath = (browser: NightwatchBrowser) => {
   browser
+    .url('http://localhost')
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 1200000)
+    .assert.containsText('h1', 'EDUVAULT')
     .url('https://home.localhost')
     .waitForElementPresent('h1[data-testid="eduvault-title"]', 1200000)
     .assert.containsText('h1', 'EDUVAULT')

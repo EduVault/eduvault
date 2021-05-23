@@ -58,7 +58,7 @@ services:
       - 8083
     environment:
       - NODE_ENV=development
-      - VIRTUAL_HOST=home.localhost
+      - VIRTUAL_HOST=home.localhost,localhost
       - VIRTUAL_PORT=8083
 
   api:

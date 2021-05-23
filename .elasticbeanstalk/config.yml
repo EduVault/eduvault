@@ -1,8 +1,8 @@
 branch-defaults:
   main:
-    environment: eduvault-staging-dev3
+    environment: production
   staging:
-    environment: https-full-with-wss
+    environment: staging
 global:
   application_name: eduvault-staging
   branch: null

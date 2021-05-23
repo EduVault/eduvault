@@ -4,8 +4,10 @@
 !.env
 sdk/js/src/.env
 
-
+# switch these before staging or deployment elastic beanstalk environment deploy 
 !docker-compose.yml
+# !docker-compose-aws-staging.yml
+
 !.elasticbeanstalk/config.yml
 
 # this is the load balncer plus https redirection

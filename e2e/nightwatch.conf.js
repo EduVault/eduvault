@@ -1,5 +1,5 @@
 // eslint-disable-next-line camelcase
-const src_folders = ["test-build"];
+const src_folders = ["../test-build"];
 const webdriver = {
   start_process: true,
   server_path: "node_modules/.bin/chromedriver",

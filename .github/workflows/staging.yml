@@ -32,7 +32,7 @@ jobs:
       #     url: 'http://localhost'
       #     responseCode: '200'
       #     timeout: 200000
-      - name: Build
+      - name: Build and run test
         run: yarn build-run-ci
         env:
           TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
@@ -40,9 +40,6 @@ jobs:
           PROD_HOST: localhost
 
           interval: 500
-
-      - name: Test
-        run: yarn test:e2e
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

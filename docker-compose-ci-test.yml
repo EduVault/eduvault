@@ -58,7 +58,7 @@ services:
       - VIRTUAL_HOST=home.localhost,localhost
       - VIRTUAL_PORT=8083
 
-  nginx:
+  nginx-proxy:
     container_name: nginx-proxy
     # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
     # image: ninanung/nginx-proxy # on mac m1
@@ -78,3 +78,13 @@ services:
     # environment:
     # Only for amazon staging
     # - SSL_POLICY=AWS-TLS-1-2-2017-01
+
+  e2e:
+    container_name: e2e
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile
+      network: host
+    command: 'yarn test'
+    depends_on:
+      - nginx-proxy

@@ -18,12 +18,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Build
-        run: yarn build-run-ci
-        env:
-          TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
-          TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
-          PROD_HOST: localhost
       - name: install
         run: |
           yarn install
@@ -37,7 +31,14 @@ jobs:
         with:
           url: 'http://localhost'
           responseCode: '200'
-          timeout: 2000000
+          timeout: 200000
+      - name: Build
+        run: yarn build-run-ci
+        env:
+          TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
+          TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
+          PROD_HOST: localhost
+
           interval: 500
 
       - name: Test

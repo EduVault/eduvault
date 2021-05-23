@@ -24,6 +24,16 @@ jobs:
           TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
           TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
           PROD_HOST: localhost
+      - name: make certs
+        run: yarn make-certs
+      - name: wait for server to start
+        uses: cygnetdigital/wait_for_response@v2.0.0
+        with:
+          url: 'http://localhost'
+          responseCode: '200'
+          timeout: 2000000
+          interval: 500
+
       - name: Test
         run: yarn install && yarn test:e2e
 

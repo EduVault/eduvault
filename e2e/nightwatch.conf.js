@@ -1,5 +1,5 @@
 // eslint-disable-next-line camelcase
-const src_folders = ["../test-build"];
+const src_folders = ["./test-build"];
 const webdriver = {
   start_process: true,
   server_path: "node_modules/.bin/chromedriver",
@@ -40,5 +40,5 @@ const headless = {
   }
 };
 
-const config = process.env.GITHUB_ACTIONS ? headless : headed;
+const config = process.env.GITHUB_ACTIONS || process.env.HEADLESS_E2E ? headless : headed;
 module.exports = config;

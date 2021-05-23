@@ -1,5 +1,5 @@
 {
-  "include": ["e2e"],
+  "include": ["tests"],
   "compilerOptions": {
     "strict": true,
     "moduleResolution": "node",
@@ -11,7 +11,7 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "outDir": "test-build",
+    "outDir": "./test-build",
     "target": "es5"
   }
 }

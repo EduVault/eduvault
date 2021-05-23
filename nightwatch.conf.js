@@ -12,7 +12,9 @@ const headed = {
   test_settings: {
     default: {
       desiredCapabilities: {
-        browserName: "chrome"
+        browserName: "chrome",
+        acceptSslCerts: true,
+        javascriptEnabled: true,
       }
     }
   }

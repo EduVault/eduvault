@@ -2,10 +2,7 @@ import { NightwatchBrowser } from 'nightwatch';
 
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
-  browser
-    .url('https://github.com/eduvault/eduvault')
-    .waitForElementPresent('body')
-    .assert.titleContains('Google');
+  browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
   // check base url working
   // browser
   //   .url('http://localhost')

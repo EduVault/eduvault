@@ -4,15 +4,18 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
   browser
     .url('https://github.com/eduvault/eduvault')
+    .waitForElementNotPresent('body')
     .waitForElementPresent('input[value="Google Search"]');
   // check base url working
   // browser
   //   .url('http://localhost')
+  //   .waitForElementNotPresent('body')
   //   .waitForElementPresent('h1[data-testid="eduvault-title"]', 1200000)
   //   .assert.containsText('h1', 'EDUVAULT')
   // check home subdomain
   browser
     .url('https://home.localhost')
+    .waitForElementNotPresent('body')
     .waitForElementPresent('h1[data-testid="eduvault-title"]', 1200000)
     .assert.containsText('h1', 'EDUVAULT')
     .click('button[data-testid="button-try-now"]');

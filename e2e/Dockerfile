@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV NODE_VERSION=8.11.3
+ENV NODE_VERSION=12.14.x
 
 RUN apt-get -qq update
 RUN apt-get -yqq upgrade

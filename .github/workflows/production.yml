@@ -31,7 +31,7 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api
         with:
-          image: eduvault/eduvault_api:
+          image: eduvault/eduvault_api
           tags: production
           registry: docker.io
           dockerfile: api/Dockerfile_prod

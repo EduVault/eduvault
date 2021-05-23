@@ -1,25 +1,35 @@
-import { NightwatchBrowser } from 'nightwatch';
+import { NightwatchAPI, NightwatchBrowser, NightwatchCallbackResult } from 'nightwatch';
 
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
   browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
   // check base url working
-  // browser
-  //   .url('http://localhost')
-  //   .waitForElementNotPresent('body')
-  //   .waitForElementPresent('h1[data-testid="eduvault-title"]', 1200000)
-  //   .assert.containsText('h1', 'EDUVAULT')
+  browser
+    .url('http://localhost')
+    .waitForElementPresent('body')
+    .waitForElementPresent(
+      'h1[data-testid="eduvault-title"]',
+      10000,
+      false,
+      function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+        console.log({ browser: this, result });
+        this.getText('body', function (result) {
+          console.log({ result });
+        });
+      },
+    )
+    .assert.containsText('h1', 'EDUVAULT');
   // check home subdomain
   browser
-    .url('https://home.localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 1200000)
+    .url('http://home.localhost')
+    .waitForElementPresent('body', 10000)
+    .waitForElementPresent('h1[data-testid="eduvault-title"]')
     .assert.containsText('h1', 'EDUVAULT')
     .click('button[data-testid="button-try-now"]');
   browser.expect.element('a[data-testid="link-example"]').is.visible;
   browser.click('a[data-testid="link-example"]');
   // navigates to example
-  browser.waitForElementVisible('img.eduvault-button');
+  browser.waitForElementVisible('img.eduvault-button', 10000);
   browser.click('img.eduvault-button');
   browser.waitForElementPresent('input[type=email]');
   browser.setValue('input[type=email]', 'example@somewhere.com');

@@ -25,7 +25,11 @@ jobs:
           TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
           PROD_HOST: localhost
       - name: install
-        run: yarn install
+        run: |
+          yarn install
+          sudo apt install libnss3-tools
+          brew install mkcert
+          mkcert -install
       - name: make certs
         run: yarn make-certs
       - name: wait for server to start

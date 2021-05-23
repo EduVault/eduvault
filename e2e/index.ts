@@ -2,10 +2,10 @@ import { NightwatchAPI, NightwatchBrowser, NightwatchCallbackResult } from 'nigh
 
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
-  browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
+  // browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
   // check base url working
   browser
-    .url('http://localhost')
+    .url('https://localhost')
     .waitForElementPresent('body')
     .waitForElementPresent(
       'h1[data-testid="eduvault-title"]',
@@ -17,13 +17,21 @@ export const HappyPath = (browser: NightwatchBrowser) => {
           console.log({ result });
         });
       },
-    )
-    .assert.containsText('h1', 'EDUVAULT');
+    );
+  // .assert.containsText('h1', 'EDUVAULT');
+  browser
+    .url('http://localhost')
+    .waitForElementPresent('body')
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
+  browser
+    .url('https://home.localhost')
+    .waitForElementPresent('body')
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   // check home subdomain
   browser
     .url('http://home.localhost')
-    .waitForElementPresent('body', 10000)
-    .waitForElementPresent('h1[data-testid="eduvault-title"]')
+    .waitForElementPresent('body')
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false)
     .assert.containsText('h1', 'EDUVAULT')
     .click('button[data-testid="button-try-now"]');
   browser.expect.element('a[data-testid="link-example"]').is.visible;

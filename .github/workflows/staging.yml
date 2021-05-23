@@ -26,12 +26,12 @@ jobs:
           mkcert -install
       - name: make certs
         run: yarn make-certs
-      - name: wait for server to start
-        uses: cygnetdigital/wait_for_response@v2.0.0
-        with:
-          url: 'http://localhost'
-          responseCode: '200'
-          timeout: 200000
+      # - name: wait for server to start
+      #   uses: cygnetdigital/wait_for_response@v2.0.0
+      #   with:
+      #     url: 'http://localhost'
+      #     responseCode: '200'
+      #     timeout: 200000
       - name: Build
         run: yarn build-run-ci
         env:

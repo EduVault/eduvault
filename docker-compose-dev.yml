@@ -108,7 +108,6 @@ services:
       context: ./e2e
       dockerfile: Dockerfile
       network: host
-    command: 'yarn test'
     depends_on:
       - nginx-proxy
     environment:

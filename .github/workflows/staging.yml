@@ -24,6 +24,8 @@ jobs:
           TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
           TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
           PROD_HOST: localhost
+      - name: install
+        run: yarn install
       - name: make certs
         run: yarn make-certs
       - name: wait for server to start
@@ -35,7 +37,7 @@ jobs:
           interval: 500
 
       - name: Test
-        run: yarn install && yarn test:e2e
+        run: yarn test:e2e
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

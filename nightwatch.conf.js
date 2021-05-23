@@ -6,16 +6,21 @@ const webdriver = {
   port: 9515
 };
 
+const desiredCapabilities = {
+
+  browserName: "chrome",
+  acceptSslCerts: true,
+  acceptInsecureCerts: true,
+  javascriptEnabled: true,
+
+}
+
 const headed = {
   src_folders,
   webdriver,
   test_settings: {
     default: {
-      desiredCapabilities: {
-        browserName: "chrome",
-        acceptSslCerts: true,
-        javascriptEnabled: true,
-      }
+      desiredCapabilities
     }
   }
 };
@@ -26,7 +31,7 @@ const headless = {
   test_settings: {
     default: {
       desiredCapabilities: {
-        browserName: "chrome",
+        ...desiredCapabilities,
         chromeOptions: {
           args: ["--headless", "--no-sandbox", "--ignore-certificate-errors"]
         }

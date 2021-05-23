@@ -2,7 +2,6 @@ version: '3.7'
 services:
   app:
     container_name: app
-    image: eduvault/eduvault_app:latest
     build:
       context: ./app
       target: prod-stage
@@ -18,7 +17,6 @@ services:
 
   example:
     container_name: example
-    image: eduvault/eduvault_example:latest
     build:
       context: ./example
       target: prod-stage
@@ -34,7 +32,6 @@ services:
 
   api:
     container_name: api
-    image: eduvault/eduvault_api:latest
     build:
       context: ./api
       target: prod-stage
@@ -49,7 +46,6 @@ services:
 
   home-page:
     container_name: home-page
-    image: eduvault/eduvault_home-page:latest
     build:
       context: ./home-page
       target: prod-stage
@@ -65,8 +61,8 @@ services:
   nginx:
     container_name: nginx-proxy
     # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
-    # image: ninanung/nginx-proxy # on mac m1
-    image: jwilder/nginx-proxy
+    image: ninanung/nginx-proxy # on mac m1
+    # image: jwilder/nginx-proxy
     restart: unless-stopped
     volumes:
       - ./deploy/dev-certs:/etc/nginx/certs:ro

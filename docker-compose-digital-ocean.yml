@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     container_name: app
-    image: docker.io/eduvault/eduvault_app:latest
+    image: docker.io/eduvault/eduvault_app:production
     env_file: ./.env
     expose:
       - 8081
@@ -13,7 +13,7 @@ services:
 
   example:
     container_name: example
-    image: docker.io/eduvault/eduvault_example:latest
+    image: docker.io/eduvault/eduvault_example:production
     env_file:
       - ./.env
     expose:
@@ -24,7 +24,7 @@ services:
 
   api:
     container_name: api
-    image: docker.io/eduvault/eduvault_api:latest
+    image: docker.io/eduvault/eduvault_api:production
     expose:
       - 30333
     env_file: ./.env
@@ -34,7 +34,7 @@ services:
 
   home-page:
     container_name: home-page
-    image: docker.io/eduvault/eduvault_home-page:latest
+    image: docker.io/eduvault/eduvault_home-page:production
     expose:
       - 8083
     env_file: ./.env

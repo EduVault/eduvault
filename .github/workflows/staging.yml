@@ -73,14 +73,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: install
-        run: |
-          yarn install
-          sudo apt install libnss3-tools
-          brew install mkcert
-          mkcert -install
-      - name: make certs
-        run: yarn make-certs
+
       - name: start app
         run: yarn build-run-ci
       - name: wait for server to start
@@ -91,7 +84,9 @@ jobs:
           timeout: 200000
           interval: 500
       - name: test
-        run: yarn test:e2e
+        run: |
+          yarn inst:e2e
+          yarn test:e2e
       # - name: Build and run test
       #   run: yarn build-run-ci
       #   env:

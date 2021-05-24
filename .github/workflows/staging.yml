@@ -53,16 +53,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           buildArgs: PROD_HOST=eduvault-staging.click
 
-      # - uses: mr-smithers-excellent/docker-build-push@v5
-      #   name: Build & push Docker image - home-page
-      #   with:
-      #     image: eduvault/eduvault_home-page
-      #     tags: testing
-      #     registry: docker.io
-      #     dockerfile: home-page/Dockerfile_prod
-      #     directory: home-page
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - home-page
+        with:
+          image: eduvault/eduvault_home-page
+          tags: testing
+          registry: docker.io
+          dockerfile: home-page/Dockerfile_prod
+          directory: home-page
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       ##### TEST #####
 

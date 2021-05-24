@@ -54,7 +54,7 @@ services:
     ports:
       - '80:80'
     depends_on:
-      # - app
-      # - api
-      # - example
+      - app
+      - api
+      - example
       - home-page

@@ -37,7 +37,7 @@
     "re-inst": "run-p re-inst:*",
     "link:shared": "cd ./shared && yarn link && cd ../app && yarn link @eduvault/shared && cd ../api && yarn link @eduvault/shared && cd ../sdk/js && yarn link @eduvault/shared",
     "link:sdk-js": "cd ./sdk/js && yarn link && cd ../../example && yarn link @eduvault/eduvault-js",
-    "test:e2e": "tsc && npx nightwatch",
+    "test:e2e": "cd e2e && yarn test",
     "test:api": "cd ./api && yarn test",
     "test:sdk-js": "cd ./sdk/js && yarn test",
     "test-watch:api": "cd ./api && yarn test:watch",

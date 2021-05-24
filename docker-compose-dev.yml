@@ -43,6 +43,8 @@ services:
       - VIRTUAL_HOST=example.localhost
       - VIRTUAL_PORT=8082
       - VUE_APP_PROD_HOST=%{PROD_HOST}
+    depends_on: 
+      - app
 
   home-page:
     container_name: home-page
@@ -80,6 +82,8 @@ services:
       - IN_DOCKER=true
       - VIRTUAL_HOST=api.localhost
       - VIRTUAL_PORT=30333
+    depends_on:
+      - example
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -101,14 +105,37 @@ services:
       - example
       - home-page
 
+  chrome:
+    image: selenium/node-chrome:4.0.0-beta-4-prerelease-20210517
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    ports:
+      - "6900:5900"
+  selenium-hub:
+    image: selenium/hub:4.0.0-beta-4-prerelease-20210517
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"  
+    depends_on:
+      - nginx-proxy 
+    environment:
+      - START_XVFB=false
 
   e2e:
     container_name: e2e
     build:
       context: ./e2e
       dockerfile: Dockerfile
-      network: host
     depends_on:
-      - nginx-proxy
+      - chrome
     environment:
       - HEADLESS_E2E=true
+    restart: on-failure

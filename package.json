@@ -85,7 +85,7 @@
     "m1-push-build:home-page": "cd home-page && docker buildx build -t eduvault/eduvault_home-page:latest --file Dockerfile_prod --target prod-stage --platform linux/amd64 --push .",
     "m1-push-build": "run-s m1-push-build:*",
     "republish": "run-s publish:shared remove:shared link-replace:shared publish:sdk-js remove:sdk-js link-replace:sdk-js",
-    "build-run-ci": "docker-compose -f docker-compose-ci-test.yml up -—abort-on-container-exit -—exit-code-from app",
+    "build-run-ci": "docker-compose -f docker-compose-ci-test.yml up -—exit-code-from e2e",
     "build-run": "docker-compose -f docker-compose-build.yml down --remove-orphans && docker-compose -f docker-compose-build.yml up",
     "build-run:build": "docker-compose -f docker-compose-build.yml down --remove-orphans && docker-compose -f docker-compose-build.yml up --build",
     "d-vols-clean": "docker-compose -f docker-compose-build.yml down --remove-orphans && docker volume rm eduvault_example-dist-share eduvault_dist-share eduvault_example-dist-share",

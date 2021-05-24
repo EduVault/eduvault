@@ -78,13 +78,13 @@ jobs:
 
       - name: start app
         run: yarn build-run-ci
-      # - name: wait for server to start
-      #   uses: cygnetdigital/wait_for_response@v2.0.0
-      #   with:
-      #     url: 'http://localhost'
-      #     responseCode: '200'
-      #     timeout: 200000
-      #     interval: 500
+      - name: wait for server to start
+        uses: cygnetdigital/wait_for_response@v2.0.0
+        with:
+          url: 'http://home.localhost'
+          responseCode: '200'
+          timeout: 200000
+          interval: 500
       - name: test
         run: |
           yarn inst:e2e

@@ -1,11 +1,11 @@
 import { NightwatchAPI, NightwatchBrowser, NightwatchCallbackResult } from 'nightwatch';
-
+const serverTestEnv = process.env.TEST === 'true'
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
   // browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
   // check base url working
   browser
-    .url('https://localhost')
+    .url('http://localhost')
     .waitForElementPresent('body')
     .waitForElementPresent(
       'h1[data-testid="eduvault-title"]',
@@ -19,15 +19,17 @@ export const HappyPath = (browser: NightwatchBrowser) => {
       },
     );
   // .assert.containsText('h1', 'EDUVAULT');
+  if(!serverTestEnv){
   browser
-    .url('http://localhost')
+    .url('https://localhost')
     .waitForElementPresent('body')
     .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   browser
     .url('https://home.localhost')
     .waitForElementPresent('body')
     .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
-  // check home subdomain
+  }
+
   browser
     .url('http://home.localhost')
     .waitForElementPresent('body')

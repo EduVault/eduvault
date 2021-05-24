@@ -5,7 +5,7 @@ import {
   Collection,
   CollectionConfig,
 } from '@textile/threaddb/dist/cjs/local/collection';
-import { formatURLApi, formatURLApp, formatWSApi } from './config';
+import { formatURLApi, formatURLApp, formatWSApi, isTestEnv } from './config';
 
 import {
   appLogin,
@@ -53,7 +53,7 @@ class EduVault {
   setupLoginButton = setupLoginButton(this);
   buttonID?: string;
   redirectURL?: string;
-  HOST = isProdEnv() ? 'localhost' : 'eduvault-staging.click';
+  HOST = !isProdEnv() || isTestEnv() ? 'localhost' : 'eduvault.org';
   URL_APP = formatURLApp(this.HOST);
   URL_API = formatURLApi(this.HOST);
   WS_API = formatWSApi(this.HOST);

@@ -11,6 +11,8 @@ COPY . .
 FROM build-stage AS prod-build
 WORKDIR /example
 ARG PROD_HOST='localhost'
+ARG TEST=0
+ENV VUE_APP_TEST=$TEST
 ENV VUE_APP_PROD_HOST=$PROD_HOST
 ENV NODE_ENV=production
 RUN yarn build

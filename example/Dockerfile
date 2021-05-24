@@ -4,7 +4,8 @@ FROM node:12 AS build-stage
 
 WORKDIR /example
 ENV NODE_ENV=development
-
+ARG TEST=0
+ENV VUE_APP_TEST=$TEST
 ENV PATH /example/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./

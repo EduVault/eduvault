@@ -6,7 +6,7 @@ if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../../.env' });
 
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 const PROD_HOST = process.env.VUE_APP_PROD_HOST;
-const isTestEnv = () => process.env.TEST === '1';
+const isTestEnv = () => process.env.TEST === '1' || process.env.VUE_APP_TEST === '1';
 
 console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;

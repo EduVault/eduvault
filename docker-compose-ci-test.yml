@@ -46,10 +46,7 @@ services:
 
   home-page:
     container_name: home-page
-    build:
-      context: ./home-page
-      target: prod-stage
-      dockerfile: Dockerfile_prod
+    image: docker.io/eduvault/eduvault_home-page:testing
     expose:
       - 8083
     environment:
@@ -65,41 +62,11 @@ services:
     image: jwilder/nginx-proxy
     restart: unless-stopped
     volumes:
-      - ./deploy/dev-certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - '80:80'
-      - '443:443'
     depends_on:
       # - app
       # - api
       # - example
       - home-page
-    # environment:
-    # Only for amazon staging
-    # - SSL_POLICY=AWS-TLS-1-2-2017-01
-
-  # chrome:
-  #   image: selenium/node-chrome:4.0.0-beta-4-prerelease-20210517
-  #   volumes:
-  #     - /dev/shm:/dev/shm
-  #   depends_on:
-  #     - selenium-hub
-  #   environment:
-  #     - SE_EVENT_BUS_HOST=selenium-hub
-  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
-  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-  #   ports:
-  #     - '6900:5900'
-
-  # selenium-hub:
-  #   image: selenium/hub:4.0.0-beta-4-prerelease-20210517
-  #   container_name: selenium-hub
-  #   ports:
-  #     - '4442:4442'
-  #     - '4443:4443'
-  #     - '4444:4444'
-  #   depends_on:
-  #     - nginx-proxy
-  #   environment:
-  #     - START_XVFB=false

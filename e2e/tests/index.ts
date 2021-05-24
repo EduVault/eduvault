@@ -1,33 +1,34 @@
 import { NightwatchAPI, NightwatchBrowser, NightwatchCallbackResult } from 'nightwatch';
 const serverTestEnv = process.env.TEST === 'true'
+console.log({ serverTestEnv, 'process.env.TEST': process.env.TEST })
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
   // browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
   // check base url working
-  browser
-    .url('http://localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent(
-      'h1[data-testid="eduvault-title"]',
-      120000,
-      false,
-      function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
-        console.log({ browser: this, result });
-        this.getText('body', function (result) {
-          console.log({ result });
-        });
-      },
-    );
   // .assert.containsText('h1', 'EDUVAULT');
-  if(!serverTestEnv){
-  browser
-    .url('https://localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
-  browser
-    .url('https://home.localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
+  if (!serverTestEnv) {
+    browser
+      .url('http://localhost')
+      .waitForElementPresent('body')
+      .waitForElementPresent(
+        'h1[data-testid="eduvault-title"]',
+        120000,
+        false,
+        function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+          console.log({ browser: this, result });
+          this.getText('body', function (result) {
+            console.log({ result });
+          });
+        },
+      );
+    browser
+      .url('https://localhost')
+      .waitForElementPresent('body')
+      .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
+    browser
+      .url('https://home.localhost')
+      .waitForElementPresent('body')
+      .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   }
 
   browser

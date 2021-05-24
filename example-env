@@ -1,7 +1,19 @@
-PROD_HOST="eduvault.org"
+# not really secret. when pushing to production or staging, toggle these three:
+PROD_HOST=eduvault-staging.click
+# PROD_HOST=eduvault.org 
+WATCHTOWER_POLLING_INTERVAL=60
+# WATCHTOWER_POLLING_INTERVAL=600
+IMAGE_SUFFIX=staging
+# IMAGE_SUFFIX=production
+
+# arbitrary, but does need to be secret
+APP_SECRET=Dsadf%5^%fdgdfewawsdaewuadfasf96
+
+# third party service secrets
 APP_SECRET="just a random key. Generate with ulid/uuid etc."
 TEXTILE_USER_API_SECRET="get from https://docs.textile.io/hub/apis/"
 TEXTILE_ORG_API_SECRET="get from https://docs.textile.io/hub/apis/"
 GOOGLE_CLIENT_SECRET="get from google https://console.cloud.google.com/apis/credentials"
 FACEBOOK_CLIENT_SECRET="get from facebook https://developers.facebook.com/apps/"
 DOTWALLET_SECRET="get from dotwallet https://developers.dotwallet.com/en/"
+

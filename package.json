@@ -4,7 +4,6 @@
   "description": "Eduvault let's learners own their own data. It helps app builders quickly create user-owned databases that sync and interoperate. Home page at eduvault.org",
   "private": "true",
   "devDependencies": {
-
     "@types/node": "^15.3.1",
     "cross-var": "^1.1.0",
     "dotenv": "^8.2.0",

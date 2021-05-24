@@ -2,5 +2,6 @@ FROM node:12
 
 WORKDIR /app
 COPY package.json /app/
-RUN npm install chromedriver --chromedriver-force-download && npm install
+COPY yarn.lock ./
+RUN yarn add chromedriver --chromedriver-force-download && yarn install
 CMD [ "yarn", "test"]

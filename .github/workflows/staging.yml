@@ -29,17 +29,17 @@ jobs:
       #     username: ${{ secrets.DOCKER_USERNAME }}
       #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - uses: mr-smithers-excellent/docker-build-push@v5
-      #   name: Build & push Docker image - app
-      #   with:
-      #     image: eduvault/eduvault_app
-      #     tags: testing
-      #     registry: docker.io
-      #     dockerfile: app/Dockerfile_prod
-      #     directory: app
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-      #     buildArgs: PROD_HOST=eduvault-staging.click
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - app
+        with:
+          image: eduvault/eduvault_app
+          tags: testing
+          registry: docker.io
+          dockerfile: app/Dockerfile_prod
+          directory: app
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildArgs: PROD_HOST=localhost
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - example
@@ -51,7 +51,7 @@ jobs:
           directory: example
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          buildArgs: PROD_HOST=eduvault-staging.click
+          buildArgs: PROD_HOST=localhost
 
       # - uses: mr-smithers-excellent/docker-build-push@v5
       #   name: Build & push Docker image - home-page

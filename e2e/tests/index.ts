@@ -1,6 +1,6 @@
 import { NightwatchAPI, NightwatchBrowser, NightwatchCallbackResult } from 'nightwatch';
-const serverTestEnv = process.env.TEST === '1'
-console.log({ serverTestEnv, 'process.env.TEST': process.env.TEST })
+const serverTestEnv = process.env.TEST === '1';
+console.log({ serverTestEnv, 'process.env.TEST': process.env.TEST });
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
   // browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
@@ -19,28 +19,19 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // first call need to wait, cause app might be booting up
   browser
     .url('http://localhost')
-    .waitForElementPresent('body',
-      120000,
-      false,)
-    .waitForElementPresent(
-      'h1[data-testid="eduvault-title"]',
-      120000,
-      false,
-    )
-  browser
-    .url('http://localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent(
-      'h1[data-testid="eduvault-title"]',
-      120000,
-      false,
-      function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
-        console.log({ browser: this, result });
-        this.getText('body', function (result) {
-          console.log({ result });
-        });
-      },
-    );
+    .waitForElementPresent('body', 120000, false)
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false);
+  browser.url('http://localhost').waitForElementPresent('body').waitForElementPresent(
+    'h1[data-testid="eduvault-title"]',
+    120000,
+    false,
+    // function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+    //   console.log({ browser: this, result });
+    //   this.getText('body', function (result) {
+    //     console.log({ result });
+    //   });
+    // },
+  );
   browser
     .url('http://home.localhost')
     .waitForElementPresent('body', 120000, false)

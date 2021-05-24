@@ -112,5 +112,6 @@ services:
     depends_on:
       - chrome
     environment:
-      - HEADLESS_E2E=true
+      - HEADLESS_E2E="1"
+      - DOCKER_COMPOSE="1"
     restart: on-failure

@@ -1,4 +1,5 @@
-const HEADLESS = process.env.GITHUB_ACTIONS || process.env.HEADLESS_E2E ? true : false
+const HEADLESS = process.env.GITHUB_ACTIONS || process.env.HEADLESS_E2E === '1' ? true : false
+const DOCKER_COMPOSE = process.env.DOCKER_COMPOSE === '1'
 module.exports =
 {
   "src_folders": ["./test-build"],
@@ -8,7 +9,7 @@ module.exports =
   "test_settings": {
     "default": {
       "selbenium_port": 4444,
-      "selenium_host": "localhost",
+      "selenium_host": DOCKER_COMPOSE ? 'selenium-hub' : "localhost",
       "silent": false,
       "desiredCapabilities": {
         "javascriptEnabled": true,

@@ -42,6 +42,7 @@ services:
       - VUE_APP_PROD_HOST=localhost
       - VIRTUAL_HOST=home.localhost,localhost
       - VIRTUAL_PORT=8083
+      - TEST=1
 
   nginx-proxy:
     container_name: nginx-proxy

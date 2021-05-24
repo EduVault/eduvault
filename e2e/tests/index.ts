@@ -7,20 +7,7 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // check base url working
   // .assert.containsText('h1', 'EDUVAULT');
   if (!serverTestEnv) {
-    browser
-      .url('http://localhost')
-      .waitForElementPresent('body')
-      .waitForElementPresent(
-        'h1[data-testid="eduvault-title"]',
-        120000,
-        false,
-        function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
-          console.log({ browser: this, result });
-          this.getText('body', function (result) {
-            console.log({ result });
-          });
-        },
-      );
+
     browser
       .url('https://localhost')
       .waitForElementPresent('body')
@@ -30,11 +17,33 @@ export const HappyPath = (browser: NightwatchBrowser) => {
       .waitForElementPresent('body')
       .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   }
-
+  // first call need to wait, cause app might be booting up
+  browser
+    .url('http://localhost')
+    .waitForElementPresent('body')
+    .waitForElementPresent(
+      'h1[data-testid="eduvault-title"]',
+      120000,
+      false,
+    )
+  browser
+    .url('http://localhost')
+    .waitForElementPresent('body')
+    .waitForElementPresent(
+      'h1[data-testid="eduvault-title"]',
+      120000,
+      false,
+      function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+        console.log({ browser: this, result });
+        this.getText('body', function (result) {
+          console.log({ result });
+        });
+      },
+    );
   browser
     .url('http://home.localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false)
+    .waitForElementPresent('body', 120000, false)
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false)
     .assert.containsText('h1', 'EDUVAULT')
     .click('button[data-testid="button-try-now"]');
   browser.expect.element('a[data-testid="link-example"]').is.visible;

@@ -2,12 +2,7 @@ version: '3.7'
 services:
   # app:
   #   container_name: app
-  #   build:
-  #     context: ./app
-  #     target: prod-stage
-  #     dockerfile: Dockerfile_prod
-  #     args:
-  #       - PROD_HOST=localhost
+  #   image: docker.io/eduvault/eduvault_app:testing
   #   expose:
   #     - 8081
   #   environment:
@@ -17,12 +12,7 @@ services:
 
   # example:
   #   container_name: example
-  #   build:
-  #     context: ./example
-  #     target: prod-stage
-  #     dockerfile: Dockerfile_prod
-  #     args:
-  #       - PROD_HOST=localhost
+  #   image: docker.io/eduvault/eduvault_example:testing
   #   expose:
   #     - 8082
   #   environment:
@@ -32,10 +22,7 @@ services:
 
   # api:
   #   container_name: api
-  #   build:
-  #     context: ./api
-  #     target: prod-stage
-  #     dockerfile: Dockerfile_prod
+  #   image: docker.io/eduvault/eduvault_api:testing
   #   expose:
   #     - 30333
   #   environment:
@@ -43,6 +30,7 @@ services:
   #     - VIRTUAL_HOST=api.localhost
   #     - VIRTUAL_PORT=30333
   #     - APP_SECRET='testing-secret'
+  #     - TESTING=true
 
   home-page:
     container_name: home-page

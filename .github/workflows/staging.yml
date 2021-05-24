@@ -3,8 +3,10 @@ on:
   push:
     branches:
       - staging
+
 jobs:
   # create-test-images:
+  # The point of this job, is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
   #   runs-on: ubuntu-latest
   #   strategy:
   #     matrix:

@@ -1,6 +1,6 @@
 {
   "name": "@eduvault/eduvault-js",
-  "version": "1.2.19",
+  "version": "1.2.20",
   "description": "An SDK that allows app creators to quickly create and authenticate a user-owned database",
   "main": "dist/main/index.js",
   "typings": "dist/main/index.d.ts",
@@ -12,7 +12,7 @@
     "clean:dist": "rimraf dist",
     "clean:modules": "rimraf node_modules yarn.lock",
     "inst": "yarn add @eduvault/shared && yarn install",
-    "prepublishOnly": "run-s clean:modules inst build",
+    "prepublishOnly": "run-s build",
     "prebuild": "yarn clean:dist",
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.main.json",

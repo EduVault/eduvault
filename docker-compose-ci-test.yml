@@ -1,36 +1,36 @@
 version: '3.7'
 services:
-  # app:
-  #   container_name: app
-  #   image: docker.io/eduvault/eduvault_app:testing
-  #   expose:
-  #     - 8081
-  #   environment:
-  #     - NODE_ENV=production
-  #     - VIRTUAL_HOST=app.localhost
-  #     - VIRTUAL_PORT=8081
+  app:
+    container_name: app
+    image: docker.io/eduvault/eduvault_app:testing
+    expose:
+      - 8081
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=app.localhost
+      - VIRTUAL_PORT=8081
 
-  # example:
-  #   container_name: example
-  #   image: docker.io/eduvault/eduvault_example:testing
-  #   expose:
-  #     - 8082
-  #   environment:
-  #     - NODE_ENV=production
-  #     - VIRTUAL_HOST=example.localhost
-  #     - VIRTUAL_PORT=8082
+  example:
+    container_name: example
+    image: docker.io/eduvault/eduvault_example:testing
+    expose:
+      - 8082
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=example.localhost
+      - VIRTUAL_PORT=8082
 
-  # api:
-  #   container_name: api
-  #   image: docker.io/eduvault/eduvault_api:testing
-  #   expose:
-  #     - 30333
-  #   environment:
-  #     - NODE_ENV=production
-  #     - VIRTUAL_HOST=api.localhost
-  #     - VIRTUAL_PORT=30333
-  #     - APP_SECRET='testing-secret'
-  #     - TEST=1
+  api:
+    container_name: api
+    image: docker.io/eduvault/eduvault_api:testing
+    expose:
+      - 30333
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=api.localhost
+      - VIRTUAL_PORT=30333
+      - APP_SECRET='testing-secret'
+      - TEST=1
 
   home-page:
     container_name: home-page

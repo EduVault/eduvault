@@ -7,7 +7,6 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // check base url working
   // .assert.containsText('h1', 'EDUVAULT');
   if (!serverTestEnv) {
-
     browser
       .url('https://localhost')
       .waitForElementPresent('body')
@@ -20,7 +19,9 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // first call need to wait, cause app might be booting up
   browser
     .url('http://localhost')
-    .waitForElementPresent('body')
+    .waitForElementPresent('body',
+      120000,
+      false,)
     .waitForElementPresent(
       'h1[data-testid="eduvault-title"]',
       120000,

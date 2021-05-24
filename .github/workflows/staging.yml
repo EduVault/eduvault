@@ -5,65 +5,8 @@ on:
       - staging
 
 jobs:
-  # create-test-images:
-  # The point of this job, is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [12.13.0]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         ref: staging
-  # - uses: mr-smithers-excellent/docker-build-push@v5
-  #   name: Build & push Docker image - api
-  #   with:
-  #     image: eduvault/eduvault_api
-  #     tags: testing
-  #     registry: docker.io
-  #     dockerfile: api/Dockerfile_prod
-  #     directory: api
-  #     username: ${{ secrets.DOCKER_USERNAME }}
-  #     password: ${{ secrets.DOCKER_PASSWORD }}
-
-  # - uses: mr-smithers-excellent/docker-build-push@v5
-  #   name: Build & push Docker image - app
-  #   with:
-  #     image: eduvault/eduvault_app
-  #     tags: testing
-  #     registry: docker.io
-  #     dockerfile: app/Dockerfile_prod
-  #     directory: app
-  #     username: ${{ secrets.DOCKER_USERNAME }}
-  #     password: ${{ secrets.DOCKER_PASSWORD }}
-  #     buildArgs: PROD_HOST=eduvault-staging.click
-
-  # - uses: mr-smithers-excellent/docker-build-push@v5
-  #   name: Build & push Docker image - example
-  #   with:
-  #     image: eduvault/eduvault_example
-  #     tags: testing
-  #     registry: docker.io
-  #     dockerfile: example/Dockerfile_prod
-  #     directory: example
-  #     username: ${{ secrets.DOCKER_USERNAME }}
-  #     password: ${{ secrets.DOCKER_PASSWORD }}
-  #     buildArgs: PROD_HOST=eduvault-staging.click
-
-  # - uses: mr-smithers-excellent/docker-build-push@v5
-  #   name: Build & push Docker image - home-page
-  #   with:
-  #     image: eduvault/eduvault_home-page
-  #     tags: testing
-  #     registry: docker.io
-  #     dockerfile: home-page/Dockerfile_prod
-  #     directory: home-page
-  #     username: ${{ secrets.DOCKER_USERNAME }}
-  #     password: ${{ secrets.DOCKER_PASSWORD }}
-
-  deploy:
+  test-and-push-images:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [12.13.0]
@@ -71,6 +14,58 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: staging
+
+        ##### BUIL TEST IMAGES #####
+        # The point of this part is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - api
+        with:
+          image: eduvault/eduvault_api
+          tags: testing
+          registry: docker.io
+          dockerfile: api/Dockerfile_prod
+          directory: api
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - app
+        with:
+          image: eduvault/eduvault_app
+          tags: testing
+          registry: docker.io
+          dockerfile: app/Dockerfile_prod
+          directory: app
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildArgs: PROD_HOST=eduvault-staging.click
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - example
+        with:
+          image: eduvault/eduvault_example
+          tags: testing
+          registry: docker.io
+          dockerfile: example/Dockerfile_prod
+          directory: example
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildArgs: PROD_HOST=eduvault-staging.click
+
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - home-page
+      #   with:
+      #     image: eduvault/eduvault_home-page
+      #     tags: testing
+      #     registry: docker.io
+      #     dockerfile: home-page/Dockerfile_prod
+      #     directory: home-page
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+
+      ##### TEST #####
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -78,25 +73,17 @@ jobs:
 
       - name: start app
         run: yarn build-run-ci
-      - name: wait for server to start
-        uses: cygnetdigital/wait_for_response@v2.0.0
-        with:
-          url: 'http://home.localhost'
-          responseCode: '200'
-          timeout: 200000
-          interval: 500
       - name: test
         run: |
           yarn inst:e2e
           yarn test:e2e
         env:
           TEST: 1
-      # - name: Build and run test
-      #   run: yarn build-run-ci
-      #   env:
-      #     TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
-      #     TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
-      #     PROD_HOST: localhost
+          TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
+          TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
+          PROD_HOST: localhost
+
+      ##### TEST PASSED -- BUILD STAGING IMAGES #####
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

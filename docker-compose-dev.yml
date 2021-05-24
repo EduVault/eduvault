@@ -1,50 +1,48 @@
 # use docker-compose build <service-name> to just rebuild one service
 version: '3.7'
 services:
-  app:
-    container_name: app
-    build:
-      context: ./app
-      target: dev-stage
-    volumes:
-      - './app:/app'
-      - '/app/node_modules'
-    stdin_open: true
-    env_file: 
-      - ./.env
-    expose:
-      - 8081
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-      - IN_DOCKER=true
-      - VIRTUAL_HOST=app.localhost
-      - VIRTUAL_PORT=8081
+  # app:
+  #   container_name: app
+  #   build:
+  #     context: ./app
+  #     target: dev-stage
+  #   volumes:
+  #     - './app:/app'
+  #     - '/app/node_modules'
+  #   stdin_open: true
+  #   env_file:
+  #     - ./.env
+  #   expose:
+  #     - 8081
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - NODE_ENV=development
+  #     - IN_DOCKER=true
+  #     - VIRTUAL_HOST=app.localhost
+  #     - VIRTUAL_PORT=8081
 
-  example:
-    container_name: example
-    build:
-      context: ./example
-      target: dev-stage
-    volumes:
-      - './example:/example'
-      - '/example/node_modules'
-    stdin_open: true
-    env_file: 
-      - ./.env    
-    expose:
-      - 8082
-    env_file:
-      - ./.env
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-      - IN_DOCKER=true
-      - VIRTUAL_HOST=example.localhost
-      - VIRTUAL_PORT=8082
-      - VUE_APP_PROD_HOST=%{PROD_HOST}
-    depends_on: 
-      - app
+  # example:
+  #   container_name: example
+  #   build:
+  #     context: ./example
+  #     target: dev-stage
+  #   volumes:
+  #     - './example:/example'
+  #     - '/example/node_modules'
+  #   stdin_open: true
+  #   env_file:
+  #     - ./.env
+  #   expose:
+  #     - 8082
+  #   env_file:
+  #     - ./.env
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - NODE_ENV=development
+  #     - IN_DOCKER=true
+  #     - VIRTUAL_HOST=example.localhost
+  #     - VIRTUAL_PORT=8082
+  #     - VUE_APP_PROD_HOST=%{PROD_HOST}
 
   home-page:
     container_name: home-page
@@ -54,8 +52,8 @@ services:
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'
-    env_file: 
-      - ./.env      
+    env_file:
+      - ./.env
     expose:
       - 8083
     environment:
@@ -63,27 +61,25 @@ services:
       - VIRTUAL_HOST=home.localhost,localhost
       - VIRTUAL_PORT=8083
 
-  api:
-    container_name: api
-    build:
-      context: ./api
-      target: dev-stage
-    env_file: 
-      - ./.env      
-    expose:
-      - 30333
-    ports:
-      - '9229:9229'
-    volumes:
-      - './api:/api'
-      - '/api/node_modules'
-    environment:
-      - NODE_ENV=development
-      - IN_DOCKER=true
-      - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=30333
-    depends_on:
-      - example
+  # api:
+  #   container_name: api
+  #   build:
+  #     context: ./api
+  #     target: dev-stage
+  #   env_file:
+  #     - ./.env
+  #   expose:
+  #     - 30333
+  #   ports:
+  #     - '9229:9229'
+  #   volumes:
+  #     - './api:/api'
+  #     - '/api/node_modules'
+  #   environment:
+  #     - NODE_ENV=development
+  #     - IN_DOCKER=true
+  #     - VIRTUAL_HOST=api.localhost
+  #     - VIRTUAL_PORT=30333
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -100,43 +96,7 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - app
-      - api
-      - example
+      # - app
+      # - api
+      # - example
       - home-page
-
-  chrome:
-    image: selenium/node-chrome:4.0.0-beta-4-prerelease-20210517
-    volumes:
-      - /dev/shm:/dev/shm
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-    ports:
-      - "6900:5900"
-  selenium-hub:
-    image: selenium/hub:4.0.0-beta-4-prerelease-20210517
-    container_name: selenium-hub
-    ports:
-      - "4442:4442"
-      - "4443:4443"
-      - "4444:4444"  
-    depends_on:
-      - nginx-proxy 
-    environment:
-      - START_XVFB=false
-
-  e2e:
-    container_name: e2e
-    build:
-      context: ./e2e
-      dockerfile: Dockerfile
-    depends_on:
-      - chrome
-    environment:
-      - HEADLESS_E2E="1"
-      - DOCKER_COMPOSE="1"
-    restart: on-failure

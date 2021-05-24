@@ -26,20 +26,23 @@ jobs:
           mkcert -install
       - name: make certs
         run: yarn make-certs
-      # - name: wait for server to start
-      #   uses: cygnetdigital/wait_for_response@v2.0.0
-      #   with:
-      #     url: 'http://localhost'
-      #     responseCode: '200'
-      #     timeout: 200000
-      - name: Build and run test
+      - name: start app
         run: yarn build-run-ci
-        env:
-          TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
-          TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
-          PROD_HOST: localhost
-
+      - name: wait for server to start
+        uses: cygnetdigital/wait_for_response@v2.0.0
+        with:
+          url: 'http://localhost'
+          responseCode: '200'
+          timeout: 200000
           interval: 500
+      - name: test
+        run: yarn test:e2e
+      # - name: Build and run test
+      #   run: yarn build-run-ci
+      #   env:
+      #     TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
+      #     TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
+      #     PROD_HOST: localhost
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

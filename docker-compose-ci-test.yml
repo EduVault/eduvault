@@ -1,48 +1,48 @@
 version: '3.7'
 services:
-  app:
-    container_name: app
-    build:
-      context: ./app
-      target: prod-stage
-      dockerfile: Dockerfile_prod
-      args:
-        - PROD_HOST=localhost
-    expose:
-      - 8081
-    environment:
-      - NODE_ENV=production
-      - VIRTUAL_HOST=app.localhost
-      - VIRTUAL_PORT=8081
+  # app:
+  #   container_name: app
+  #   build:
+  #     context: ./app
+  #     target: prod-stage
+  #     dockerfile: Dockerfile_prod
+  #     args:
+  #       - PROD_HOST=localhost
+  #   expose:
+  #     - 8081
+  #   environment:
+  #     - NODE_ENV=production
+  #     - VIRTUAL_HOST=app.localhost
+  #     - VIRTUAL_PORT=8081
 
-  example:
-    container_name: example
-    build:
-      context: ./example
-      target: prod-stage
-      dockerfile: Dockerfile_prod
-      args:
-        - PROD_HOST=localhost
-    expose:
-      - 8082
-    environment:
-      - NODE_ENV=production
-      - VIRTUAL_HOST=example.localhost
-      - VIRTUAL_PORT=8082
+  # example:
+  #   container_name: example
+  #   build:
+  #     context: ./example
+  #     target: prod-stage
+  #     dockerfile: Dockerfile_prod
+  #     args:
+  #       - PROD_HOST=localhost
+  #   expose:
+  #     - 8082
+  #   environment:
+  #     - NODE_ENV=production
+  #     - VIRTUAL_HOST=example.localhost
+  #     - VIRTUAL_PORT=8082
 
-  api:
-    container_name: api
-    build:
-      context: ./api
-      target: prod-stage
-      dockerfile: Dockerfile_prod
-    expose:
-      - 30333
-    environment:
-      - NODE_ENV=production
-      - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=30333
-      - APP_SECRET='testing-secret'
+  # api:
+  #   container_name: api
+  #   build:
+  #     context: ./api
+  #     target: prod-stage
+  #     dockerfile: Dockerfile_prod
+  #   expose:
+  #     - 30333
+  #   environment:
+  #     - NODE_ENV=production
+  #     - VIRTUAL_HOST=api.localhost
+  #     - VIRTUAL_PORT=30333
+  #     - APP_SECRET='testing-secret'
 
   home-page:
     container_name: home-page
@@ -71,47 +71,35 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - app
-      - api
-      - example
+      # - app
+      # - api
+      # - example
       - home-page
     # environment:
     # Only for amazon staging
     # - SSL_POLICY=AWS-TLS-1-2-2017-01
 
-  chrome:
-    image: selenium/node-chrome:4.0.0-beta-4-prerelease-20210517
-    volumes:
-      - /dev/shm:/dev/shm
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-    ports:
-      - '6900:5900'
+  # chrome:
+  #   image: selenium/node-chrome:4.0.0-beta-4-prerelease-20210517
+  #   volumes:
+  #     - /dev/shm:/dev/shm
+  #   depends_on:
+  #     - selenium-hub
+  #   environment:
+  #     - SE_EVENT_BUS_HOST=selenium-hub
+  #     - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #     - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #   ports:
+  #     - '6900:5900'
 
-  selenium-hub:
-    image: selenium/hub:4.0.0-beta-4-prerelease-20210517
-    container_name: selenium-hub
-    ports:
-      - '4442:4442'
-      - '4443:4443'
-      - '4444:4444'
-    depends_on:
-      - nginx-proxy
-    environment:
-      - START_XVFB=false
-
-  e2e:
-    container_name: e2e
-    build:
-      context: ./e2e
-      dockerfile: Dockerfile
-    depends_on:
-      - chrome
-    environment:
-      - HEADLESS_E2E="1"
-      - DOCKER_COMPOSE="1"
-    restart: on-failure
+  # selenium-hub:
+  #   image: selenium/hub:4.0.0-beta-4-prerelease-20210517
+  #   container_name: selenium-hub
+  #   ports:
+  #     - '4442:4442'
+  #     - '4443:4443'
+  #     - '4444:4444'
+  #   depends_on:
+  #     - nginx-proxy
+  #   environment:
+  #     - START_XVFB=false

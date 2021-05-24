@@ -92,7 +92,7 @@ services:
     ports:
       - '6900:5900'
 
-      selenium-hub:
+  selenium-hub:
     image: selenium/hub:4.0.0-beta-4-prerelease-20210517
     container_name: selenium-hub
     ports:

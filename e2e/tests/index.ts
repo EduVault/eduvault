@@ -1,5 +1,5 @@
 import { NightwatchAPI, NightwatchBrowser, NightwatchCallbackResult } from 'nightwatch';
-const serverTestEnv = process.env.TEST === 'true'
+const serverTestEnv = process.env.TEST === '1'
 console.log({ serverTestEnv, 'process.env.TEST': process.env.TEST })
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working

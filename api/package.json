@@ -13,8 +13,8 @@
     "watch": "tsc -p tsconfig.build.json -w ",
     "build:server": "tsc -p tsconfig.build.json ",
     "build": "run-s clean:dist build:server",
-    "test": "env TEST=true jest --env=./jest-env.js --detectOpenHandles",
-    "test:watch": "env TEST=true jest --env=./jest-env.js --detectOpenHandles  --watch"
+    "test": "env TEST=1 jest --env=./jest-env.js --detectOpenHandles",
+    "test:watch": "env TEST=1 jest --env=./jest-env.js --detectOpenHandles  --watch"
   },
   "author": "Jacob Cohen-Rosenthal",
   "license": "MIT",

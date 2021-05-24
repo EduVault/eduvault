@@ -30,7 +30,7 @@ services:
   #     - VIRTUAL_HOST=api.localhost
   #     - VIRTUAL_PORT=30333
   #     - APP_SECRET='testing-secret'
-  #     - TESTING=true
+  #     - TEST=1
 
   home-page:
     container_name: home-page
@@ -45,7 +45,6 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
     # image: ninanung/nginx-proxy # on mac m1
     image: jwilder/nginx-proxy
     restart: unless-stopped

@@ -90,7 +90,7 @@ jobs:
           yarn inst:e2e
           yarn test:e2e
         env:
-          TEST: 'true'
+          TEST: 1
       # - name: Build and run test
       #   run: yarn build-run-ci
       #   env:

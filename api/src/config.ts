@@ -84,7 +84,7 @@ export const JWT_EXPIRY = '30d';
 
 // this will be deprecated. Will need to look up app info in DB and callback to their registered callback
 /** Sometimes the callback cannot find the referer, In a real setup,  we will need apps that use this backend to register a callback */
-export const CLIENT_CALLBACK = URL_APP;
+export const CLIENT_CALLBACK = isTestEnv() ? URL_APP_HTTP : URL_APP;
 
 export const TEXTILE_USER_API_SECRET = process.env.TEXTILE_USER_API_SECRET;
 export const DOTWALLET_SECRET = process.env.DOTWALLET_SECRET;

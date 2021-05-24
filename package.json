@@ -51,7 +51,7 @@
     "inst:home-page": "cd ./home-page && yarn install",
     "inst:sdk-js": "cd ./sdk/js && yarn install",
     "inst:shared": "cd ./shared && yarn install",
-    "inst:e2e": "cds ./e2e && yarn install",
+    "inst:e2e": "cd ./e2e && yarn install",
     "#inst:root": "yarn install",
     "inst": "yarn install && run-s inst:*",
     "clean:app": "cd ./app && rimraf yarn.lock && rimraf node_modules",

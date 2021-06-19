@@ -31,6 +31,7 @@ services:
       - VIRTUAL_PORT=30333
       - APP_SECRET='testing-secret'
       - TEST=1
+      - PROD_HOST=localhost
 
   home-page:
     container_name: home-page
@@ -46,8 +47,8 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    # image: ninanung/nginx-proxy # on mac m1
-    image: jwilder/nginx-proxy
+    image: ninanung/nginx-proxy # on mac m1
+    # image: jwilder/nginx-proxy
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
@@ -58,3 +59,5 @@ services:
       - api
       - example
       - home-page
+    environment:
+      - HTTPS_METHOD=noredirect

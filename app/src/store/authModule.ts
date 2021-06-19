@@ -144,7 +144,6 @@ export default {
 
         const options: AxiosRequestConfig = {
           url: URL_API + ROUTES.PASSWORD_AUTH,
-          withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
             'X-Forwarded-Proto': 'https',
@@ -171,13 +170,8 @@ export default {
             return 'Could not retrieve PrivateKey';
           const jwts = await store.dispatch.authMod.getJwt();
           if (!jwts || !jwts.jwt) return 'could not get JWT';
-          const {
-            pwEncryptedPrivateKey,
-            threadIDStr,
-            pubKey,
-            appLoginToken,
-            decryptToken,
-          } = loginRes;
+          const { pwEncryptedPrivateKey, threadIDStr, pubKey, appLoginToken, decryptToken } =
+            loginRes;
           const jwtEncryptedPrivateKey = encrypt(keyStr, jwts.jwt);
           if (!jwtEncryptedPrivateKey) return 'error encrypting jwtEncryptedPrivateKey';
           storePersistentAuthData(
@@ -534,9 +528,7 @@ export default {
         return null;
       }
     } /** Get JWT and person info */,
-    async getJwt({
-      state,
-    }: ActionContext<AuthState, RootState>): Promise<{
+    async getJwt({ state }: ActionContext<AuthState, RootState>): Promise<{
       jwt: string;
       oldJwt: string | null;
     } | null> {

@@ -9,7 +9,6 @@ import { StrategyOptionWithRequest } from 'passport-facebook';
 import dotenv from 'dotenv';
 if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../.env' });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
-const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
 export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
@@ -34,8 +33,6 @@ export const validDomains = [
   URL_APP_HTTP,
   URL_EXAMPLE_HTTP,
 ];
-export const URL_CYPRESS = 'http://' + LOCAL_HOST + PORT_CYPRESS;
-if (isTestEnv()) validDomains.push(URL_CYPRESS);
 
 export const APP_SECRET = process.env.APP_SECRET || 'VerySecretPassword';
 if (isProdEnv() && APP_SECRET === 'VerySecretPassword') {
@@ -71,11 +68,11 @@ export const SESSION_OPTIONS = {
   httpOnly: !isTestEnv() /** (boolean) httpOnly or not (default true) */,
   // signed: true /** (boolean) signed or not (default true) */,
   rolling:
-    true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
+    !isTestEnv() /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
   renew:
-    true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
+    !isTestEnv() /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
   secure: !isTestEnv() /** (boolean) isProdEnv() secure cookie*/,
-  sameSite: isTestEnv() ? false : 'none',
+  sameSite: isTestEnv() ? null : 'none',
   /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */
 } as Partial<session.opts>;
 
@@ -111,6 +108,7 @@ export const SYNC_DEBOUNCE_TIME = isTestEnv() ? 1000 : 5000;
 
 console.log({
   NODE_ENV: process.env.NODE_ENV,
+  TEST_ENV: isTestEnv(),
   APP_SECRET,
   PROD_HOST,
   HOST,

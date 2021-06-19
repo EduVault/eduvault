@@ -66,22 +66,22 @@ jobs:
 
       ##### TEST #####
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
 
-      - name: start app
-        run: yarn build-run-ci
-      - name: test
-        run: |
-          yarn inst:e2e
-          yarn test:e2e
-        env:
-          TEST: 1
-          TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
-          TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
-          PROD_HOST: localhost
+      # - name: start app
+      #   run: yarn build-run-ci
+      # - name: test
+      #   run: |
+      #     yarn inst:e2e
+      #     yarn test:e2e
+      #   env:
+      #     TEST: 1
+      #     TEXTILE_ORG_API_SECRET: ${{ secrets.TEXTILE_ORG_API_SECRET }}
+      #     TEXTILE_USER_API_SECRET: ${{  secrets.TEXTILE_USER_API_SECRET }}
+      #     PROD_HOST: localhost
 
       ##### TEST PASSED -- BUILD STAGING IMAGES #####
 
@@ -89,7 +89,7 @@ jobs:
         name: Build & push Docker image - api
         with:
           image: eduvault/eduvault_api
-          tags: latest
+          tags: staging
           registry: docker.io
           dockerfile: api/Dockerfile_prod
           directory: api
@@ -100,7 +100,7 @@ jobs:
         name: Build & push Docker image - app
         with:
           image: eduvault/eduvault_app
-          tags: latest
+          tags: staging
           registry: docker.io
           dockerfile: app/Dockerfile_prod
           directory: app
@@ -111,7 +111,7 @@ jobs:
         name: Build & push Docker image - example
         with:
           image: eduvault/eduvault_example
-          tags: latest
+          tags: staging
           registry: docker.io
           dockerfile: example/Dockerfile_prod
           directory: example
@@ -123,7 +123,7 @@ jobs:
         name: Build & push Docker image - home-page
         with:
           image: eduvault/eduvault_home-page
-          tags: latest
+          tags: staging
           registry: docker.io
           dockerfile: home-page/Dockerfile_prod
           directory: home-page

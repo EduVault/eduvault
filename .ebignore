@@ -6,12 +6,11 @@ sdk/js/src/.env
 
 # switch these before staging or deployment elastic beanstalk environment deploy 
 !docker-compose.yml
-# !docker-compose-aws-staging.yml
 
 !.elasticbeanstalk/config.yml
 
 # this is the load balncer plus https redirection
-!.ebextensions/alb-http-to-https-redirection-full.config
+# !.ebextensions/alb-http-to-https-redirection-full.config
 
 # this separates them into two
 # !.ebextensions/securelistener-alb.config
@@ -19,3 +18,9 @@ sdk/js/src/.env
 
 # websockets
 !.ebextensions/enable-websockets.config
+
+
+# for single-instance environment:
+!.ebextensions/ssl.config
+!deploy/nginx/conf.d/https_custom.conf
+!deploy/nginx/nginx.conf

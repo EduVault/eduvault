@@ -2,7 +2,8 @@ branch-defaults:
   main:
     environment: production
   staging:
-    environment: staging
+    environment: null
+    group_suffix: null
 global:
   application_name: eduvault-staging
   branch: null

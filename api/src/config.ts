@@ -34,7 +34,7 @@ export const validDomains = [
   URL_EXAMPLE_HTTP,
 ];
 
-export const APP_SECRET = process.env.APP_SECRET || 'VerySecretPassword';
+export const APP_SECRET = process.env.APP_SECRET as string || 'VerySecretPassword';
 if (isProdEnv() && APP_SECRET === 'VerySecretPassword') {
   throw new Error('APP_SECRET missing in production');
 }

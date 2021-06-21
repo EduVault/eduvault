@@ -63,7 +63,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
-      - '80:80'
+      - '8080:8080'
     depends_on:
       - app
       - api

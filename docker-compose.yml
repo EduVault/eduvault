@@ -1,12 +1,12 @@
 # This is the amazon elastic beanstalk deploy version. The key difference with digital ocean deploy is that in nginx-proxy we don't use ssl and port 443. ssl is handled by the load balancer.
 version: '3.7'
 services:
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      # this will re poll for image changes every 60s, could extend in final production
-    command: --interval ${WATCHTOWER_POLLING_INTERVAL}
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     # this will re poll for image changes every 60s, could extend in final production
+  #   command: --interval ${WATCHTOWER_POLLING_INTERVAL}
 
   app:
     container_name: app

@@ -9,7 +9,7 @@ export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
 
 console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;
-export const HOST = 'eduvault-staging.click';
+export const HOST = 'is-a-test.xyz';
 // \: LOCAL_HOST;
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];

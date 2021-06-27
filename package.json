@@ -17,9 +17,9 @@
     "link-local-nginx-conf": "ln deploy/nginx/local/app.conf /usr/local/Homebrew/etc/nginx/servers/app.conf",
     "copy-dev-certs": "mkdir /usr/local/Homebrew/etc/dev-certs && cp -r deploy/dev-certs /usr/local/Homebrew/etc/",
     "make-certs": "cd deploy/dev-certs && mkcert api.localhost && cp api.localhost-key.pem api.localhost.key && cp api.localhost.pem api.localhost.crt && mkcert app.localhost && cp app.localhost-key.pem app.localhost.key && cp app.localhost.pem app.localhost.crt && mkcert example.localhost && cp example.localhost-key.pem example.localhost.key && cp example.localhost.pem example.localhost.crt && mkcert home.localhost && cp home.localhost-key.pem home.localhost.key && cp home.localhost.pem home.localhost.crt",
-    "make-prod-certs": "mkdir deploy/dev-certs && cd deploy/dev-certs && sudo certbot certonly --standalone -d eduvault-staging.click -d app.eduvault-staging.click -d api.eduvault-staging.click -d home.eduvault-staging.click -d example.eduvault-staging.click",
-    "copy-dev-build-certs": "cd deploy/dev-certs && cp /etc/letsencrypt/live/eduvault-staging.click-0001/fullchain.pem eduvault-staging.click.crt && cp /etc/letsencrypt/live/eduvault-staging.click-0001/privkey.pem eduvault-staging.click.key",
-    "copy-prod-certs": "cd deploy/prod-certs && cp /etc/letsencrypt/live/eduvault-staging.click-0001/fullchain.pem eduvault-staging.click.crt && cp /etc/letsencrypt/live/eduvault-staging.click-0001/privkey.pem eduvault-staging.click.key",
+    "make-prod-certs": "mkdir deploy/prod-certs ; cd deploy/prod-certs && sudo certbot certonly --standalone -d is-a-test.xyz -d app.is-a-test.xyz -d api.is-a-test.xyz -d home.is-a-test.xyz -d example.is-a-test.xyz",
+    "copy-dev-build-certs": "cd deploy/dev-certs && cp /etc/letsencrypt/live/is-a-test.xyz-0001/fullchain.pem is-a-test.xyz.crt && cp /etc/letsencrypt/live/is-a-test.xyz-0001/privkey.pem is-a-test.xyz.key",
+    "copy-prod-certs": "cd deploy/prod-certs && cp /etc/letsencrypt/live/is-a-test.xyz-0001/fullchain.pem is-a-test.xyz.crt && cp /etc/letsencrypt/live/is-a-test.xyz-0001/privkey.pem is-a-test.xyz.key",
     "publish:shared": "cd ./shared && yarn publish --access=public",
     "publish:sdk-js": "cd ./sdk/js && yarn publish --access=public",
     "link-all": "yarn build:shared && yarn link:shared && yarn build:sdk-js && yarn link:sdk-js",
@@ -86,7 +86,7 @@
     "d-vols-clean": "docker-compose down --remove-orphans && docker volume rm eduvault_example-dist-share eduvault_dist-share eduvault_example-dist-share",
     "d-dev": "docker-compose down --remove-orphans && docker-compose -f docker-compose-dev.yml up",
     "d-dev:build": "docker-compose down --remove-orphans && docker-compose -f docker-compose-dev.yml up --build",
-    "production": "docker-compose down --remove-orphans && docker-compose up --build -d"
+    "production": "docker-compose -f docker-compose-digital-ocean.yml down --remove-orphans ; docker-compose -f docker-compose-digital-ocean.yml up --build -d"
   },
   "repository": {
     "type": "git",

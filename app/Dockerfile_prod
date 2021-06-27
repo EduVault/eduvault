@@ -12,7 +12,7 @@ COPY . .
 FROM build-stage AS prod-build
 WORKDIR /app
 # ARG PROD_HOST='localhost'
-ENV VUE_APP_PROD_HOST='eduvault-staging.click'
+ENV VUE_APP_PROD_HOST='is-a-test.xyz'
 ENV NODE_ENV=production
 # We don't need to build if dist is already been copied with . .
 # was running into errors building for other architectures from mac m-1, so just build dist locally

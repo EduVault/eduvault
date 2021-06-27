@@ -9,7 +9,7 @@ import { createJwt, getJwtExpiry, compareAppLoginToken } from '../utils/jwt';
 /** Accepts appLoginToken and appID. Compares token. Issues JWT and cookie. */
 const appAuth = function (router: Router<DefaultState, Context>, passport: typeof KoaPassport) {
   router.post(ROUTES.APP_AUTH, async (ctx, next) => {
-    const data = ctx.request.body as types.AppAuthReq;
+    const data = ctx.request.body as unknown as types.AppAuthReq;
     // console.log({ data });
     return passport.authenticate('app', async (error: string, tokenData: AppAndTokenData) => {
       // console.log({ error, tokenData });
@@ -39,7 +39,7 @@ const appAuth = function (router: Router<DefaultState, Context>, passport: typeo
       }
     })(ctx, next);
   });
-  
+
   return router;
 };
 export default appAuth;

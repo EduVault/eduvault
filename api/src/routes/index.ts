@@ -52,15 +52,15 @@ const routerInit = (
   router.get('/auth-check', checkAuth, (ctx) => {
     ctx.oK(null, 'ok');
   });
-
-  router.post('/drop-collections', async (ctx) => {
-    const appSecret = ctx.request.body.appSecret;
-    if (appSecret !== APP_SECRET) ctx.unauthorized();
-    else if (!utils.isProdEnv()) {
+  
+  if (!utils.isProdEnv())
+    router.post('/drop-collections', async (ctx) => {
+      const body = ctx.request.body as { appSecret: string };
+      const appSecret = body.appSecret;
+      if (!appSecret || appSecret !== APP_SECRET) ctx.unauthorized();
       await clearCollections(db);
       ctx.oK();
-    } else ctx.methodNotAllowed();
-  });
+    });
 
   appManage(router, passport, db);
   appAuth(router, passport);

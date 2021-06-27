@@ -40,7 +40,7 @@ services:
     depends_on:
       - example      
     cpus: "0.5"
-    mem_limit: 712m
+    mem_limit: 512m
 
   home-page:
     container_name: home-page
@@ -55,8 +55,8 @@ services:
       - VIRTUAL_PORT=8083
     depends_on:
       - api
-    cpus: "0.5"
-    mem_limit: 512m
+    cpus: "0.7"
+    mem_limit: 712m
 
   nginx:
     container_name: nginx-proxy

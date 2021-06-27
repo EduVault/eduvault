@@ -38,7 +38,7 @@ app.use(async function handleGeneralError(ctx, next) {
 app.use(cors(CORS_CONFIG));
 
 if (!isTestEnv()) app.use(sslify({ resolver }));
-// if (!isTestEnv()) app.use(sslify({ resolver }));
+
 app.use(cookie());
 app.use(logger());
 app.use(bodyParser());

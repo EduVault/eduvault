@@ -67,12 +67,10 @@ export const SESSION_OPTIONS = {
   // overwrite: true /** (boolean) can overwrite or not (default true) */,
   httpOnly: !isTestEnv() /** (boolean) httpOnly or not (default true) */,
   // signed: true /** (boolean) signed or not (default true) */,
-  rolling:
-    !isTestEnv() /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
-  renew:
-    !isTestEnv() /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
-  secure: !isTestEnv() /** (boolean) isProdEnv() secure cookie*/,
-  sameSite: isTestEnv() ? null : 'none',
+  rolling: true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
+  renew: true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
+  secure: !isTestEnv() /** (boolean) secure cookie*/,
+  sameSite: isTestEnv() ? null : 'strict',
   /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */
 } as Partial<session.opts>;
 

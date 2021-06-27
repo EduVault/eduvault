@@ -150,6 +150,7 @@ export default {
           },
           method: 'POST',
           data: loginData,
+          withCredentials: true,
         };
 
         const response = await axios(options);

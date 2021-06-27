@@ -3,7 +3,7 @@ version: '3.7'
 services:
   app:
     container_name: app
-    image: docker.io/eduvault/eduvault_app:production
+    image: docker.io/eduvault/eduvault_app:${IMAGE_SUFFIX}
     env_file: ./.env
     expose:
       - 8081
@@ -13,7 +13,7 @@ services:
 
   example:
     container_name: example
-    image: docker.io/eduvault/eduvault_example:production
+    image: docker.io/eduvault/eduvault_example:${IMAGE_SUFFIX}
     env_file:
       - ./.env
     expose:
@@ -24,7 +24,7 @@ services:
 
   api:
     container_name: api
-    image: docker.io/eduvault/eduvault_api:production
+    image: docker.io/eduvault/eduvault_api:${IMAGE_SUFFIX}
     expose:
       - 30333
     env_file: ./.env
@@ -34,7 +34,7 @@ services:
 
   home-page:
     container_name: home-page
-    image: docker.io/eduvault/eduvault_home-page:production
+    image: docker.io/eduvault/eduvault_home-page:${IMAGE_SUFFIX}
     expose:
       - 8083
     env_file: ./.env
@@ -64,4 +64,4 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       # this will re poll for image changes every 60s, could extend in final production
-    command: --interval 60
+    command: --interval ${WATCHTOWER_POLLING_INTERVAL}

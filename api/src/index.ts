@@ -58,7 +58,7 @@ app.use(
 const testAPI = app;
 export { testAPI, newLocalDB, passportInit, routerInit, personAuthRoute };
 
-if (isTestEnv()) {
+if (!isTestEnv()) {
   /** Start the server! */
   app.listen(PORT_API, async () => {
     // app.ws.listen({ port: PORT_API });

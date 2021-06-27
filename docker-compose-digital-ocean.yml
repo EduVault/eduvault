@@ -23,8 +23,6 @@ services:
     environment:
       - VIRTUAL_HOST=example.${PROD_HOST}
       - VIRTUAL_PORT=8082
-    depends_on:
-      - app
     cpus: "0.2"
     mem_limit: 212m
 
@@ -37,8 +35,6 @@ services:
     environment:
       - VIRTUAL_HOST=api.${PROD_HOST}
       - VIRTUAL_PORT=30333
-    depends_on:
-      - example      
     cpus: "0.5"
     mem_limit: 512m
 
@@ -53,8 +49,6 @@ services:
       - VUE_APP_PROD_HOST=${PROD_HOST}
       - VIRTUAL_HOST=home.${PROD_HOST},${PROD_HOST}
       - VIRTUAL_PORT=8083
-    depends_on:
-      - api
     cpus: "0.7"
     mem_limit: 712m
 
@@ -64,7 +58,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./deploy/prod-certs:/etc/nginx/certs:ro
+      - ./deploy/prod-certs:/etc/nginx/certs
     ports:
       - '80:80'
       - '443:443'
@@ -82,7 +76,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       # this will re poll for image changes every 60s, could extend in final production
     command: --interval ${WATCHTOWER_POLLING_INTERVAL}
-    depends_on:
-      - nginx
     cpus: "0.2"
     mem_limit: 512m      

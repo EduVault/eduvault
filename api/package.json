@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf dist yarn.lock node_modules",
-    "clean:dist": "rimraf dist",
+    "clean:dist": "rm -rf dist",
     "dev:watch": "TS_NODE_PROJECT='./tsconfig.build.json' ts-node-dev --inspect=0.0.0.0:9229 --poll --respawn ./src src/index.ts",
     "dev": "run-s dev:watch",
-    "prod": "rm -rf dist && yarn build:server && node dist/",
+    "prod": "yarn build && yarn start",
     "start": "node dist/",
     "watch": "tsc -p tsconfig.build.json -w ",
     "build:server": "tsc -p tsconfig.build.json ",

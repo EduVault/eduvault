@@ -101,7 +101,7 @@ export default function (
     })(ctx, next);
   });
   router.post(ROUTES.APP_UPDATE, async (ctx, next) => {
-    const data = ctx.request.body as types.AppUpdateReq;
+    const data = (ctx.request.body as unknown) as types.AppUpdateReq;
     // console.log({ data });
 
     return passport.authenticate('dev', async (err: string, person: IPerson) => {

@@ -1,4 +1,4 @@
-name: Staging push Docker images
+name: Production push Docker images
 on:
   push:
     branches:

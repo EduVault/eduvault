@@ -14,6 +14,7 @@ export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
 
+
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';
 const HTTPS = 'https://';

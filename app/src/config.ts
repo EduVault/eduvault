@@ -10,7 +10,9 @@ const isTestEnv = () => process.env.TEST === '1' || process.env.VUE_APP_TEST ===
 
 console.log({ env: process.env });
 export const { isProdEnv, isDockerEnv } = utils;
+
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
+
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';

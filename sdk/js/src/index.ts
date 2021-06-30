@@ -1,10 +1,11 @@
+import { isProdEnv } from '@eduvault/shared/dist/utils';
 import { Buckets, PrivateKey } from '@textile/hub';
 import { Database, JSONSchema, ThreadID } from '@textile/threaddb';
 import {
   Collection,
   CollectionConfig,
 } from '@textile/threaddb/dist/cjs/local/collection';
-import { formatURLApi, formatURLApp, formatWSApi } from './config';
+import { formatURLApi, formatURLApp, formatWSApi, isTestEnv } from './config';
 
 import {
   appLogin,
@@ -30,9 +31,8 @@ import { setupLoginButton } from './lib/loginButton';
 import { initOptions } from './types';
 import { checkConnectivityClearBacklog, isServerOnline } from './utils';
 
-
 class EduVault {
-  log?= false;
+  log? = false;
   isBrowserOnline = () => navigator.onLine;
   isServerOnline = isServerOnline(this);
   isOnline = () => this.isServerOnline() && this.isServerOnline();
@@ -53,7 +53,7 @@ class EduVault {
   setupLoginButton = setupLoginButton(this);
   buttonID?: string;
   redirectURL?: string;
-  HOST = 'eduvault.org';
+  HOST = !isProdEnv() || isTestEnv() ? 'localhost' : 'eduvault.org';
   URL_APP = formatURLApp(this.HOST);
   URL_API = formatURLApi(this.HOST);
   WS_API = formatWSApi(this.HOST);

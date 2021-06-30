@@ -4,7 +4,8 @@ FROM node:12 AS build-stage
 
 WORKDIR /example
 ENV NODE_ENV=development
-
+ARG TEST=0
+ENV VUE_APP_TEST=$TEST
 ENV PATH /example/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
@@ -16,5 +17,4 @@ COPY . .
 # RUN ls node_modules/@eduvault
 FROM build-stage AS dev-stage
 # RUN yarn global add @vue/cli
-EXPOSE 8082
 CMD [ "yarn", "dev" ]

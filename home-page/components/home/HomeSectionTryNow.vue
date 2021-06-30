@@ -1,32 +1,34 @@
 <template>
   <div id="try-now" class="section">
-    <div class="section-wrap">
-      <h3 class="mb-5 text-center">TRY NOW</h3>
-      <p class="text-center">
+    <div class="section-wrap text-center">
+      <h3 class="mb-5">TRY NOW</h3>
+      <p class="">
         EduVault is still in development. The alpha app is located here:
       </p>
-      <a
-        class="text-center block border-orange border text-orange py-1 px-2 my-2 w-32 rounded mx-auto cursor-pointer"
-        :href="appLink"
+      <button
+        class="block border-orange border text-orange py-1 px-2 my-2 w-32 rounded mx-auto"
       >
-        TRY ALPHA
-      </a>
-      <p class="text-center">
+        <a data-testid="link-app" class="cursor-pointer" :href="appLink"
+          >TRY ALPHA</a
+        >
+      </button>
+      <p class="">
         FlashyCards is a mini app built to showcase syncing app data with
         EduVault
       </p>
-      <a
-        :href="exampleLink"
-        class="text-center block bg-orange text-white py-1 px-2 my-2 w-48 rounded mx-auto cursor-pointer"
+      <button
+        class="block bg-orange text-white py-1 px-2 my-2 w-48 rounded mx-auto"
       >
-        TRY EXAMPLE APP
-      </a>
-      <p class="mb-3 text-center">
+        <a data-testid="link-example" class="cursor-pointer" :href="exampleLink"
+          >TRY EXAMPLE APP</a
+        >
+      </button>
+      <p class="mb-3">
         Send us an <a href="info@eduvault.org" class="link">email</a> to be
         alerted of future releases.
       </p>
 
-      <h3 class="mb-5 mt-10 text-center">Inter Planetary Flash Cards</h3>
+      <h3 class="mb-5 mt-10">Inter Planetary Flash Cards</h3>
       <p class="mb-3">
         <a class="link" href="https://ipfc.tech">Inter Planetary Flash Cards</a>
         (IPFC) is an app developed by us, and will be the first app to integrate

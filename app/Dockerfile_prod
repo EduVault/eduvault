@@ -11,12 +11,16 @@ COPY . .
 
 FROM build-stage AS prod-build
 WORKDIR /app
-# ARG PROD_HOST='localhost'
-ENV VUE_APP_PROD_HOST='is-a-test.xyz'
+
+ARG PROD_HOST='localhost'
+ARG TEST=0
+ENV VUE_APP_TEST=$TEST
+ENV VUE_APP_PROD_HOST=$PROD_HOST
+
 ENV NODE_ENV=production
 # We don't need to build if dist is already been copied with . .
 # was running into errors building for other architectures from mac m-1, so just build dist locally
-# RUN yarn build
+RUN yarn build
 
 FROM nginx as prod-stage
 RUN mkdir /app

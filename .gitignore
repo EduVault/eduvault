@@ -2,7 +2,6 @@
 **/dist
 **/client-dist
 **/coverage
-**/tests
 **/test-output
 **/log
 cypress/screenshots/
@@ -133,17 +132,19 @@ fullchain1.pem
 privkey1.pem
 *key-certbot.pem
 *.sqlite
-home-page/assets/.DS_Store
-deploy/dev-certs/
+*/**/.DS_Store
+# deploy/dev-certs/
 deploy/prod-certs/
 access.log alias
 .gitignore
 error.log alias
 eduvault-ec2.pem
+test-build
+tests_output
 
 # Elastic Beanstalk Files
-.elasticbeanstalk/*
-.ebextensions/*
+# .elasticbeanstalk/*
+# .ebextensions/*
 # !.elasticbeanstalk/*.cfg.yml
 # !.elasticbeanstalk/*.global.yml
-home-page/assets/.DS_Store
+

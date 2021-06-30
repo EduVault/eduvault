@@ -6,14 +6,14 @@
   - threaddb is not accepting array of collection config (wait for next threaddb-js version to update)
   - set up debouncer call for database saves through eduvault. expose raw db, but also allow calls that sync through eduvault. put in a callback for handling changes from the server. Handle issues with many fast changes to local data getting overwritten if still syncing
 - [ ] Schema registry
-- [ ] Dev sign up page to register apps to add to cors whitelist
+- [ ] Dev sign up page to register apps to add to cors whitelist. How to update in real time without needing to restart the server? could make a DB call each time, but could effect performance (test it). Could also save it in app local state either by making the server into a stateful class object(avoiding using global state.) Or, by using textileDB local version to save on server.
 - [ ] change MetaMask login to generate PrivateKey as per [this example](https://docs.textile.io/tutorials/hub/pki-identities/)
 - [ ] Refactor:
   - [ ] find more reused code and libraries across project and put them in shared (like lodash or @textile/hub)
   - [ ] Move User Model to a shared folder between app and api
-- [ ] validation library
+- [ ] validation library - most important on user and third party app requests. Then from calls from the frontend
 - [ ] add types for all API req/res
-- [ ] API docs - w/ swagger
+- [ ] API docs - w/ swagger. Only needed for routes used by third party apps.
 - [ ] detect stored persistent storage on 3rd party login and auto-login/redirect
 - [ ] password recovery
 - [ ] Dev ops:
@@ -23,13 +23,12 @@
   - [ ] set up CI with automated deploys and tests
 - [ ] Set up tests:
   - [x] unit sets for each API route
-  - [ ] E2E/ integration tests with cypress. Ditch cypress for another? Cypress is acting up because of the multiple domains
+  - [x] E2E/ integration tests with nightwatch
   - [ ] unit tests for sdk (hard to isolate). failing now because of HTTPS
-  - [ ] unit tests for app logic(low priority)
-  - [ ] dockerize tests (cypress not working on my mac m1 chip)
+  - [ ] unit tests for app logic (low priority)
 - [ ] More tests!
 - [ ] Add emails array to Person model, and signups
-- [ ] Allow linking of accounts, i.e. persons can signup/login with multiple methods all on the same account. Start with faceboom then add password.
+- [ ] Allow linking of accounts, i.e. persons can signup/login with multiple methods all on the same account. Start with facebook then add password.
 - [ ] vuex/redux plugin
 
 ## auth flow pseudocode

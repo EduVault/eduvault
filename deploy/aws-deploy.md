@@ -122,7 +122,7 @@ sudo service docker start
 yarn production # runs docker-compose up -f prod-...yml
 
 # else rebuild docker images with correct domain:
-yarn d-build # need to be signed in as me. (or change the image links in the docker-compose files     image: docker.io/jewcub/eduvault_example:latest)
+yarn d-build # need to be signed in as me. (or change the image links in the docker-compose files     image: docker.io/eduvault/eduvault_example:latest)
 ```
 
 Refactor to make dev, staging, prod builds super easy and with no manual changes except for changing the staging/prod server host in the env file

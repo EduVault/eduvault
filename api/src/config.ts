@@ -7,14 +7,13 @@ import { StrategyOptionsWithRequest } from 'passport-google-oauth20';
 import { StrategyOptionWithRequest } from 'passport-facebook';
 // only for local build
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' });
-console.log({ env: process.env });
+if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../.env' });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
-const PORT_CYPRESS = 9229;
 export const { isProdEnv, isDockerEnv } = utils;
-export const PORT_API = parseInt(process.env.PORT_API) || 3003;
+export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
-export const HOST = isProdEnv() ? 'is-a-test.xyz' : LOCAL_HOST;
+export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
+
 
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';
@@ -35,10 +34,8 @@ export const validDomains = [
   URL_APP_HTTP,
   URL_EXAMPLE_HTTP,
 ];
-export const URL_CYPRESS = 'http://' + LOCAL_HOST + PORT_CYPRESS;
-if (isTestEnv()) validDomains.push(URL_CYPRESS);
 
-export const APP_SECRET = process.env.APP_SECRET || 'VerySecretPassword';
+export const APP_SECRET = process.env.APP_SECRET as string || 'VerySecretPassword';
 if (isProdEnv() && APP_SECRET === 'VerySecretPassword') {
   throw new Error('APP_SECRET missing in production');
 }
@@ -48,11 +45,11 @@ export const ROUTES = config.ROUTES;
 export const CORS_CONFIG: cors.Options = {
   credentials: true,
   origin: (ctx) => {
-    console.log(
-      '===================================ctx.request.header.origin===================================\n',
+    // console.log(
+    //   '===================================ctx.request.header.origin===================================\n',
 
-      { nodeENV: process.env.NODE_ENV, validDomains, headersOrigin: ctx.request.header.origin },
-    );
+    //   { nodeENV: process.env.NODE_ENV, validDomains, headersOrigin: ctx.request.header.origin },
+    // );
     if (validDomains.indexOf(ctx.request.header.origin) !== -1) {
       // console.log('\n is valid domain');
       return ctx.request.header.origin;
@@ -73,8 +70,8 @@ export const SESSION_OPTIONS = {
   // signed: true /** (boolean) signed or not (default true) */,
   rolling: true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
   renew: true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
-  secure: !isTestEnv() /** (boolean) isProdEnv() secure cookie*/,
-  sameSite: isTestEnv() ? false : 'none',
+  secure: !isTestEnv() /** (boolean) secure cookie*/,
+  sameSite: isTestEnv() ? null : 'none',
   /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */
 } as Partial<session.opts>;
 
@@ -83,7 +80,7 @@ export const JWT_EXPIRY = '30d';
 
 // this will be deprecated. Will need to look up app info in DB and callback to their registered callback
 /** Sometimes the callback cannot find the referer, In a real setup,  we will need apps that use this backend to register a callback */
-export const CLIENT_CALLBACK = URL_APP;
+export const CLIENT_CALLBACK = isTestEnv() ? URL_APP_HTTP : URL_APP;
 
 export const TEXTILE_USER_API_SECRET = process.env.TEXTILE_USER_API_SECRET;
 export const DOTWALLET_SECRET = process.env.DOTWALLET_SECRET;
@@ -107,3 +104,14 @@ export const FACEBOOK_CONFIG = {
 } as StrategyOptionWithRequest;
 
 export const SYNC_DEBOUNCE_TIME = isTestEnv() ? 1000 : 5000;
+
+console.log({
+  NODE_ENV: process.env.NODE_ENV,
+  TEST_ENV: isTestEnv(),
+  APP_SECRET,
+  PROD_HOST,
+  HOST,
+  PORT_API,
+  GITHUB_ACTIONS: process.env.GITHUB_ACTIONS,
+  SESSION_OPTIONS,
+});

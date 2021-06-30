@@ -7,6 +7,26 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { fromEvent, Observable } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 // import { DBInfo } from '@textile/threads';
+import { ROUTES, URL_API, API_WS, URL_APP } from '../config';
+
+// const textileLogin = async (privateKey: PrivateKey) => {
+//   const requestChallenge = async () => {
+//     const pubkey = privateKey.pubKey.toString();
+//   };
+
+//   const signChallenge = async (challenge: string) => {
+//     const buf = Buffer.from(challenge);
+//     /** Person our identity to sign the challenge */
+//     const signed = await privateKey.sign(buf);
+//     return Buffer.from(signed).toJSON();
+//   };
+//   const sendSignedChallenge = async () => {
+//     // api /signed-challenge
+//   };
+
+//   const challenge = await requestChallenge();
+//   sendSignedChallenge(signChallenge(challenge));
+// };
 
 /** we should have different forms of getting the Textile personAuth,
  * 1. crypto wallet: ask crypto wallet to sign

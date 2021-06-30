@@ -1,47 +1,56 @@
 # digital ocean deploy requires certs to be generated and stored in the right folder before using
-version: '3.7'
+version: '2.4'
 services:
   app:
     container_name: app
-    image: docker.io/eduvault/eduvault_app:staging
+    image: docker.io/eduvault/eduvault_app:${IMAGE_SUFFIX}
     env_file: ./.env
-    ports:
+    expose:
       - 8081
     environment:
       - VIRTUAL_HOST=app.${PROD_HOST}
       - VIRTUAL_PORT=8081
+    cpus: "0.2"
+    mem_limit: 212m
 
   example:
     container_name: example
-    image: docker.io/eduvault/eduvault_example:staging
+    image: docker.io/eduvault/eduvault_example:${IMAGE_SUFFIX}
     env_file:
       - ./.env
-    ports:
+    expose:
       - 8082
     environment:
       - VIRTUAL_HOST=example.${PROD_HOST}
       - VIRTUAL_PORT=8082
+    cpus: "0.2"
+    mem_limit: 212m
 
-  # api:
-  #   container_name: api
-  #   image: docker.io/eduvault/eduvault_api:staging
-  #   ports:
-  #     - ${PORT_API}
-  #   env_file: ./.env
-  #   environment:
-  #     - VIRTUAL_HOST=api.${PROD_HOST}
-  #     - VIRTUAL_PORT=${PORT_API}
+  api:
+    container_name: api
+    image: docker.io/eduvault/eduvault_api:${IMAGE_SUFFIX}
+    expose:
+      - 30333
+    env_file: ./.env
+    environment:
+      - VIRTUAL_HOST=api.${PROD_HOST}
+      - VIRTUAL_PORT=30333
+    cpus: "0.5"
+    mem_limit: 512m
 
   home-page:
     container_name: home-page
-    image: docker.io/eduvault/eduvault_home-page:staging
-    ports:
+    image: docker.io/eduvault/eduvault_home-page:${IMAGE_SUFFIX}
+    expose:
       - 8083
     env_file: ./.env
     environment:
       - NODE_ENV=development
-      - VIRTUAL_HOST=home.${PROD_HOST}
+      - VUE_APP_PROD_HOST=${PROD_HOST}
+      - VIRTUAL_HOST=home.${PROD_HOST},${PROD_HOST}
       - VIRTUAL_PORT=8083
+    cpus: "0.7"
+    mem_limit: 712m
 
   nginx:
     container_name: nginx-proxy
@@ -49,7 +58,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./deploy/prod-certs:/etc/nginx/certs:ro
+      - ./deploy/prod-certs:/etc/nginx/certs
     ports:
       - '80:80'
       - '443:443'
@@ -58,3 +67,14 @@ services:
       - api
       - example
       - home-page
+    cpus: "0.2"
+    mem_limit: 512m
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # this will re poll for image changes every 60s, could extend in final production
+    command: --interval ${WATCHTOWER_POLLING_INTERVAL}
+    cpus: "0.2"
+    mem_limit: 512m      

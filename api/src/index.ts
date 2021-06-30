@@ -21,7 +21,7 @@ import { clearCollections } from './utils/clearCollections';
 import { populateDB } from './utils/populateDB';
 // import { appSchema } from './models/app';
 // import { personSchema } from './models/person';
-const app = websockify(new Koa(), {});
+const app = websockify(new Koa());
 app.proxy = true;
 // app.keys = [APP_SECRET];
 const { isProdEnv } = utils;
@@ -36,11 +36,9 @@ app.use(async function handleGeneralError(ctx, next) {
   }
 });
 app.use(cors(CORS_CONFIG));
-console.log({ PORT_API });
-console.log({ env: process.env });
 
-app.use(sslify({ resolver, port: PORT_API }));
-// if (!isTestEnv()) app.use(sslify({ resolver: xForwardedProtoResolver }));
+if (!isTestEnv()) app.use(sslify({ resolver }));
+
 app.use(cookie());
 app.use(logger());
 app.use(bodyParser());
@@ -60,21 +58,21 @@ app.use(
 const testAPI = app;
 export { testAPI, newLocalDB, passportInit, routerInit, personAuthRoute };
 
-if (process.env.TEST !== 'true') {
+if (!isTestEnv()) {
   /** Start the server! */
   app.listen(PORT_API, async () => {
-    app.ws.listen({ port: PORT_API });
+    // app.ws.listen({ port: PORT_API });
     /** Database */
     const db = await newLocalDB('eduvault-api');
     if ('error' in db) {
       console.log('error loading db');
       return;
     }
-    // populate with dummy app info
     if (!isProdEnv()) {
       await clearCollections(db);
-      await populateDB(db);
     }
+    await populateDB(db);
+    // populate with dummy app info
 
     /** Passport */
     const passport = passportInit(app, db);
@@ -88,5 +86,6 @@ if (process.env.TEST !== 'true') {
     );
   });
 }
+// docker CI testing
 
 export default app;

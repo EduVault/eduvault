@@ -12,5 +12,4 @@ RUN yarn install
 COPY . .
 
 FROM build-stage AS dev-stage
-EXPOSE 8083
 CMD [ "yarn", "dev" ]

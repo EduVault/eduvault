@@ -10,14 +10,16 @@ services:
       - './app:/app'
       - '/app/node_modules'
     stdin_open: true
-    ports:
-      - ${PORT_APP}
+    env_file:
+      - ./.env
+    expose:
+      - 8081
     environment:
       - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=development
       - IN_DOCKER=true
       - VIRTUAL_HOST=app.localhost
-      - VIRTUAL_PORT=${PORT_APP}
+      - VIRTUAL_PORT=8081
 
   example:
     container_name: example
@@ -28,8 +30,10 @@ services:
       - './example:/example'
       - '/example/node_modules'
     stdin_open: true
-    ports:
-      - ${PORT_EXAMPLE}
+    env_file:
+      - ./.env
+    expose:
+      - 8082
     env_file:
       - ./.env
     environment:
@@ -37,8 +41,7 @@ services:
       - NODE_ENV=development
       - IN_DOCKER=true
       - VIRTUAL_HOST=example.localhost
-      - VIRTUAL_PORT=${PORT_EXAMPLE}
-      - VUE_APP_PROD_HOST=%{PROD_HOST}
+      - VIRTUAL_PORT=8082
 
   home-page:
     container_name: home-page
@@ -48,20 +51,25 @@ services:
     volumes:
       - './home-page:/home-page'
       - '/home-page/node_modules'
-    ports:
-      - ${PORT_HOME_PAGE}
+    env_file:
+      - ./.env
+    expose:
+      - 8083
     environment:
       - NODE_ENV=development
-      - VIRTUAL_HOST=home.localhost
-      - VIRTUAL_PORT=${PORT_HOME_PAGE}
+      - VIRTUAL_HOST=home.localhost,localhost
+      - VIRTUAL_PORT=8083
 
   api:
     container_name: api
     build:
       context: ./api
       target: dev-stage
+    env_file:
+      - ./.env
+    expose:
+      - 30333
     ports:
-      - ${PORT_API}
       - '9229:9229'
     volumes:
       - './api:/api'
@@ -70,9 +78,9 @@ services:
       - NODE_ENV=development
       - IN_DOCKER=true
       - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=${PORT_API}
+      - VIRTUAL_PORT=30333
 
-  nginx:
+  nginx-proxy:
     container_name: nginx-proxy
     # using this instead of jwilder because issue with m1 https://github.com/nginx-proxy/nginx-proxy/issues/1550#issuecomment-799705715
     image: ninanung/nginx-proxy # on mac m1

@@ -16,7 +16,7 @@ export default function (
   db: Database,
 ) {
   router.post(ROUTES.DEV_VERIFY, async (ctx, next) => {
-    const data: types.DevVerifyReq = ctx.request.body;
+    const data = (ctx.request.body as unknown ) as types.DevVerifyReq
     // console.log({ devVerifyData: data });
     if (data.appSecret !== APP_SECRET)
       ctx.unauthorized(null, 'No secret found. Only administrators may verify devs');
@@ -45,7 +45,7 @@ export default function (
   });
 
   router.post(ROUTES.APP_REGISTER, async (ctx, next) => {
-    const data: types.AppRegisterReq = ctx.request.body;
+    const data = ( ctx.request.body as unknown ) as types.AppRegisterReq;
     // console.log({ APP_REGISTERdata: data });
     return passport.authenticate('dev', async (err: string, foundPerson: IPerson) => {
       // passport isnt returning person...
@@ -101,7 +101,7 @@ export default function (
     })(ctx, next);
   });
   router.post(ROUTES.APP_UPDATE, async (ctx, next) => {
-    const data: types.AppUpdateReq = ctx.request.body;
+    const data = (ctx.request.body as unknown) as types.AppUpdateReq;
     // console.log({ data });
 
     return passport.authenticate('dev', async (err: string, person: IPerson) => {

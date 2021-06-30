@@ -1,7 +1,7 @@
 <template>
   <div class="deck-display">
     <div class="deck-display__title-div d-flex justify-content-center">
-      <h2 class="deck-display__title title">
+      <h2 data-testid="deck-title" class="deck-display__title title">
         {{ deck.title }}
       </h2>
       <div>
@@ -86,7 +86,7 @@ export default Vue.extend({
   },
   computed: {
     cards() {
-      return this.deck.cards.filter(card => !card.deleted);
+      return this.deck.cards.filter((card) => !card.deleted);
     },
   },
 });

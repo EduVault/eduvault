@@ -9,6 +9,8 @@
 <script>
 import AlertUpdatePWA from './components/AlertUpdatePWA.vue';
 // import TheNavbar from './components/TheNavbar.vue';
+console.log({ env: process.env });
+console.warn('HELLO FROM GITHUB ACTIONS');
 export default {
   components: {
     AlertUpdatePWA,

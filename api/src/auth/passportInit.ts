@@ -17,6 +17,10 @@ export default (app: Koa, db: Database) => {
    */
   app.keys = [APP_SECRET];
   app.use(session(SESSION_OPTIONS, app));
+  app.use((ctx, next) => {
+    ctx.cookies.secure = true;
+    return next();
+  });
   passport.serializeUser(function (personOrApp: IPerson | IApp, done) {
     if (!personOrApp) done(personOrApp, null);
     // console.log('serializing: ', { personOrApp });

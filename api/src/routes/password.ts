@@ -16,7 +16,7 @@ const password = function (
   db: Database,
 ) {
   async function signup(ctx: Context, appLoginToken?: string, decryptToken?: string) {
-    const data: types.PasswordLoginReq = ctx.request.body;
+    const data = ( ctx.request.body as unknown ) as types.PasswordLoginReq;
     if (!data.pwEncryptedPrivateKey || !data.pubKey || !data.threadIDStr) {
       ctx.unauthorized({ error: 'invalid signup' }, 'invalid signup');
       return;
@@ -70,7 +70,7 @@ const password = function (
   }
 
   router.post(ROUTES.PASSWORD_AUTH, async (ctx, next) => {
-    const data: types.PasswordLoginReq = ctx.request.body;
+    const data = ( ctx.request.body as unknown ) as types.PasswordLoginReq;
     // console.log({ data });
     if (!data.password || !data.username) {
       ctx.unauthorized({ error: 'invalid signup' }, 'invalid signup');

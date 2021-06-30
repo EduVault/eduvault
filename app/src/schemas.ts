@@ -1,6 +1,6 @@
 export const cardSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  id: 'https://github.com/Jewcub/textile-flashcards',
+  id: 'https://github.com/eduvault/textile-flashcards',
   title: 'Card',
   type: 'object',
   properties: {

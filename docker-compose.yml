@@ -1,62 +1,59 @@
 # This is the amazon elastic beanstalk deploy version. The key difference with digital ocean deploy is that in nginx-proxy we don't use ssl and port 443. ssl is handled by the load balancer.
 version: '3.7'
 services:
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      # this will re poll for image changes every 60s, could extend in final production
-    command: --interval 60
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     # this will re poll for image changes every 60s, could extend in final production
+  #   command: --interval ${WATCHTOWER_POLLING_INTERVAL}
 
   app:
     container_name: app
-    image: docker.io/jewcub/eduvault_app:latest
+    image: docker.io/eduvault/eduvault_app:${IMAGE_SUFFIX}
     env_file:
       - ./.env
-    ports:
-      - ${PORT_APP}
+    expose:
+      - 8081
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=app.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_APP}
+      - VIRTUAL_PORT=8081
 
   example:
     container_name: example
-    image: docker.io/jewcub/eduvault_example:latest
+    image: docker.io/eduvault/eduvault_example:${IMAGE_SUFFIX}
     env_file:
       - ./.env
-    ports:
-      - ${PORT_EXAMPLE}
     expose:
-      - ${PORT_EXAMPLE}
+      - 8082
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=example.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_EXAMPLE}
+      - VIRTUAL_PORT=8082
 
   api:
     container_name: api
-    image: docker.io/jewcub/eduvault_api:latest
-    ports:
-      - ${PORT_API}
+    image: docker.io/eduvault/eduvault_api:${IMAGE_SUFFIX}
     expose:
-      - ${PORT_API}
+      - 30333
     env_file: ./.env
     environment:
       - NODE_ENV=production
+      - VUE_APP_PROD_HOST=${PROD_HOST}
       - VIRTUAL_HOST=api.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_API}
+      - VIRTUAL_PORT=30333
 
   home-page:
     container_name: home-page
-    image: docker.io/jewcub/eduvault_home-page:latest
-    ports:
-      - ${PORT_HOME_PAGE}
+    image: docker.io/eduvault/eduvault_home-page:${IMAGE_SUFFIX}
+    expose:
+      - 8083
     env_file: ./.env
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=home.${PROD_HOST}
-      - VIRTUAL_PORT=${PORT_HOME_PAGE}
+      - VIRTUAL_HOST=home.${PROD_HOST},${PROD_HOST},${EB_HOST}
+      - VIRTUAL_PORT=8083
 
   nginx:
     container_name: nginx
@@ -66,7 +63,8 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
-      - '80:80'
+      # - '80:80'
+      - '3030:3030'
     depends_on:
       - app
       - api

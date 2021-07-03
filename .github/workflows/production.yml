@@ -85,48 +85,48 @@ jobs:
 
       ##### TEST PASSED -- BUILD production IMAGES #####
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - api
-        with:
-          image: eduvault/eduvault_api
-          tags: production
-          registry: docker.io
-          dockerfile: api/Dockerfile_prod
-          directory: api
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - api
+      #   with:
+      #     image: eduvault/eduvault_api
+      #     tags: production
+      #     registry: docker.io
+      #     dockerfile: api/Dockerfile_prod
+      #     directory: api
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - app
-        with:
-          image: eduvault/eduvault_app
-          tags: production
-          registry: docker.io
-          dockerfile: app/Dockerfile_prod
-          directory: app
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          buildArgs: PROD_HOST=${{ secrets.PROD_HOST }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - app
+      #   with:
+      #     image: eduvault/eduvault_app
+      #     tags: production
+      #     registry: docker.io
+      #     dockerfile: app/Dockerfile_prod
+      #     directory: app
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     buildArgs: PROD_HOST=${{ secrets.PROD_HOST }}
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - example
-        with:
-          image: eduvault/eduvault_example
-          tags: production
-          registry: docker.io
-          dockerfile: example/Dockerfile_prod
-          directory: example
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          buildArgs: PROD_HOST=${{ secrets.PROD_HOST }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - example
+      #   with:
+      #     image: eduvault/eduvault_example
+      #     tags: production
+      #     registry: docker.io
+      #     dockerfile: example/Dockerfile_prod
+      #     directory: example
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     buildArgs: PROD_HOST=${{ secrets.PROD_HOST }}
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - home-page
-        with:
-          image: eduvault/eduvault_home-page
-          tags: production
-          registry: docker.io
-          dockerfile: home-page/Dockerfile_prod
-          directory: home-page
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - home-page
+      #   with:
+      #     image: eduvault/eduvault_home-page
+      #     tags: production
+      #     registry: docker.io
+      #     dockerfile: home-page/Dockerfile_prod
+      #     directory: home-page
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}

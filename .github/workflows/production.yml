@@ -18,51 +18,51 @@ jobs:
         ##### BUILD TEST IMAGES #####
         # The point of this part is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - api
-        with:
-          image: eduvault/eduvault_api
-          tags: testing
-          registry: docker.io
-          dockerfile: api/Dockerfile_prod
-          directory: api
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - api
+      #   with:
+      #     image: eduvault/eduvault_api
+      #     tags: testing
+      #     registry: docker.io
+      #     dockerfile: api/Dockerfile_prod
+      #     directory: api
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - app
-        with:
-          image: eduvault/eduvault_app
-          tags: testing
-          registry: docker.io
-          dockerfile: app/Dockerfile_prod
-          directory: app
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          buildArgs: PROD_HOST=localhost
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - app
+      #   with:
+      #     image: eduvault/eduvault_app
+      #     tags: testing
+      #     registry: docker.io
+      #     dockerfile: app/Dockerfile_prod
+      #     directory: app
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     buildArgs: PROD_HOST=localhost
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - example
-        with:
-          image: eduvault/eduvault_example
-          tags: testing
-          registry: docker.io
-          dockerfile: example/Dockerfile_prod
-          directory: example
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          buildArgs: PROD_HOST=localhost
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - example
+      #   with:
+      #     image: eduvault/eduvault_example
+      #     tags: testing
+      #     registry: docker.io
+      #     dockerfile: example/Dockerfile_prod
+      #     directory: example
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      #     buildArgs: PROD_HOST=localhost
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - home-page
-        with:
-          image: eduvault/eduvault_home-page
-          tags: testing
-          registry: docker.io
-          dockerfile: home-page/Dockerfile_prod
-          directory: home-page
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - home-page
+      #   with:
+      #     image: eduvault/eduvault_home-page
+      #     tags: testing
+      #     registry: docker.io
+      #     dockerfile: home-page/Dockerfile_prod
+      #     directory: home-page
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
       ##### TEST #####
 

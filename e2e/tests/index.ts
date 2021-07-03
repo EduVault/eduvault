@@ -54,7 +54,7 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // navigates to example
   browser.waitForElementVisible('img.eduvault-button', 50000);
   browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000);
-  browser.click('a[href^=http://app.localhost]');
+  browser.click('a[href^="http://app.localhost"]');
   // failing here. is it because the eduvault sdk has not loaded the app link yet? What about test for an href instead?
 
   // navigates to app

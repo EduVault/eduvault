@@ -3,7 +3,7 @@ const serverTestEnv = process.env.TEST === '1';
 console.log({ serverTestEnv, 'process.env.TEST': process.env.TEST });
 export const HappyPath = (browser: NightwatchBrowser) => {
   // check nightwatch is working
-  browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
+  // browser.url('https://google.com').waitForElementPresent('body').assert.titleContains('Google');
   // check base url working
   // .assert.containsText('h1', 'EDUVAULT');
   if (!serverTestEnv) {
@@ -17,25 +17,32 @@ export const HappyPath = (browser: NightwatchBrowser) => {
       .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   }
   // first call need to wait, cause app might be booting up
+  console.log('checking root');
   browser
     .url('http://localhost')
     .waitForElementPresent('body', 120000, false)
     .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false);
-  browser
-    .url('http://localhost')
-    .waitForElementPresent('body')
-    .waitForElementPresent(
-      'h1[data-testid="eduvault-title"]',
-      120000,
-      false,
-      function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
-        console.log({ browser: this, result });
-        this.getText('body', function (result) {
-          console.log({ result });
-        });
-      },
-    );
+  console.log('checking home');
+
+  browser.url('http://home.localhost').waitForElementPresent('body').waitForElementPresent(
+    'h1[data-testid="eduvault-title"]',
+    120000,
+    false,
+    // function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+    //   console.log({ browser: this, result });
+    //   this.getText('body', function (result) {
+    //     console.log({ result });
+    //   });
+    // },
+  );
   // navigate to app, example, and api.
+  console.log('checking example');
+
+  browser.url('http://exmaple.localhost').waitForElementVisible('img.eduvault-button', 50000);
+  console.log('checking app');
+
+  browser.url('http://exmaple.localhost').waitForElementPresent('input[type=email]', 50000);
+  browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000);
 
   browser
     .url('http://home.localhost')
@@ -47,7 +54,7 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   browser.click('a[data-testid="link-example"]');
   // navigates to example
   browser.waitForElementVisible('img.eduvault-button', 50000);
-  browser.waitForElementPresent('a[href^=http://app.localhost]', 50000);
+  browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000);
   browser.click('a[href^=http://app.localhost]');
   // failing here. is it because the eduvault sdk has not loaded the app link yet? What about test for an href instead?
 

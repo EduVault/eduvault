@@ -21,17 +21,22 @@ export const HappyPath = (browser: NightwatchBrowser) => {
     .url('http://localhost')
     .waitForElementPresent('body', 120000, false)
     .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false);
-  browser.url('http://localhost').waitForElementPresent('body').waitForElementPresent(
-    'h1[data-testid="eduvault-title"]',
-    120000,
-    false,
-    function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
-      console.log({ browser: this, result });
-      this.getText('body', function (result) {
-        console.log({ result });
-      });
-    },
-  );
+  browser
+    .url('http://localhost')
+    .waitForElementPresent('body')
+    .waitForElementPresent(
+      'h1[data-testid="eduvault-title"]',
+      120000,
+      false,
+      function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+        console.log({ browser: this, result });
+        this.getText('body', function (result) {
+          console.log({ result });
+        });
+      },
+    );
+  // navigate to app, example, and api.
+
   browser
     .url('http://home.localhost')
     .waitForElementPresent('body', 120000, false)
@@ -42,7 +47,10 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   browser.click('a[data-testid="link-example"]');
   // navigates to example
   browser.waitForElementVisible('img.eduvault-button', 50000);
-  browser.click('img.eduvault-button');
+  browser.waitForElementPresent('a[href^=http://app.localhost]', 50000);
+  browser.click('a[href^=http://app.localhost]');
+  // failing here. is it because the eduvault sdk has not loaded the app link yet? What about test for an href instead?
+
   // navigates to app
   browser.waitForElementPresent('input[type=email]', 50000);
   browser.setValue('input[type=email]', 'example@somewhere.com');

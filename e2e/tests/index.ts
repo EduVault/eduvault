@@ -38,9 +38,9 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // navigate to app, example, and api.
   
 
-  browser.url('http://exmaple.localhost').waitForElementVisible('img.eduvault-button', 50000, false, ()=>console.log('checking example'));
+  browser.url('http://example.localhost').waitForElementVisible('img.eduvault-button', 50000, false, ()=>console.log('checking example'));
 
-  browser.url('http://exmaple.localhost').waitForElementPresent('input[type=email]', 50000, false, ()=>console.log('checking app'));
+  browser.url('http://app.localhost').waitForElementPresent('input[type=email]', 50000, false, ()=>console.log('checking app'));
   browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000, false);
 
   browser

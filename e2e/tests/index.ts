@@ -17,32 +17,31 @@ export const HappyPath = (browser: NightwatchBrowser) => {
       .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   }
   // first call need to wait, cause app might be booting up
-  console.log('checking root');
   browser
     .url('http://localhost')
     .waitForElementPresent('body', 120000, false)
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false);
-  console.log('checking home');
+    .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false, () =>
+      console.log('checking root'),
+    )
 
   browser.url('http://home.localhost').waitForElementPresent('body').waitForElementPresent(
     'h1[data-testid="eduvault-title"]',
     120000,
-    false,
-    // function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
+    false, ()=>console.log('checking home')
+  );
+      // function (this: NightwatchAPI, result: NightwatchCallbackResult<void>) {
     //   console.log({ browser: this, result });
     //   this.getText('body', function (result) {
     //     console.log({ result });
     //   });
     // },
-  );
   // navigate to app, example, and api.
-  console.log('checking example');
+  
 
-  browser.url('http://exmaple.localhost').waitForElementVisible('img.eduvault-button', 50000);
-  console.log('checking app');
+  browser.url('http://exmaple.localhost').waitForElementVisible('img.eduvault-button', 50000, false, ()=>console.log('checking example'));
 
-  browser.url('http://exmaple.localhost').waitForElementPresent('input[type=email]', 50000);
-  browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000);
+  browser.url('http://exmaple.localhost').waitForElementPresent('input[type=email]', 50000, false, ()=>console.log('checking app'));
+  browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000, false);
 
   browser
     .url('http://home.localhost')

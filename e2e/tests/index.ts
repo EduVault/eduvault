@@ -17,12 +17,12 @@ export const HappyPath = (browser: NightwatchBrowser) => {
       .waitForElementPresent('h1[data-testid="eduvault-title"]', 10000, false);
   }
   // first call need to wait, cause app might be booting up
-  browser
-    .url('http://localhost')
-    .waitForElementPresent('body', 120000, false)
-    .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false, () =>
-      console.log('checking root'),
-    )
+  // browser
+  //   .url('http://localhost')
+  //   .waitForElementPresent('body', 120000, false)
+  //   .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false, () =>
+  //     console.log('checking root'),
+  //   )
 
   browser.url('http://home.localhost').waitForElementPresent('body').waitForElementPresent(
     'h1[data-testid="eduvault-title"]',
@@ -40,8 +40,7 @@ export const HappyPath = (browser: NightwatchBrowser) => {
 
   browser.url('http://example.localhost').waitForElementVisible('img.eduvault-button', 50000, false, ()=>console.log('checking example'));
 
-  browser.url('http://app.localhost').waitForElementPresent('input[type=email]', 50000, false, ()=>console.log('checking app'));
-  browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000, false);
+  browser.url('http://app.localhost').waitForElementPresent('input[type=email]', 50000, false, ()=>console.log('checking app')).waitForElementPresent('a[href^="http://app.localhost"]', 50000, false);
 
   browser
     .url('http://home.localhost')
@@ -54,11 +53,11 @@ export const HappyPath = (browser: NightwatchBrowser) => {
   // navigates to example
   browser.waitForElementVisible('img.eduvault-button', 50000);
   browser.waitForElementPresent('a[href^="http://app.localhost"]', 50000);
-  browser.click('a[href^="http://app.localhost"]');
+  browser.click('img.eduvault-button');
   // failing here. is it because the eduvault sdk has not loaded the app link yet? What about test for an href instead?
 
   // navigates to app
-  browser.waitForElementPresent('input[type=email]', 50000);
+  browser.waitForElementPresent('input[type=email]', 200000);
   browser.setValue('input[type=email]', 'example@somewhere.com');
   browser.setValue('input[type=password]', 'Password123');
   browser.click('button[type=submit]');

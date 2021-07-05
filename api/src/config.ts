@@ -14,7 +14,6 @@ export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
 export const HOST = isProdEnv() ? PROD_HOST : LOCAL_HOST;
 
-
 // const prefixes = [PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE];
 const HTTP = 'http://';
 const HTTPS = 'https://';
@@ -35,7 +34,9 @@ export const validDomains = [
   URL_EXAMPLE_HTTP,
 ];
 
-export const APP_SECRET = process.env.APP_SECRET as string || 'VerySecretPassword';
+export const APP_SECRET = isTestEnv()
+  ? 'test-secret'
+  : (process.env.APP_SECRET as string) || 'VerySecretPassword';
 if (isProdEnv() && APP_SECRET === 'VerySecretPassword') {
   throw new Error('APP_SECRET missing in production');
 }

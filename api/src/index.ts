@@ -16,7 +16,7 @@ import passportInit from './auth/passportInit';
 import routerInit from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
 import { config, CORS_CONFIG, URL_API, URL_APP, PORT_API, APP_SECRET } from './config';
-import { isTestEnv, utils } from './utils';
+import { isTestEnv, utils, isUnitTestEnv } from './utils';
 import { clearCollections } from './utils/clearCollections';
 import { populateDB } from './utils/populateDB';
 // import { appSchema } from './models/app';
@@ -58,7 +58,7 @@ app.use(
 const testAPI = app;
 export { testAPI, newLocalDB, passportInit, routerInit, personAuthRoute };
 
-if (!isTestEnv()) {
+if (!isUnitTestEnv()) {
   /** Start the server! */
   app.listen(PORT_API, async () => {
     // app.ws.listen({ port: PORT_API });

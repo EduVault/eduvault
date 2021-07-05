@@ -16,7 +16,7 @@ jobs:
           ref: main
 
         ##### BUILD TEST IMAGES #####
-        The point of this part is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
+        # The point of this part is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
 
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image - api

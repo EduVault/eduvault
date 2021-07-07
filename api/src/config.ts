@@ -24,7 +24,7 @@ export const URL_EXAMPLE = `${HTTPS}${PREFIX_EXAMPLE}${HOST}`;
 export const URL_API_HTTP = `${HTTP}${PREFIX_API}${HOST}`;
 export const URL_APP_HTTP = `${HTTP}${PREFIX_APP}${HOST}`;
 export const URL_EXAMPLE_HTTP = `${HTTP}${PREFIX_EXAMPLE}${HOST}`;
-// console.log({ URL_API, URL_APP });
+
 export const validDomains = [
   URL_API,
   URL_APP,
@@ -35,9 +35,9 @@ export const validDomains = [
 ];
 
 export const APP_SECRET = isTestEnv()
-  ? 'test-secret'
-  : (process.env.APP_SECRET as string) || 'VerySecretPassword';
-if (isProdEnv() && APP_SECRET === 'VerySecretPassword') {
+  ? 'dev-secret'
+  : (process.env.APP_SECRET as string) || 'dev-secret';
+if (isProdEnv() && APP_SECRET === 'dev-secret') {
   throw new Error('APP_SECRET missing in production');
 }
 
@@ -45,7 +45,9 @@ export const ROUTES = config.ROUTES;
 
 export const CORS_CONFIG: cors.Options = {
   credentials: true,
-  origin: (ctx) => {
+};
+if (isProdEnv() && !isTestEnv())
+  CORS_CONFIG.origin = (ctx) => {
     // console.log(
     //   '===================================ctx.request.header.origin===================================\n',
 
@@ -55,9 +57,8 @@ export const CORS_CONFIG: cors.Options = {
       // console.log('\n is valid domain');
       return ctx.request.header.origin;
     }
-    return validDomains[0]; // we can't return void, so let's return one of the valid domains
-  },
-};
+    return ''; // we can't return void, so let's return one of the valid domains
+  };
 
 export const SESSION_OPTIONS = {
   key: 'koa.sess' /** (string) cookie key (default is koa.sess) */,
@@ -69,8 +70,10 @@ export const SESSION_OPTIONS = {
   // overwrite: true /** (boolean) can overwrite or not (default true) */,
   httpOnly: !isTestEnv() /** (boolean) httpOnly or not (default true) */,
   // signed: true /** (boolean) signed or not (default true) */,
-  rolling: true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
-  renew: true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
+  rolling:
+    true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
+  renew:
+    true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
   secure: !isTestEnv() /** (boolean) secure cookie*/,
   sameSite: isTestEnv() ? null : 'none',
   /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */

@@ -8,6 +8,7 @@ if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: './src/.env' });
  */
 module.exports = class CustomTestEnvironment extends Environment {
   async setup() {
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
     await super.setup();
     this.global.fetch = fetch;
     if (typeof this.global.TextEncoder === 'undefined') {

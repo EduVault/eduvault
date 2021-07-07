@@ -9,6 +9,7 @@ services:
       - NODE_ENV=production
       - VIRTUAL_HOST=app.localhost
       - VIRTUAL_PORT=8081
+      - VUE_APP_TEST=1      
 
   example:
     container_name: example
@@ -19,6 +20,7 @@ services:
       - NODE_ENV=production
       - VIRTUAL_HOST=example.localhost
       - VIRTUAL_PORT=8082
+      - VUE_APP_TEST=1
 
   api:
     container_name: api

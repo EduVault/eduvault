@@ -48,7 +48,9 @@ export const loadCredentials = (self: EduVault) => async ({
 }: LoadCredentialsOptions) => {
   try {
     if (onStart) onStart();
-    const online = await self.isServerOnline();
+    // const online = await self.isOnline();
+    const online = true
+    // console.log({ online})
     // if (!online) {
     //   setTimeout(async () => (online = await self.isServerOnline()), 300);
     // }

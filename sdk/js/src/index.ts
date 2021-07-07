@@ -29,13 +29,13 @@ import {
 import { init } from './lib/init';
 import { setupLoginButton } from './lib/loginButton';
 import { initOptions } from './types';
-import { checkConnectivityClearBacklog, isServerOnline } from './utils';
+import { 
+  // checkConnectivityClearBacklog, 
+  isServerOnline } from './utils';
 
 class EduVault {
   log? = false;
-  isBrowserOnline = () => navigator.onLine;
-  isServerOnline = isServerOnline(this);
-  isOnline = () => this.isServerOnline() && this.isServerOnline();
+  isOnline = isServerOnline(this);
 
   privateKeyValid = () => {
     return this.privateKey?.canSign();
@@ -84,7 +84,7 @@ class EduVault {
 
   backlog: string | undefined;
   syncChanges = syncChanges(this);
-  checkConnectivityClearBacklog = checkConnectivityClearBacklog(this);
+  // checkConnectivityClearBacklog = checkConnectivityClearBacklog(this);
   sync = sync(this);
   debounceTime = 0;
   setDebounceTime = (time: number) => (this.debounceTime = time);

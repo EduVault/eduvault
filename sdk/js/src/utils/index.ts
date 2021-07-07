@@ -1,39 +1,50 @@
 export { utils } from '@eduvault/shared';
 import { PrivateKey } from '@textile/threaddb';
 import { EduVault } from '../index';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 export const isServerOnline = (self: EduVault) => async () => {
   try {
-    // console.log('URL_API', URL_API);
-    const ping = await axios.get(self.URL_API + '/ping');
-    // console.log({ ping });
+        const axiosOptions: AxiosRequestConfig = {
+          url: self.URL_API + '/ping',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Forwarded-Proto': 'https',
+          },
+          method: 'GET',
+          baseURL: self.HOST,
+          proxy: false,
+        };
+    // console.log('URL_API', self.URL_API);
+    console.log({axiosOptions})
+    const ping = await axios(axiosOptions);
+    const pingData = await ping.data
+    console.log({pingData, ping });
     return ping.status >= 200 && ping.status < 300;
   } catch (err) {
     console.log({ err });
-
     return false;
   }
 };
-export const checkConnectivityClearBacklog = (self: EduVault) => {
-  return () => {
-    const timer = setInterval(() => {
-      console.log(
-        'checking connectivity, backlog, isBrowserOnline',
-        !!self.backlog,
-        self.isBrowserOnline()
-      );
-      if (!self.backlog) {
-        clearInterval(timer);
-        return;
-      } else if (self.isBrowserOnline()) {
-        self.sync(self.backlog);
-        self.backlog = undefined;
-        clearInterval(timer);
-      } else return;
-    }, 1000);
-  };
-};
+// export const checkConnectivityClearBacklog = (self: EduVault) => {
+//   return () => {
+//     const timer = setInterval(() => {
+//       console.log(
+//         'checking connectivity, backlog, isBrowserOnline',
+//         !!self.backlog,
+//         self.isBrowserOnline()
+//       );
+//       if (!self.backlog) {
+//         clearInterval(timer);
+//         return;
+//       } else if (self.isBrowserOnline()) {
+//         self.sync(self.backlog);
+//         self.backlog = undefined;
+//         clearInterval(timer);
+//       } else return;
+//     }, 3000);
+//   };
+// };
 
 export async function rehydratePrivateKey(keyStr: string) {
   try {

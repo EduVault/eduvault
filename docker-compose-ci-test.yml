@@ -56,19 +56,19 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    # image: ninanung/nginx-proxy # on mac m1
-    image: jwilder/nginx-proxy
+    image: ninanung/nginx-proxy # on mac m1
+    # image: jwilder/nginx-proxy
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./deploy/dev-certs:/etc/nginx/certs:ro
     ports:
       - '80:80'
+      - '443:443'      
     depends_on:
       - app
       - api
       - example
       - home-page
-    environment:
-      - HTTPS_METHOD=noredirect
     # cpus: "0.2"
     # mem_limit: 512m      

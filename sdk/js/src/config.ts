@@ -11,9 +11,9 @@ export const ROUTES = config.ROUTES;
 const HTTP = 'http://';
 const HTTPS = 'https://';
 const WSS = 'wss://';
-const WS = 'ws://';
+// const WS = 'ws://';
 export const formatURLApp = (host: string) => `${HTTP}${PREFIX_APP}${host}`;
 export const formatURLApi = (host: string) =>
-  `${isTestEnv() ? HTTP : HTTPS}${PREFIX_API}${host}`;
+  `${HTTPS}${PREFIX_API}${host}`;
 export const formatWSApi = (host: string) =>
-  `${isTestEnv() ? WS : WSS}${PREFIX_API}${host}`;
+  `${WSS}${PREFIX_API}${host}`;

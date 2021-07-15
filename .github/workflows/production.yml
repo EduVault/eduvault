@@ -11,7 +11,8 @@ jobs:
       matrix:
         node-version: [12.13.0]
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
         with:
           ref: main
 
@@ -73,21 +74,6 @@ jobs:
 
       - name: start app
         run: yarn build-run-ci
-
-      - name: wait for server start
-        uses: nev7n/wait_for_response@v1
-        with:
-          url: 'http://api.localhost/ping'
-          responseCode: 200
-          timeout: 180000
-          interval: 3000
-      - name: wait for homepage start
-        uses: nev7n/wait_for_response@v1
-        with:
-          url: 'http://localhost:8083'
-          responseCode: 200
-          timeout: 180000
-          interval: 3000
 
       - name: test
         run: |

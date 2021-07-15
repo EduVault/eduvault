@@ -1,5 +1,4 @@
-import { DefaultState, Context, Middleware } from 'koa';
-import { isTestEnv } from '../utils';
+import { Middleware } from 'koa';
 
 const checkAuth: Middleware = (ctx, next) => {
   if (!ctx.isAuthenticated()) {

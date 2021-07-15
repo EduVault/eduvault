@@ -7,8 +7,6 @@ import { types } from '../types';
 import { ROUTES, APP_SECRET } from '../config';
 import { v4 as uuid } from 'uuid';
 import { Database } from '@textile/threaddb';
-import { sync } from '../textile/helpers';
-import { isTestEnv } from '../utils';
 /** Accepts appSecret and appID. Compares token. Issues JWT and cookie. */
 export default function (
   router: Router<DefaultState, Context>,
@@ -30,15 +28,6 @@ export default function (
       else {
         dev.dev = { isVerified: true };
         await dev.save();
-        // sync(db, 'person');
-
-        // if (isTestEnv()) {
-        //   setTimeout(function () {
-        //     ctx.oK(dev);
-        //   }, 100);
-        //   var end = Date.now() + 3300;
-        //   while (Date.now() < end);
-        // }
         ctx.oK(dev);
       }
     }

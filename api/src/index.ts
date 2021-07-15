@@ -15,7 +15,7 @@ import { newLocalDB } from './textile/helpers';
 import passportInit from './auth/passportInit';
 import routerInit from './routes';
 import personAuthRoute from './routes/wssPersonAuthRoute';
-import { config, CORS_CONFIG, URL_API, URL_APP, PORT_API, APP_SECRET } from './config';
+import { CORS_CONFIG, URL_API, URL_APP, PORT_API } from './config';
 import { isTestEnv, utils, isUnitTestEnv } from './utils';
 import { clearCollections } from './utils/clearCollections';
 import { populateDB } from './utils/populateDB';
@@ -37,7 +37,7 @@ app.use(async function handleGeneralError(ctx, next) {
 });
 app.use(cors(CORS_CONFIG));
 
-if (!isTestEnv()) app.use(sslify({ resolver }));
+if (!isUnitTestEnv()) app.use(sslify({ resolver }));
 
 app.use(cookie());
 app.use(logger());

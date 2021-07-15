@@ -1,6 +1,6 @@
 import cors from '@koa/cors';
 import session from 'koa-session';
-import { utils, isTestEnv } from './utils';
+import { utils, isTestEnv, isUnitTestEnv } from './utils';
 import { config } from '@eduvault/shared';
 export { config };
 import { StrategyOptionsWithRequest } from 'passport-google-oauth20';
@@ -9,6 +9,7 @@ import { StrategyOptionWithRequest } from 'passport-facebook';
 import dotenv from 'dotenv';
 if (!process.env.GITHUB_ACTIONS) dotenv.config({ path: '../.env' });
 export const { PREFIX_API, PREFIX_APP, PREFIX_EXAMPLE, LOCAL_HOST } = config;
+
 export const { isProdEnv, isDockerEnv } = utils;
 export const PORT_API = 30333;
 const PROD_HOST = process.env.PROD_HOST;
@@ -68,14 +69,14 @@ export const SESSION_OPTIONS = {
   maxAge: 1000 * 60 * 60 * 24 * 2 /** two days */,
   // autoCommit: true /** (boolean) automatically commit headers (default true) */,
   // overwrite: true /** (boolean) can overwrite or not (default true) */,
-  httpOnly: !isTestEnv() /** (boolean) httpOnly or not (default true) */,
+  httpOnly: !isUnitTestEnv() /** (boolean) httpOnly or not (default true) */,
   // signed: true /** (boolean) signed or not (default true) */,
   rolling:
     true /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */,
   renew:
     true /** (boolean) renew session when session is nearly expired, so we can always keep person logged in. (default is false)*/,
-  secure: !isTestEnv() /** (boolean) secure cookie*/,
-  sameSite: isTestEnv() ? null : 'none',
+  secure: !isUnitTestEnv() /** (boolean) secure cookie*/,
+  sameSite: isUnitTestEnv() ? null : 'none',
   /** (string) isProdEnv() session cookie sameSite options (default null, don't set it) */
 } as Partial<session.opts>;
 
@@ -84,7 +85,7 @@ export const JWT_EXPIRY = '30d';
 
 // this will be deprecated. Will need to look up app info in DB and callback to their registered callback
 /** Sometimes the callback cannot find the referer, In a real setup,  we will need apps that use this backend to register a callback */
-export const CLIENT_CALLBACK = isTestEnv() ? URL_APP_HTTP : URL_APP;
+export const CLIENT_CALLBACK = URL_APP_HTTP;
 
 export const TEXTILE_USER_API_SECRET = process.env.TEXTILE_USER_API_SECRET;
 export const DOTWALLET_SECRET = process.env.DOTWALLET_SECRET;
@@ -112,6 +113,7 @@ export const SYNC_DEBOUNCE_TIME = isTestEnv() ? 1000 : 5000;
 console.log({
   NODE_ENV: process.env.NODE_ENV,
   TEST_ENV: isTestEnv(),
+  UNIT_TEST_ENV: isUnitTestEnv(),
   APP_SECRET,
   PROD_HOST,
   HOST,

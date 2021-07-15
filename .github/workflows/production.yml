@@ -41,17 +41,17 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           buildArgs: PROD_HOST=localhost,TEST=1
 
-      # - uses: mr-smithers-excellent/docker-build-push@v5
-      #   name: Build & push Docker image - example
-      #   with:
-      #     image: eduvault/eduvault_example
-      #     tags: testing
-      #     registry: docker.io
-      #     dockerfile: example/Dockerfile_prod
-      #     directory: example
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
-      #     buildArgs: PROD_HOST=localhost
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image - example
+        with:
+          image: eduvault/eduvault_example
+          tags: testing
+          registry: docker.io
+          dockerfile: example/Dockerfile_prod
+          directory: example
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildArgs: PROD_HOST=localhost
 
       # - uses: mr-smithers-excellent/docker-build-push@v5
       #   name: Build & push Docker image - home-page

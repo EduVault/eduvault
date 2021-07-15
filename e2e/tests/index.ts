@@ -28,12 +28,12 @@ export const Base = async (browser: NightwatchBrowser) => {
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
       interval: 2000,
-      verbose: true,
+      // verbose: true,
       delay: 1000,
     });
     browser
-      .url('http://home.localhost')
-      .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false, () =>
+      .url('http://localhost')
+      .waitForElementPresent('h1[data-testid="eduvault-title"]', 50000, false, () =>
         console.log('checking home'),
       );
     browser
@@ -56,7 +56,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
       interval: 2000,
-      verbose: true,
+      // verbose: true,
       delay: 1000,
     });
     browser

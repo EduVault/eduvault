@@ -56,8 +56,8 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    image: ninanung/nginx-proxy # on mac m1
-    # image: jwilder/nginx-proxy
+    # image: ninanung/nginx-proxy # on mac m1
+    image: jwilder/nginx-proxy
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro

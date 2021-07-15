@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2.4'
 services:
   app:
     container_name: app
@@ -10,6 +10,8 @@ services:
       - VIRTUAL_HOST=app.localhost
       - VIRTUAL_PORT=8081
       - VUE_APP_TEST=1      
+    # cpus: "0.2"
+    # mem_limit: 212m
 
   example:
     container_name: example
@@ -21,6 +23,8 @@ services:
       - VIRTUAL_HOST=example.localhost
       - VIRTUAL_PORT=8082
       - VUE_APP_TEST=1
+    # cpus: "0.2"
+    # mem_limit: 212m
 
   api:
     container_name: api
@@ -31,9 +35,10 @@ services:
       - NODE_ENV=production
       - VIRTUAL_HOST=api.localhost
       - VIRTUAL_PORT=30333
-      - APP_SECRET='testing-secret'
       - TEST=1
       - PROD_HOST=localhost
+    # cpus: "0.5"
+    # mem_limit: 512m
 
   home-page:
     container_name: home-page
@@ -46,6 +51,8 @@ services:
       - VIRTUAL_HOST=home.localhost,localhost
       - VIRTUAL_PORT=8083
       - TEST=1
+    # cpus: "0.7"
+    # mem_limit: 712m
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -63,3 +70,5 @@ services:
       - home-page
     environment:
       - HTTPS_METHOD=noredirect
+    # cpus: "0.2"
+    # mem_limit: 512m      

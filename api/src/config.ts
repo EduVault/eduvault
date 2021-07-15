@@ -37,7 +37,7 @@ export const validDomains = [
 export const APP_SECRET = isTestEnv()
   ? 'dev-secret'
   : (process.env.APP_SECRET as string) || 'dev-secret';
-if (isProdEnv() && APP_SECRET === 'dev-secret') {
+if (isProdEnv() && !isTestEnv() && APP_SECRET === 'dev-secret') {
   throw new Error('APP_SECRET missing in production');
 }
 

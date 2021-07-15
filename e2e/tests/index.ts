@@ -28,7 +28,7 @@ export const Base = async (browser: NightwatchBrowser) => {
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
       interval: 2000,
-      verbose: true,
+      // verbose: true,
       delay: 1000,
     });
     browser
@@ -56,7 +56,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
       interval: 2000,
-      verbose: true,
+      // verbose: true,
       delay: 1000,
     });
     browser

@@ -9,7 +9,7 @@
       :decks-prop="decks"
       :remote-loaded="remoteLoaded"
     ></home>
-    <span class="footer">{{ loadingStatus }}...</span>
+    <!-- <span class="footer">{{ loadingStatus }}...</span> -->
   </div>
 </template>
 <script lang="ts">

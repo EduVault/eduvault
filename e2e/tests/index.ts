@@ -27,6 +27,7 @@ export const Base = async (browser: NightwatchBrowser) => {
     await waitOn({
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
+      interval: 2000,
       verbose: true,
       delay: 1000,
     });
@@ -44,6 +45,7 @@ export const Base = async (browser: NightwatchBrowser) => {
       .url('http://app.localhost')
       .waitForElementPresent('input[type=email]', 50000, false, () => console.log('checking app'));
   } catch (err) {
+    console.log({ err });
     browser.assert.visible('.non_existing');
   }
 };
@@ -53,6 +55,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
     await waitOn({
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
+      interval: 2000,
       verbose: true,
       delay: 1000,
     });
@@ -84,6 +87,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       .expect.element('h2[data-testid="deck-title"]')
       .text.to.contain('Default Deck');
   } catch (err) {
+    console.log({err})
     browser.assert.visible('.non_existing');
   }
 };

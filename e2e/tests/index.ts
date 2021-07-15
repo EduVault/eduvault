@@ -75,6 +75,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       .url('http://example.localhost')
       .waitForElementPresent('a[href^="http://app.localhost"]', 100000)
       .waitForElementVisible('img.eduvault-button', 100000)
+      .moveToElement('img.eduvault-button', 20, 20)
       .click('img.eduvault-button')
 
       // navigates to app

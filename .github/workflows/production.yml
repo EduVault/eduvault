@@ -18,16 +18,16 @@ jobs:
         ##### BUILD TEST IMAGES #####
         # The point of this part is to make the test images separately on one run, then you can selectively comment out which images you want to rebuild or not. If you don't need to rebuild the images, it will make the subsequent test much faster
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
-        name: Build & push Docker image - api
-        with:
-          image: eduvault/eduvault_api
-          tags: testing
-          registry: docker.io
-          dockerfile: api/Dockerfile_prod
-          directory: api
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - uses: mr-smithers-excellent/docker-build-push@v5
+      #   name: Build & push Docker image - api
+      #   with:
+      #     image: eduvault/eduvault_api
+      #     tags: testing
+      #     registry: docker.io
+      #     dockerfile: api/Dockerfile_prod
+      #     directory: api
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
       # - uses: mr-smithers-excellent/docker-build-push@v5
       #   name: Build & push Docker image - app
@@ -73,6 +73,22 @@ jobs:
 
       - name: start app
         run: yarn build-run-ci
+
+      - name: wait for server start
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: 'http://api.localhost/ping'
+          responseCode: 200
+          timeout: 180000
+          interval: 3000
+      - name: wait for homepage start
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: 'http://localhost:8083'
+          responseCode: 200
+          timeout: 180000
+          interval: 3000
+
       - name: test
         run: |
           yarn inst:e2e

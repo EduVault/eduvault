@@ -28,7 +28,7 @@ export const Base = async (browser: NightwatchBrowser) => {
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
       interval: 2000,
-      // verbose: true,
+      verbose: true,
       delay: 1000,
     });
     browser
@@ -56,7 +56,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       resources: ['http://localhost', 'http://api.localhost/ping'],
       timeout: 240000,
       interval: 2000,
-      // verbose: true,
+      verbose: true,
       delay: 1000,
     });
     browser
@@ -64,7 +64,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       .waitForElementPresent('h1[data-testid="eduvault-title"]', 120000, false)
       .assert.containsText('h1', 'EDUVAULT')
       .click('button[data-testid="button-try-now"]')
-      .expect.element('a[data-testid="link-example"]').is.visible;
+      .expect.element('a[data-testid="link-example"]').is.visible
     browser
       .click('a[data-testid="link-example"]') // navigates to example
       .waitForElementVisible('img.eduvault-button', 50000)
@@ -74,6 +74,7 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
     browser
       .url('http://example.localhost')
       .waitForElementPresent('a[href^="http://app.localhost"]', 100000)
+      .waitForElementVisible('img.eduvault-button', 50000)
       .click('img.eduvault-button')
 
       // navigates to app
@@ -88,6 +89,6 @@ export const HappyPath = async (browser: NightwatchBrowser) => {
       .text.to.contain('Default Deck');
   } catch (err) {
     console.log({err})
-    browser.assert.visible('.non_existing');
+    browser.assert.visible('.non_existing'); //force fail
   }
 };
